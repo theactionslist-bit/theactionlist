@@ -17,9 +17,9 @@ A task/action management app built with Next.js App Router, React 19, and Tailwi
 | Fonts | next/font/google (Geist) | — |
 | Linting | ESLint + eslint-config-next | ^9 |
 | Package Manager | Yarn | — |
-| Language | JavaScript (JSX) | — |
+| Language | TypeScript (TSX) | — |
 
-**No TypeScript.** All files use `.js` / `.jsx`. Do not introduce `.ts` or `.tsx` files.
+**TypeScript only.** All files use `.ts` / `.tsx`. Do not introduce `.js` or `.jsx` files.
 
 **Tailwind v4 differences from v3:**
 - No `tailwind.config.js` — configuration lives in CSS via `@theme` blocks in `globals.css`.
@@ -35,8 +35,8 @@ theactionlist/
 ├── public/                  # Static assets served at /
 ├── src/
 │   └── app/                 # App Router root (Next.js)
-│       ├── layout.js        # Root layout — fonts, html/body shell
-│       ├── page.js          # Home page (route: /)
+│       ├── layout.tsx       # Root layout — fonts, html/body shell
+│       ├── page.tsx         # Home page (route: /)
 │       ├── globals.css      # Global styles + Tailwind import + CSS theme vars
 │       └── favicon.ico
 ├── .gitignore
@@ -64,13 +64,36 @@ src/
 │   ├── ui/                  # Primitive/generic components (Button, Input, Modal)
 │   └── [feature]/           # Feature-specific components
 ├── lib/                     # Pure utility functions and helpers
-├── hooks/                   # Custom React hooks (use*.js)
+├── hooks/                   # Custom React hooks (use*.ts)
 ├── services/                # External API / data-fetching logic
 ├── store/                   # Global state (if added later)
 └── styles/                  # Additional CSS modules (if needed)
 ```
 
-Keep route files (`page.js`, `layout.js`, `loading.js`, `error.js`) **inside `app/`** only. Do not put business logic in route files — delegate to components and hooks.
+Keep route files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`) **inside `app/`** only. Do not put business logic in route files — delegate to components and hooks.
+
+### Page / Module File Pattern
+
+Each page or feature module follows a consistent internal file structure. Files are co-located in a folder named after the module:
+
+```
+src/app/[module]/
+├── page.tsx         # Main component / rendered UI for the route
+├── action.ts        # All event handlers and user-facing actions
+├── service.ts       # API calls and external data-fetching logic
+├── import.ts        # Shared imports and re-exports for the module
+└── constant.ts      # Static constants and configuration values
+```
+
+| File | Purpose |
+|---|---|
+| `page.tsx` | Main component/page file — keep it thin, delegate to the others |
+| `action.ts` | All actions and handlers (form submits, button clicks, etc.) |
+| `service.ts` | API calls and services (fetch, mutations, external SDKs) |
+| `import.ts` | Common imports/exports scoped to the module |
+| `constant.ts` | Static constants and configuration values |
+
+Not every module needs all five files — add only what the module requires. `page.tsx` is always present; the others are added as the module grows.
 
 ---
 
@@ -80,7 +103,7 @@ This project uses **functional React patterns** — not class components. Apply 
 
 **Single Responsibility** — each file/component does one thing. A `TaskCard` renders a task; a `useTaskStore` hook manages task state. Never mix data-fetching with rendering in the same component.
 
-**Encapsulation** — keep internal state and helpers private. Export only what consumers need. Prefer named exports for components and utilities; use default export only for Next.js route files (`page.js`, `layout.js`).
+**Encapsulation** — keep internal state and helpers private. Export only what consumers need. Prefer named exports for components and utilities; use default export only for Next.js route files (`page.tsx`, `layout.tsx`).
 
 **Composition over inheritance** — build complex UI by composing small components. Pass children or render props instead of extending base components.
 
@@ -143,18 +166,18 @@ import "./styles.css";
 
 ### No barrel re-exports by default
 
-Avoid `index.js` re-export barrels unless a folder has 5+ public exports. Prefer direct imports — they are easier to tree-shake and trace.
+Avoid `index.ts` re-export barrels unless a folder has 5+ public exports. Prefer direct imports — they are easier to tree-shake and trace.
 
 ---
 
 ## Component Conventions
 
-- **File name:** PascalCase matching the component name — `TaskCard.js`, `AddTaskModal.js`.
+- **File name:** PascalCase matching the component name — `TaskCard.tsx`, `AddTaskModal.tsx`.
 - **One component per file** (small helpers co-located are fine if not reused).
 - **Default export** only for Next.js route files. All other components use **named exports**.
 
-```js
-// components/ui/Button.js
+```tsx
+// components/ui/Button.tsx
 export function Button({ children, variant = "primary", ...props }) {
   return (
     <button className={clsx("...", variant === "primary" && "...")} {...props}>
@@ -184,9 +207,9 @@ export function Button({ children, variant = "primary", ...props }) {
 
 | Thing | Convention | Example |
 |---|---|---|
-| Component files | PascalCase | `TaskCard.js` |
-| Hook files | camelCase, `use` prefix | `useTaskList.js` |
-| Utility files | camelCase | `formatDate.js` |
+| Component files | PascalCase | `TaskCard.tsx` |
+| Hook files | camelCase, `use` prefix | `useTaskList.ts` |
+| Utility files | camelCase | `formatDate.ts` |
 | Route directories | kebab-case | `app/task-detail/` |
 | CSS class names | Tailwind utilities only | — |
 | Variables / functions | camelCase | `taskList`, `fetchTasks` |
@@ -196,11 +219,11 @@ export function Button({ children, variant = "primary", ...props }) {
 
 ## Next.js App Router Rules
 
-- `page.js` — the rendered UI for a route. Keep it thin.
-- `layout.js` — persistent shell wrapping child routes. Fonts and global providers go here.
-- `loading.js` — automatic Suspense boundary for a route segment.
-- `error.js` — error boundary (`"use client"` required).
-- `route.js` — API endpoint (replaces `pages/api/`). Lives at `app/api/[endpoint]/route.js`.
+- `page.tsx` — the rendered UI for a route. Keep it thin.
+- `layout.tsx` — persistent shell wrapping child routes. Fonts and global providers go here.
+- `loading.tsx` — automatic Suspense boundary for a route segment.
+- `error.tsx` — error boundary (`"use client"` required).
+- `route.ts` — API endpoint (replaces `pages/api/`). Lives at `app/api/[endpoint]/route.ts`.
 
 **Data fetching:** prefer async Server Components for reads. Use Server Actions (`"use server"`) for mutations. Avoid client-side `fetch` in `useEffect` for initial data.
 

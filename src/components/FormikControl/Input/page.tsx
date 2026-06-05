@@ -1,0 +1,75 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { useField } from "formik";
+import passwordEye from "@/assets/passwordEye.png";
+import passwordHideEye from "@/assets/passwordhideEye.png";
+
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+  name: string;
+};
+
+export default function Input({ label, type, ...props }: InputProps) {
+  const [field, meta] = useField(props.name);
+  const [showPassword, setShowPassword] = useState(false);
+  const hasError = meta.touched && meta.error;
+  const isPasswordField = type === "password";
+  const inputType = isPasswordField && showPassword ? "text" : type;
+
+  return (
+    <div className="flex flex-col gap-2.5">
+      <label
+        htmlFor={props.id || props.name}
+        className="font-sans text-[16px] font-semibold text-[#101010]"
+      >
+        {label}
+      </label>
+
+      <div className="relative">
+        <input
+          id={props.id || props.name}
+          {...field}
+          {...props}
+          type={inputType}
+          className={`
+            font-sans text-sm w-full h-17
+            rounded-xl border-2 bg-gray-50
+            px-4 text-gray-900 placeholder:text-gray-400
+            outline-none transition-all
+            hover:bg-white
+            focus:bg-white
+            ${isPasswordField ? "pr-12" : ""}
+            ${
+              hasError
+                ? "border-red-400 focus:border-red-500"
+                : "border-[#DBDBDB] focus:border-[#D89593]"
+            }
+          `}
+        />
+
+        {isPasswordField && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center justify-center hover:opacity-75 transition-opacity focus:outline-none"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            <Image
+              src={showPassword ? passwordHideEye : passwordEye}
+              alt={showPassword ? "Hide password" : "Show password"}
+              width={20}
+              height={20}
+              className="pointer-events-none"
+            />
+          </button>
+        )}
+      </div>
+
+      {hasError && (
+        <p className="font-sans text-sm text-red-600">{meta.error}</p>
+      )}
+    </div>
+  );
+}
