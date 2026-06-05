@@ -1,14 +1,15 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Goudy_Bookletter_1911, Quicksand } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const goudyBookletter = Goudy_Bookletter_1911({
+  weight: "400",
   subsets: ["latin"],
+  variable: "--font-goudy",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const quicksand = Quicksand({
   subsets: ["latin"],
+  variable: "--font-quicksand",
 });
 
 export const metadata = {
@@ -20,7 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${goudyBookletter.variable} ${quicksand.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
