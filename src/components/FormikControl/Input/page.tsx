@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { useField } from "formik";
-import passwordEye from "@/assets/passwordEye.png";
-import passwordHideEye from "@/assets/passwordhideEye.png";
+import {
+  useState,
+  Image,
+  useField,
+  passwordEye,
+  passwordHideEye,
+  SHOW_PASSWORD_ARIA_LABEL,
+  HIDE_PASSWORD_ARIA_LABEL,
+  PASSWORD_EYE_SIZE,
+} from "./import";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
@@ -54,13 +59,13 @@ export default function Input({ label, type, ...props }: InputProps) {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center justify-center hover:opacity-75 transition-opacity focus:outline-none"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? HIDE_PASSWORD_ARIA_LABEL : SHOW_PASSWORD_ARIA_LABEL}
           >
             <Image
               src={showPassword ? passwordHideEye : passwordEye}
-              alt={showPassword ? "Hide password" : "Show password"}
-              width={20}
-              height={20}
+              alt={showPassword ? HIDE_PASSWORD_ARIA_LABEL : SHOW_PASSWORD_ARIA_LABEL}
+              width={PASSWORD_EYE_SIZE}
+              height={PASSWORD_EYE_SIZE}
               className="pointer-events-none"
             />
           </button>

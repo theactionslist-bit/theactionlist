@@ -12,13 +12,10 @@ interface FormikControlProps {
 export default function FormikControl({ control, ...rest }: FormikControlProps) {
   switch (control) {
     case "input":
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return <Input {...(rest as any)} />;
     case "select":
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return <Selector {...(rest as any)} />;
     case "textarea":
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return <Textarea {...(rest as any)} />;
     default:
       return null;

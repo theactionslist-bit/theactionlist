@@ -1,12 +1,21 @@
 "use client";
 
 import { useRef, useState } from "react";
-import loginCover from "@/assets/LoginPage/Login_page.png";
-import logoPng from "@/assets/Logo.png";
-import { OnboardingLayout } from "@/components/Onboarding/page";
+import {
+  loginCover,
+  logoPng,
+  OnboardingLayout,
+  OTP_LENGTH,
+  OTP_HEADING,
+  OTP_DESCRIPTION,
+  OTP_VERIFY_TEXT,
+  OTP_VERIFYING_TEXT,
+  OTP_RESEND_TEXT,
+  OTP_RESENDING_TEXT,
+} from "./import";
 
 export default function OTPPage() {
-  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
@@ -18,7 +27,7 @@ export default function OTPPage() {
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
 
-    if (value && index < 5) {
+    if (value && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -35,11 +44,10 @@ export default function OTPPage() {
   const handleVerify = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const otpValue = otp.join("");
-    if (otpValue.length !== 6) return;
+    if (otpValue.length !== OTP_LENGTH) return;
 
     setIsSubmitting(true);
     try {
-      console.log("Verifying OTP:", otpValue);
       await new Promise((resolve) => setTimeout(resolve, 1000));
     } finally {
       setIsSubmitting(false);
@@ -49,9 +57,8 @@ export default function OTPPage() {
   const handleResendOtp = async (): Promise<void> => {
     setResendLoading(true);
     try {
-      console.log("Resending OTP");
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      setOtp(["", "", "", "", "", ""]);
+      setOtp(Array(OTP_LENGTH).fill(""));
       inputRefs.current[0]?.focus();
     } finally {
       setResendLoading(false);
@@ -60,16 +67,14 @@ export default function OTPPage() {
 
   return (
     <OnboardingLayout
-      heading="Check Your Inbox"
-      description="We've sent a verification code to your email to continue your journey."
+      heading={OTP_HEADING}
+      description={OTP_DESCRIPTION}
       coverImage={loginCover}
       logo={logoPng}
       showGoogleButton={false}
       showBackButton={true}
     >
       <form onSubmit={handleVerify} className="flex flex-col gap-6">
-
-        {/* OTP Input Fields */}
         <div className="flex gap-2 sm:gap-3 xl:gap-4 justify-center">
           {otp.map((digit, index) => (
             <input
@@ -95,10 +100,9 @@ export default function OTPPage() {
           ))}
         </div>
 
-        {/* Verify Button */}
         <button
           type="submit"
-          disabled={isSubmitting || otp.join("").length !== 6}
+          disabled={isSubmitting || otp.join("").length !== OTP_LENGTH}
           className="
             font-sans text-lg font-semibold w-full h-15 rounded-full bg-[#D89593] py-3 text-white
             transition-all hover:bg-[#c07c79] active:scale-[.98]
@@ -106,10 +110,9 @@ export default function OTPPage() {
             disabled:opacity-60 disabled:cursor-not-allowed
           "
         >
-          {isSubmitting ? "Verifying…" : "Verify"}
+          {isSubmitting ? OTP_VERIFYING_TEXT : OTP_VERIFY_TEXT}
         </button>
 
-        {/* Resend OTP */}
         <div className="text-center">
           <button
             type="button"
@@ -121,7 +124,7 @@ export default function OTPPage() {
               disabled:opacity-60 disabled:cursor-not-allowed
             "
           >
-            {resendLoading ? "Sending…" : "Resend OTP"}
+            {resendLoading ? OTP_RESENDING_TEXT : OTP_RESEND_TEXT}
           </button>
         </div>
       </form>

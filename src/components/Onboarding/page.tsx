@@ -1,9 +1,20 @@
 "use client";
 
-import Image from "next/image";
-import type { StaticImageData } from "next/image";
-import Link from "next/link";
-import googleIconPng from "@/assets/GoogleIcon.png";
+import {
+  Image,
+  Link,
+  googleIconPng,
+  COVER_IMAGE_ALT,
+  LOGO_ALT,
+  LOGO_WIDTH,
+  LOGO_HEIGHT,
+  GOOGLE_ICON_ALT,
+  GOOGLE_ICON_SIZE,
+  BACK_BUTTON_TEXT,
+  BACK_HREF,
+  CONTINUE_WITH_GOOGLE_TEXT,
+} from "./import";
+import type { StaticImageData } from "./import";
 
 interface FooterLink {
   href: string;
@@ -39,7 +50,7 @@ export function OnboardingLayout({
       <div className="relative hidden lg:block lg:w-1/2">
         <Image
           src={coverImage}
-          alt="The Action List — get things done"
+          alt={COVER_IMAGE_ALT}
           fill
           className="object-cover"
           preload={true}
@@ -48,11 +59,10 @@ export function OnboardingLayout({
 
       {/* ── Right: form panel ── */}
       <div className="flex flex-1 items-center justify-center bg-white px-6 py-8 lg:px-8 xl:px-16">
-
         <div className="w-full max-w-[560px]">
           {showBackButton && (
             <Link
-              href="/login"
+              href={BACK_HREF}
               className="
                 inline-flex items-center w-fit px-4 py-2
                 border-2 border-[#999999] rounded-full
@@ -60,16 +70,17 @@ export function OnboardingLayout({
                 hover:bg-gray-50 transition-colors
               "
             >
-              &lt; Back
+              {BACK_BUTTON_TEXT}
             </Link>
           )}
+
           {/* Logo */}
           <div className="mb-10">
             <Image
               src={logo}
-              alt="The Action List"
-              width={272}
-              height={61}
+              alt={LOGO_ALT}
+              width={LOGO_WIDTH}
+              height={LOGO_HEIGHT}
             />
           </div>
 
@@ -99,12 +110,12 @@ export function OnboardingLayout({
               >
                 <Image
                   src={googleIconPng}
-                  alt="Google"
-                  width={30}
-                  height={30}
+                  alt={GOOGLE_ICON_ALT}
+                  width={GOOGLE_ICON_SIZE}
+                  height={GOOGLE_ICON_SIZE}
                   className="shrink-0"
                 />
-                Continue with Google
+                {CONTINUE_WITH_GOOGLE_TEXT}
               </button>
             )}
 
