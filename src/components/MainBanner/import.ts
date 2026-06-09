@@ -1,2 +1,2 @@
-export { default as Image } from "next/image";
-export type { StaticImageData } from "next/image";
+export { Image } from "@/common/imports";
+export type { StaticImageData } from "@/common/imports";

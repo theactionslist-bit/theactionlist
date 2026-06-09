@@ -49,7 +49,7 @@ export function BannerSection({
         className="object-cover"
         priority
       />
-      <div className="absolute inset-0 bg-black/25" />
+      <div className="absolute inset-0" />
       <div className="absolute bottom-0 px-5 pb-10 lg:px-15 lg:pb-15">
         <h2 className="font-display text-4xl md:text-5xl lg:text-[70px] text-white leading-tight max-w-4xl whitespace-pre-line">
           {strikethroughWord ? renderHeading(heading, strikethroughWord) : heading}

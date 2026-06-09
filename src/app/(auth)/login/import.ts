@@ -1,12 +1,8 @@
 import * as Yup from "yup";
 
-export { Formik, Form } from "formik";
-export type { FormikHelpers } from "formik";
-export { default as Link } from "next/link";
-export { default as loginCover } from "@/assets/LoginPage/Login_page.png";
-export { default as logoPng } from "@/assets/Logo.png";
-export { default as FormikControl } from "@/components/FormikControl/page";
-export { OnboardingLayout } from "@/components/Onboarding/page";
+export { Formik, Form, Link } from "@/common/imports";
+export type { FormikHelpers } from "@/common/imports";
+export { Button, FormikControl, loginCover, logoPng, OnboardingLayout } from "@/common/components";
 export {
   LOGIN_HEADING,
   LOGIN_DESCRIPTION,

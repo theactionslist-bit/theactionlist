@@ -1,4 +1,5 @@
 export const ABOUT_US_BANNER_HEADING = "About You";
+export const ABOUT_US_EXPLORE_TEXT = "I want to start exploring";
 
 export const ABOUT_US_PARAGRAPHS = [
   "Welcome.",

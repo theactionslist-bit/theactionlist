@@ -12,10 +12,10 @@ export default function Textarea({ label, rows = 4, ...props }: TextareaProps) {
   const hasError = meta.touched && meta.error;
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2.5">
       <label
         htmlFor={props.id || props.name}
-        className="font-sans text-sm font-semibold text-gray-700"
+        className="font-sans text-[16px] font-semibold text-[#101010]"
       >
         {label}
       </label>
@@ -26,15 +26,15 @@ export default function Textarea({ label, rows = 4, ...props }: TextareaProps) {
         {...field}
         {...props}
         className={`
-          font-sans text-sm w-full rounded-xl border bg-gray-50
-          px-4 py-3 text-gray-900 placeholder:text-gray-400
+          font-sans text-base w-full rounded-xl border-2 bg-gray-50
+          px-4 py-3 text-gray-900 placeholder:text-gray-400 placeholder:text-[16px]
           outline-none transition-all resize-y
-          hover:border-gray-300 hover:bg-white
-          focus:bg-white focus:ring-4
+          hover:bg-white
+          focus:bg-white
           ${
             hasError
-              ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
-              : "border-gray-200 focus:border-gray-900 focus:ring-gray-900/8"
+              ? "border-red-400 focus:border-red-500"
+              : "border-[#DBDBDB] focus:border-[#D89593]"
           }
         `}
       />

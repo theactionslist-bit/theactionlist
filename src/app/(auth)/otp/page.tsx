@@ -5,6 +5,7 @@ import {
   loginCover,
   logoPng,
   OnboardingLayout,
+  Button,
   OTP_LENGTH,
   OTP_HEADING,
   OTP_DESCRIPTION,
@@ -100,18 +101,15 @@ export default function OTPPage() {
           ))}
         </div>
 
-        <button
+        <Button
           type="submit"
-          disabled={isSubmitting || otp.join("").length !== OTP_LENGTH}
-          className="
-            font-sans text-lg font-semibold w-full h-15 rounded-full bg-[#D89593] py-3 text-white
-            transition-all hover:bg-[#c07c79] active:scale-[.98]
-            focus:outline-none focus:ring-4 focus:ring-gray-900/20
-            disabled:opacity-60 disabled:cursor-not-allowed
-          "
+          variant="primary"
+          loading={isSubmitting}
+          disabled={otp.join("").length !== OTP_LENGTH}
+          className="w-full h-15 text-lg!"
         >
           {isSubmitting ? OTP_VERIFYING_TEXT : OTP_VERIFY_TEXT}
-        </button>
+        </Button>
 
         <div className="text-center">
           <button

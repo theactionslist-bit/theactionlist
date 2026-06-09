@@ -1,5 +1,4 @@
-export { useState, useRef, useEffect } from "react";
-export { default as Image } from "next/image";
+export { useState, useRef, useEffect, Image } from "@/common/imports";
 export { default as TimeIcon } from "@/assets/ActionDetailCard/TimeIcon.svg";
 export { default as HeartIcon } from "@/assets/ActionDetailCard/heartIcon.svg";
 export { default as ShareNetwork } from "@/assets/ActionDetailCard/ShareNetwork.svg";

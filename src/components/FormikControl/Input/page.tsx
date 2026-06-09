@@ -16,7 +16,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string;
 };
 
-export default function Input({ label, type, ...props }: InputProps) {
+export default function Input({ label, type, className, ...props }: InputProps) {
   const [field, meta] = useField(props.name);
   const [showPassword, setShowPassword] = useState(false);
   const hasError = meta.touched && meta.error;
@@ -25,12 +25,14 @@ export default function Input({ label, type, ...props }: InputProps) {
 
   return (
     <div className="flex flex-col gap-2.5">
-      <label
-        htmlFor={props.id || props.name}
-        className="font-sans text-[16px] font-semibold text-[#101010]"
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={props.id || props.name}
+          className="font-sans text-[16px] font-semibold text-[#101010]"
+        >
+          {label}
+        </label>
+      )}
 
       <div className="relative">
         <input
@@ -39,7 +41,7 @@ export default function Input({ label, type, ...props }: InputProps) {
           {...props}
           type={inputType}
           className={`
-            font-sans text-sm w-full h-17
+            font-sans text-base w-full h-17
             rounded-xl border-2 bg-gray-50
             px-4 text-gray-900 placeholder:text-gray-400
             outline-none transition-all
@@ -51,6 +53,7 @@ export default function Input({ label, type, ...props }: InputProps) {
                 ? "border-red-400 focus:border-red-500"
                 : "border-[#DBDBDB] focus:border-[#D89593]"
             }
+            ${className ?? ""}
           `}
         />
 

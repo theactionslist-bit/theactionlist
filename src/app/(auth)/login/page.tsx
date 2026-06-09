@@ -6,6 +6,7 @@ import {
   Link,
   loginCover,
   logoPng,
+  Button,
   FormikControl,
   OnboardingLayout,
   LOGIN_HEADING,
@@ -72,17 +73,14 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <button
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className="
-                font-sans text-lg font-semibold w-full h-15 rounded-full bg-[#D89593] py-3 text-white
-                transition-all active:scale-[.98]
-                disabled:opacity-60 disabled:cursor-not-allowed
-              "
+              variant="primary"
+              loading={isSubmitting}
+              className="w-full h-15 text-lg!"
             >
               {isSubmitting ? LOGIN_SUBMITTING_TEXT : LOGIN_BUTTON_TEXT}
-            </button>
+            </Button>
           </Form>
         )}
       </Formik>

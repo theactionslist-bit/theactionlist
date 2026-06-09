@@ -1,6 +1,4 @@
-export { default as loginCover } from "@/assets/LoginPage/Login_page.png";
-export { default as logoPng } from "@/assets/Logo.png";
-export { OnboardingLayout } from "@/components/Onboarding/page";
+export { loginCover, logoPng, OnboardingLayout, Button } from "@/common/components";
 export {
   OTP_LENGTH,
   OTP_HEADING,

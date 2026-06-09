@@ -7,6 +7,7 @@ import {
   logoPng,
   FormikControl,
   OnboardingLayout,
+  Button,
   FORGOT_PASSWORD_HEADING,
   FORGOT_PASSWORD_DESCRIPTION,
   FORGOT_PASSWORD_BUTTON_TEXT,
@@ -25,7 +26,7 @@ interface ForgotPasswordValues {
 export default function PasswordPage() {
   function handleSubmit(
     values: ForgotPasswordValues,
-    { setSubmitting }: FormikHelpers<ForgotPasswordValues>
+    { setSubmitting }: FormikHelpers<ForgotPasswordValues>,
   ) {
     setSubmitting(false);
   }
@@ -57,17 +58,16 @@ export default function PasswordPage() {
               />
             ))}
 
-            <button
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className="
-                font-sans text-lg font-semibold w-full h-15 rounded-full bg-[#D89593] py-3 text-white
-                transition-all active:scale-[.98]
-                disabled:opacity-60 disabled:cursor-not-allowed
-              "
+              variant="primary"
+              loading={isSubmitting}
+              className="w-full h-15 text-lg!"
             >
-              {isSubmitting ? FORGOT_PASSWORD_SUBMITTING_TEXT : FORGOT_PASSWORD_BUTTON_TEXT}
-            </button>
+              {isSubmitting
+                ? FORGOT_PASSWORD_SUBMITTING_TEXT
+                : FORGOT_PASSWORD_BUTTON_TEXT}
+            </Button>
           </Form>
         )}
       </Formik>

@@ -50,7 +50,10 @@ const ActionListCard = ({
   useEffect(() => {
     if (!categoriesOpen) return;
     function handle(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setCategoriesOpen(false);
       }
     }
@@ -60,6 +63,7 @@ const ActionListCard = ({
 
   return (
     <div
+      ref={dropdownRef}
       className="relative rounded-xl bg-white px-4 py-[22px] flex flex-col gap-5 justify-between"
       style={{ boxShadow: "0px 3px 8px 0px #0000003D" }}
     >
@@ -129,19 +133,23 @@ const ActionListCard = ({
               className="w-5 h-5 rounded-full object-cover shrink-0"
             />
           ) : (
-            <div className="w-[30px] h-[30px] rounded-full bg-[#8B9BA8] shrink-0" />
+            <div className="w-7.5 h- rounded-full bg-[#8B9BA8] shrink-0" />
           )}
           <span className="font-sans text-xl font-semibold text-[#101010] whitespace-nowrap">
             {authorName}
           </span>
-          <span className="font-sans text-xl text-[#101010] select-none">·</span>
-          <span className="font-sans text-xl font-semibold text-[#101010]">X</span>
+          <span className="font-sans text-xl text-[#101010] select-none">
+            ·
+          </span>
+          <span className="font-sans text-xl font-semibold text-[#101010]">
+            X
+          </span>
         </div>
       )}
 
       {/* Bottom row: category + dropdown trigger + next */}
       <div className="flex items-center justify-between">
-        <div ref={dropdownRef} className="relative flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
@@ -156,20 +164,23 @@ const ActionListCard = ({
           >
             +{categories.length}
           </button>
-
-          {categoriesOpen && (
-            <div className="absolute bottom-full left-0 mb-2 z-10 bg-white border border-[#DBDBDB] rounded-xl p-3 flex flex-wrap gap-2 shadow-sm w-64">
-              {categories.map((cat) => (
-                <span
-                  key={cat}
-                  className="border border-[#DBDBDB] rounded-lg px-3 py-1.5 font-sans text-sm font-semibold text-[#101010] whitespace-nowrap"
-                >
-                  {cat}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
+
+        {categoriesOpen && (
+          <div
+            className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
+            style={{ boxShadow: "0px 3px 8px 0px #0000003D", animation: "slide-up-fade 200ms ease-out" }}
+          >
+            {categories.map((cat) => (
+              <span
+                key={cat}
+                className="border border-[#DBDBDB] rounded-lg px-3 py-1.5 font-sans text-sm font-semibold text-[#101010] whitespace-nowrap"
+              >
+                {cat}
+              </span>
+            ))}
+          </div>
+        )}
 
         <button
           type="button"

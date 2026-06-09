@@ -1,6 +1,5 @@
-export { default as Image } from "next/image";
-export type { StaticImageData } from "next/image";
-export { default as Link } from "next/link";
+export { Image, Link } from "@/common/imports";
+export type { StaticImageData } from "@/common/imports";
 export { default as googleIconPng } from "@/assets/GoogleIcon.png";
 export {
   COVER_IMAGE_ALT,

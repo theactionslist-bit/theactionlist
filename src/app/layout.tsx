@@ -27,7 +27,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="en"
       className={`${goudyBookletter.variable} ${quicksand.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col max-w-480 mx-auto w-full">{children}</body>
     </html>
   );
 }

@@ -7,6 +7,7 @@ import {
   logoPng,
   FormikControl,
   OnboardingLayout,
+  Button,
   SIGNUP_HEADING,
   SIGNUP_DESCRIPTION,
   SIGNUP_BUTTON_TEXT,
@@ -27,7 +28,7 @@ interface SignupValues {
 export default function SignupPage() {
   function handleSubmit(
     values: SignupValues,
-    { setSubmitting }: FormikHelpers<SignupValues>
+    { setSubmitting }: FormikHelpers<SignupValues>,
   ) {
     setSubmitting(false);
   }
@@ -60,17 +61,14 @@ export default function SignupPage() {
               />
             ))}
 
-            <button
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className="
-                font-sans text-lg font-semibold w-full h-15 rounded-full bg-[#D89593] py-3 text-white
-                transition-all active:scale-[.98]
-                disabled:opacity-60 disabled:cursor-not-allowed
-              "
+              variant="primary"
+              loading={isSubmitting}
+              className="w-full h-15 text-lg!"
             >
               {isSubmitting ? SIGNUP_SUBMITTING_TEXT : SIGNUP_BUTTON_TEXT}
-            </button>
+            </Button>
           </Form>
         )}
       </Formik>

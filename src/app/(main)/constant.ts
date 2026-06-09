@@ -153,9 +153,9 @@ export const HOME_SELECTOR_FIELDS = [
     placeholder: "Suggested by anyone",
     options: [
       { value: "grove", label: "Andy Grove" },
-      { value: "sparks", label: "Chris Sparks" },
-      { value: "sparks", label: "Gurwinder Sparks" },
-      { value: "sparks", label: "Mel Sparks" },
+      { value: "chris-sparks", label: "Chris Sparks" },
+      { value: "gurwinder-sparks", label: "Gurwinder Sparks" },
+      { value: "mel-sparks", label: "Mel Sparks" },
       { value: "ravikant", label: "Naval Ravikant" },
       { value: "grant", label: "Adam Grant" },
       { value: "burkeman", label: "Oliver Burkeman" },
@@ -181,3 +181,5 @@ export const HOME_INITIAL_VALUES = {
   authors: "",
   frequencies: "",
 };
+
+export const HOME_ITEMS_PER_PAGE = 12;
