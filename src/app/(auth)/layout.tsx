@@ -3,5 +3,12 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
+    >
+      {children}
+    </div>
+  );
 }
