@@ -38,7 +38,7 @@ const HeaderSection = () => {
               {index > 0 && <div className="h-4 w-px bg-[#DBDBDB] shrink-0" />}
               <a
                 href={item.href}
-                className={`flex items-center gap-2 px-3 xl:px-5 text-[16px] text-[#101010] whitespace-nowrap ${pathname === item.href ? "font-bold" : "font-semibold"}`}
+                className={`flex items-center gap-2 px-3 xl:px-5 text-base text-[#101010] whitespace-nowrap ${pathname === item.href ? "font-bold" : "font-semibold"}`}
               >
                 <item.Icon className="shrink-0" />
                 {item.label}
@@ -88,7 +88,7 @@ const HeaderSection = () => {
               <a
                 key={item.label}
                 href={item.href}
-                className={`flex items-center gap-3 py-4 text-[16px] text-[#101010] border-b border-gray-100 last:border-b-0 ${pathname === item.href ? "font-bold" : "font-semibold"}`}
+                className={`flex items-center gap-3 py-4 text-base text-[#101010] border-b border-gray-100 last:border-b-0 ${pathname === item.href ? "font-bold" : "font-semibold"}`}
               >
                 <item.Icon className="shrink-0" />
                 {item.label}

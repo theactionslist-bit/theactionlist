@@ -20,7 +20,7 @@ const FooterSection = () => {
         <Logo aria-label={LOGO_ARIA_LABEL} role="img" />
       </Link>
       <div className="flex flex-col items-center gap-5 md:flex-row md:gap-10">
-        <div className="text-[#10101099] text-xl flex flex-col md:items-end items-start">
+        <div className="text-[#10101099] text-base md:text-lg lg:text-xl flex flex-col md:items-end items-start">
           <Link href={PRIVACY_POLICY_HREF}>{PRIVACY_POLICY_TEXT}</Link>
           <p>{COPYRIGHT_TEXT}</p>
         </div>

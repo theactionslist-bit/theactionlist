@@ -106,7 +106,7 @@ const ActionListCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-xl font-semibold text-[#101010]">
+          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-semibold text-[#101010]">
             <TimeIcon className="shrink-0" />
             {frequency}
           </span>
@@ -117,7 +117,7 @@ const ActionListCard = ({
       </div>
 
       {/* Main content text */}
-      <p className="font-display text-[28px] leading-snug text-[#101010]">
+      <p className="font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010]">
         {text}
       </p>
 
@@ -133,15 +133,15 @@ const ActionListCard = ({
               className="w-5 h-5 rounded-full object-cover shrink-0"
             />
           ) : (
-            <div className="w-7.5 h- rounded-full bg-[#8B9BA8] shrink-0" />
+            <div className="w-7.5 h-7.5 rounded-full bg-[#8B9BA8] shrink-0" />
           )}
-          <span className="font-sans text-xl font-semibold text-[#101010] whitespace-nowrap">
+          <span className="font-sans text-base md:text-xl font-semibold text-[#101010] whitespace-nowrap">
             {authorName}
           </span>
-          <span className="font-sans text-xl text-[#101010] select-none">
+          <span className="font-sans text-base md:text-xl text-[#101010] select-none">
             ·
           </span>
-          <span className="font-sans text-xl font-semibold text-[#101010]">
+          <span className="font-sans text-base md:text-xl font-semibold text-[#101010]">
             X
           </span>
         </div>
@@ -152,7 +152,7 @@ const ActionListCard = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-base md:text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
           >
             {category}
           </button>
@@ -160,7 +160,7 @@ const ActionListCard = ({
           <button
             type="button"
             onClick={() => setCategoriesOpen((v) => !v)}
-            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-base md:text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
           >
             +{categories.length}
           </button>

@@ -85,7 +85,7 @@ export function Modal({
 
         {/* Text */}
         {title && (
-          <h2 className="font-display text-2xl text-center text-[#101010] leading-snug">
+          <h2 className="font-display text-xl md:text-2xl text-center text-[#101010] leading-snug">
             {title}
           </h2>
         )}

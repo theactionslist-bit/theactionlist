@@ -77,10 +77,10 @@ const MyActions = () => {
             width={342}
             height={342}
           />
-          <h3 className="font-display text-[40px] font-norml text-[#101010] mt-3.5 mb-7.5">
+          <h3 className="font-display text-2xl md:text-3xl lg:text-[40px] font-normal text-[#101010] mt-3.5 mb-7.5">
             No saved actions yet
           </h3>
-          <p className="text-2xl leading-8 text-[#707070]">
+          <p className="text-lg md:text-xl lg:text-2xl leading-8 text-[#707070]">
             Collect what resonates with you.
           </p>
         </div>
