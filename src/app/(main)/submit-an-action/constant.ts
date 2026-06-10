@@ -48,3 +48,7 @@ export const SUBMIT_FORM_HOW_IT_WORKS_PLACEHOLDER =
 
 export const SUBMIT_FORM_ANYTHING_ELSE_PLACEHOLDER =
   "Who should we credit/source? Leave us your social media details, caveats or context.";
+
+export const SUBMIT_AN_ACTION_SEO_TITLE = "Submit an Action";
+export const SUBMIT_AN_ACTION_SEO_DESCRIPTION =
+  "Know an action that works? Share it with the community.";

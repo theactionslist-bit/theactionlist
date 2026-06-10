@@ -15,3 +15,6 @@ export const LOGIN_FIELDS = [
 export const LOGIN_SUCCESS_REDIRECT = "/";
 export const LOGIN_AUTH_CALLBACK_PATH = "/auth/callback";
 export const LOGIN_ERROR_CLASS = "text-sm font-medium text-red-600";
+export const LOGIN_SEO_TITLE = "Log In";
+export const LOGIN_SEO_DESCRIPTION =
+  "Sign in to The Action List to access your saved actions.";

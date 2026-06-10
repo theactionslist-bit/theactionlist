@@ -18,3 +18,7 @@ export const FORGOT_PASSWORD_ERROR_CLASS = "text-sm font-medium text-red-600";
 export const FORGOT_PASSWORD_SUCCESS_CLASS = "text-sm font-medium text-green-600";
 export const FORGOT_PASSWORD_AUTH_CALLBACK_PATH = "/auth/callback";
 export const FORGOT_PASSWORD_RESET_PATH = "/reset-password";
+
+export const FORGOT_PASSWORD_SEO_TITLE = "Forgot Password";
+export const FORGOT_PASSWORD_SEO_DESCRIPTION =
+  "Reset your password to regain access to your account.";

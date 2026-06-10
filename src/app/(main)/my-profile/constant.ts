@@ -19,3 +19,13 @@ export const PROFILE_HIDE_PASSWORD_ARIA = "Hide password";
 export const PROFILE_EYE_SIZE = 20;
 export const PROFILE_ERROR_CLASS = "text-sm font-medium text-red-600";
 export const PROFILE_LOGOUT_REDIRECT = "/login";
+export const PROFILE_INITIAL_VALUES = {
+  name: "Jhon Doe",
+  email: "jhon456@gmail.com",
+  newPassword: "",
+  confirmPassword: "",
+};
+
+export const MY_PROFILE_SEO_TITLE = "My Profile";
+export const MY_PROFILE_SEO_DESCRIPTION =
+  "Manage your account details and preferences.";

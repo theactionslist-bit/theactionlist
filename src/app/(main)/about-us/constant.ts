@@ -12,3 +12,7 @@ export const ABOUT_US_PARAGRAPHS = [
   "Take what works for you and most importantly, leave what doesn't.",
   "You've got this.",
 ];
+
+export const ABOUT_US_SEO_TITLE = "About Us";
+export const ABOUT_US_SEO_DESCRIPTION =
+  "Learn what The Action List is, why it exists, and how it can help you.";

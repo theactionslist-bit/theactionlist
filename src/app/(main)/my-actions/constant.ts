@@ -311,3 +311,6 @@ export const MY_ACTIONS_SAMPLE_CARDS = [
     categoryCount: 1,
   },
 ];
+export const MY_ACTIONS_SEO_TITLE = "My Actions";
+export const MY_ACTIONS_SEO_DESCRIPTION =
+  "Your personal collection of saved actions, ready when you are.";

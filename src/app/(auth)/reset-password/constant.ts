@@ -21,3 +21,7 @@ export const RESET_PASSWORD_FIELDS = [
 ];
 export const RESET_PASSWORD_SUCCESS_REDIRECT = "/";
 export const RESET_PASSWORD_ERROR_CLASS = "text-sm font-medium text-red-600";
+
+export const RESET_PASSWORD_SEO_TITLE = "Reset Password";
+export const RESET_PASSWORD_SEO_DESCRIPTION =
+  "Set a new password for your account.";
