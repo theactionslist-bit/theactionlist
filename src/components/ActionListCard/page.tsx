@@ -64,7 +64,7 @@ const ActionListCard = ({
   return (
     <div
       ref={dropdownRef}
-      className="relative rounded-xl bg-white px-4 py-[22px] flex flex-col gap-5 justify-between"
+      className="relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 justify-between"
       style={{ boxShadow: "0px 3px 8px 0px #0000003D" }}
     >
       {/* Top-right actions */}

@@ -45,7 +45,7 @@ export default function Home() {
         </Formik>
       </section>
       <div className="px-5 py-10 md:px-10 lg:px-15">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-[34px] mt-7.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8.5 mt-7.5">
           {visibleCards.map((card) => (
             <ActionListCard key={card.id} {...card} />
           ))}

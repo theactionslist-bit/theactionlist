@@ -160,7 +160,7 @@ export default function ActionListDetail() {
             {DETAIL_TAGS.map((tag, i) => (
               <span
                 key={i}
-                className="border-[#DBDBDB] border-2 rounded-[12px] px-5 py-3 font-sans text-xl text-[#101010]"
+                className="border-[#DBDBDB] border-2 rounded-xl px-5 py-3 font-sans text-xl text-[#101010]"
               >
                 {tag}
               </span>

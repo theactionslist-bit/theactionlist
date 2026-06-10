@@ -59,7 +59,7 @@ export function OnboardingLayout({
 
       {/* ── Right: form panel ── */}
       <div className="flex flex-1 items-center justify-center bg-white px-6 py-8 lg:px-8 xl:px-16">
-        <div className="w-full max-w-[560px]">
+        <div className="w-full max-w-140">
           {showBackButton && (
             <Link
               href={BACK_HREF}
