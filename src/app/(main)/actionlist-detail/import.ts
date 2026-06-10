@@ -11,6 +11,7 @@ export { default as TimeIcon } from "@/assets/ActionDetailCard/TimeIcon.svg";
 export { default as InstagramIcon } from "@/assets/footer/instagram.svg";
 export { default as TwitterIcon } from "@/assets/footer/twitter.svg";
 export { default as FacebookIcon } from "@/assets/footer/facebook.svg";
+export { default as XIcon } from "@/assets/footer/XLogo.svg";
 export { default as ActionDetailSource } from "@/assets/ActionDetailSource.jpg";
 export { default as SuggestedByIcon } from "@/assets/SuggestedByIcon.jpg";
 export { default as RelationActionVector } from "@/assets/RelationActionVector.svg";

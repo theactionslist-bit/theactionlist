@@ -8,7 +8,7 @@ import {
   ShareIcon,
   TimeIcon,
   InstagramIcon,
-  TwitterIcon,
+  XIcon,
   FacebookIcon,
   ActionDetailSource,
   SuggestedByIcon,
@@ -217,7 +217,7 @@ export default function ActionListDetail() {
                 className="hover:opacity-70 transition-opacity"
                 aria-label="Twitter"
               >
-                <TwitterIcon />
+                <XIcon className="[&_path]:fill-[#10101099]" />
               </button>
               <button
                 type="button"
