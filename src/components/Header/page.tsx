@@ -23,7 +23,10 @@ const HeaderSection = () => {
   const pathname = usePathname();
 
   return (
-    <div className="sticky top-0 z-20 bg-white">
+    <div
+      className="sticky top-0 z-20 bg-white"
+      style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
+    >
       <header className="w-full py-5 flex items-center px-5 lg:px-8 xl:px-15">
         <Link href="/" className="shrink-0">
           <Logo aria-label={LOGO_ARIA_LABEL} role="img" />

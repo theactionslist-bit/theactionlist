@@ -12,7 +12,10 @@ import {
 
 const FooterSection = () => {
   return (
-    <footer className="w-full flex flex-col items-center gap-6 px-5 py-8 border-t border-[#101010] md:flex-row md:justify-between md:items-center md:px-10 md:py-11.25 lg:px-15">
+    <footer
+      className="flex flex-col items-center gap-6 px-5 py-8 border-t border-[#101010] md:flex-row md:justify-between md:items-center md:px-10 md:py-11.25 lg:px-15 bg-white"
+      style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
+    >
       <Link href="/" className="shrink-0">
         <Logo aria-label={LOGO_ARIA_LABEL} role="img" />
       </Link>
