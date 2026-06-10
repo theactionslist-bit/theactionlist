@@ -11,3 +11,7 @@ export const LOGIN_FIELDS = [
   { control: "input" as const, type: "email", label: "Email", name: "email", autoComplete: "email" },
   { control: "input" as const, type: "password", label: "Password", name: "password", autoComplete: "current-password" },
 ];
+
+export const LOGIN_SUCCESS_REDIRECT = "/";
+export const LOGIN_AUTH_CALLBACK_PATH = "/auth/callback";
+export const LOGIN_ERROR_CLASS = "text-sm font-medium text-red-600";

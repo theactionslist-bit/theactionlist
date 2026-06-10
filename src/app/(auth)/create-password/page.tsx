@@ -4,55 +4,59 @@ import {
   Formik,
   Form,
   useRouter,
+  useSearchParams,
   loginCover,
   logoPng,
   Button,
   FormikControl,
   OnboardingLayout,
-  RESET_PASSWORD_HEADING,
-  RESET_PASSWORD_DESCRIPTION,
-  RESET_PASSWORD_BUTTON_TEXT,
-  RESET_PASSWORD_SUBMITTING_TEXT,
-  RESET_PASSWORD_INITIAL_VALUES,
-  RESET_PASSWORD_FIELDS,
-  RESET_PASSWORD_VALIDATION_SCHEMA,
-  RESET_PASSWORD_ERROR_CLASS,
-  handleResetPasswordSubmit,
+  CREATE_PASSWORD_HEADING,
+  CREATE_PASSWORD_DESCRIPTION,
+  CREATE_PASSWORD_BUTTON_TEXT,
+  CREATE_PASSWORD_SUBMITTING_TEXT,
+  CREATE_PASSWORD_INITIAL_VALUES,
+  CREATE_PASSWORD_FIELDS,
+  CREATE_PASSWORD_VALIDATION_SCHEMA,
+  CREATE_PASSWORD_ERROR_CLASS,
+  handleCreatePasswordSubmit,
 } from "./import";
 import type { FormikHelpers } from "./import";
 
-interface ResetPasswordValues {
+interface CreatePasswordValues {
   password: string;
   confirmPassword: string;
 }
 
-export default function ResetPasswordPage() {
+export default function CreatePasswordPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") ?? "";
+  const name = searchParams.get("name") ?? "";
 
   function handleSubmit(
-    values: ResetPasswordValues,
-    helpers: FormikHelpers<ResetPasswordValues>
+    values: CreatePasswordValues,
+    helpers: FormikHelpers<CreatePasswordValues>
   ) {
-    handleResetPasswordSubmit(values, helpers, router);
+    handleCreatePasswordSubmit(values, helpers, email, name, router);
   }
 
   return (
     <OnboardingLayout
-      heading={RESET_PASSWORD_HEADING}
-      description={RESET_PASSWORD_DESCRIPTION}
+      heading={CREATE_PASSWORD_HEADING}
+      description={CREATE_PASSWORD_DESCRIPTION}
       coverImage={loginCover}
       logo={logoPng}
       showGoogleButton={false}
       showBackButton={false}
     >
       <Formik
-        initialValues={RESET_PASSWORD_INITIAL_VALUES}
-        validationSchema={RESET_PASSWORD_VALIDATION_SCHEMA}
+        initialValues={CREATE_PASSWORD_INITIAL_VALUES}
+        validationSchema={CREATE_PASSWORD_VALIDATION_SCHEMA}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, status }) => (
           <Form noValidate className="flex flex-col gap-6">
-            {RESET_PASSWORD_FIELDS.map((field) => (
+            {CREATE_PASSWORD_FIELDS.map((field) => (
               <FormikControl
                 key={field.name}
                 control={field.control}
@@ -63,7 +67,7 @@ export default function ResetPasswordPage() {
               />
             ))}
 
-            {status && <p className={RESET_PASSWORD_ERROR_CLASS}>{status}</p>}
+            {status && <p className={CREATE_PASSWORD_ERROR_CLASS}>{status}</p>}
 
             <Button
               type="submit"
@@ -71,7 +75,7 @@ export default function ResetPasswordPage() {
               loading={isSubmitting}
               className="w-full h-15 text-lg!"
             >
-              {isSubmitting ? RESET_PASSWORD_SUBMITTING_TEXT : RESET_PASSWORD_BUTTON_TEXT}
+              {isSubmitting ? CREATE_PASSWORD_SUBMITTING_TEXT : CREATE_PASSWORD_BUTTON_TEXT}
             </Button>
           </Form>
         )}

@@ -11,17 +11,11 @@ export const PROFILE_UPDATING_TEXT = "Updating…";
 export const PROFILE_NAME_LABEL = "Name";
 export const PROFILE_EMAIL_LABEL = "Email";
 export const PROFILE_PASSWORD_LABEL = "Password";
-export const PROFILE_MOCK_NAME = "Jhon Doe";
-export const PROFILE_MOCK_EMAIL = "jhon456@gmail.com";
 export const PROFILE_MOCK_PASSWORD_DISPLAY = "••••••••••••••••••";
 export const PROFILE_NEW_PASSWORD_PLACEHOLDER = "New Password";
 export const PROFILE_CONFIRM_PASSWORD_PLACEHOLDER = "Confirm Password";
 export const PROFILE_SHOW_PASSWORD_ARIA = "Show password";
 export const PROFILE_HIDE_PASSWORD_ARIA = "Hide password";
 export const PROFILE_EYE_SIZE = 20;
-export const PROFILE_INITIAL_VALUES = {
-  name: "Jhon Doe",
-  email: "jhon456@gmail.com",
-  newPassword: "",
-  confirmPassword: "",
-};
+export const PROFILE_ERROR_CLASS = "text-sm font-medium text-red-600";
+export const PROFILE_LOGOUT_REDIRECT = "/login";

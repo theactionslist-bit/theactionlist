@@ -4,6 +4,7 @@ import {
   Formik,
   Form,
   Link,
+  useRouter,
   loginCover,
   logoPng,
   Button,
@@ -20,6 +21,10 @@ import {
   LOGIN_INITIAL_VALUES,
   LOGIN_FIELDS,
   LOGIN_VALIDATION_SCHEMA,
+  LOGIN_AUTH_CALLBACK_PATH,
+  LOGIN_ERROR_CLASS,
+  handleLoginSubmit,
+  handleGoogleSignIn,
 } from "./import";
 import type { FormikHelpers } from "./import";
 
@@ -29,11 +34,17 @@ interface LoginValues {
 }
 
 export default function LoginPage() {
+  const router = useRouter();
+
   function handleSubmit(
     values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>
+    helpers: FormikHelpers<LoginValues>
   ) {
-    setSubmitting(false);
+    handleLoginSubmit(values, helpers, router);
+  }
+
+  function handleGoogleLogin() {
+    handleGoogleSignIn(`${window.location.origin}${LOGIN_AUTH_CALLBACK_PATH}`);
   }
 
   return (
@@ -45,13 +56,14 @@ export default function LoginPage() {
       showGoogleButton={true}
       footerText={LOGIN_FOOTER_TEXT}
       footerLink={LOGIN_FOOTER_LINK}
+      onGoogleSignIn={handleGoogleLogin}
     >
       <Formik
         initialValues={LOGIN_INITIAL_VALUES}
         validationSchema={LOGIN_VALIDATION_SCHEMA}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, status }) => (
           <Form noValidate className="flex flex-col gap-6">
             {LOGIN_FIELDS.map((field) => (
               <FormikControl
@@ -72,6 +84,8 @@ export default function LoginPage() {
                 {LOGIN_FORGOT_PASSWORD_TEXT}
               </Link>
             </div>
+
+            {status && <p className={LOGIN_ERROR_CLASS}>{status}</p>}
 
             <Button
               type="submit"

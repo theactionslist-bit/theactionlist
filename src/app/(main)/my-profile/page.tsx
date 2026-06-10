@@ -2,6 +2,8 @@
 
 import {
   useState,
+  useEffect,
+  useRouter,
   Link,
   Image,
   Formik,
@@ -17,7 +19,9 @@ import {
   UpdateIcon,
   passwordEye,
   passwordHideEye,
-  FormikHelpers,
+  fetchUser,
+  handleProfileUpdate,
+  handleLogout,
   PROFILE_PAGE_HEADING,
   PROFILE_PAGE_SUBTITLE,
   EDIT_PAGE_HEADING,
@@ -31,22 +35,20 @@ import {
   PROFILE_NAME_LABEL,
   PROFILE_EMAIL_LABEL,
   PROFILE_PASSWORD_LABEL,
-  PROFILE_MOCK_NAME,
-  PROFILE_MOCK_EMAIL,
   PROFILE_MOCK_PASSWORD_DISPLAY,
   PROFILE_NEW_PASSWORD_PLACEHOLDER,
   PROFILE_CONFIRM_PASSWORD_PLACEHOLDER,
   PROFILE_SHOW_PASSWORD_ARIA,
   PROFILE_HIDE_PASSWORD_ARIA,
   PROFILE_EYE_SIZE,
-  PROFILE_INITIAL_VALUES,
+  PROFILE_ERROR_CLASS,
   PROFILE_VALIDATION_SCHEMA,
 } from "./import";
+import type { FormikHelpers, User } from "./import";
 
 const BACK_BUTTON_CLASS =
   "inline-flex items-center px-4 py-2 border-2 border-[#999999] rounded-full font-sans text-lg font-medium text-[#999999] hover:bg-gray-50 transition-colors";
 
-// Label column: fixed width only from sm breakpoint upward
 const LABEL_COL_CLASS = "flex items-center gap-3 sm:w-52 sm:shrink-0";
 
 interface ProfileValues {
@@ -57,27 +59,36 @@ interface ProfileValues {
 }
 
 export default function MyProfile() {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    fetchUser().then(({ data }) => {
+      setUser(data.user);
+      setLoading(false);
+    });
+  }, []);
+
   function handleSubmit(
-    _values: ProfileValues,
-    { setSubmitting }: FormikHelpers<ProfileValues>,
+    values: ProfileValues,
+    helpers: FormikHelpers<ProfileValues>
   ) {
-    setSubmitting(false);
-    setIsEditing(false);
+    handleProfileUpdate(values, helpers, setUser, () => setIsEditing(false));
   }
+
+  if (loading) return null;
 
   return (
     <div className="px-4 py-6 md:px-8 lg:px-15">
-      {/* Back — only visible in edit mode */}
       {isEditing && (
         <Link href="/" className={BACK_BUTTON_CLASS}>
           {PROFILE_BACK_TEXT}
         </Link>
       )}
 
-      {/* Header */}
       <div className="flex items-start justify-between mt-8 mb-8 gap-4">
         <div className="min-w-0">
           <h1 className="font-display text-3xl sm:text-4xl text-[#101010]">
@@ -99,12 +110,10 @@ export default function MyProfile() {
         )}
       </div>
 
-      {/* Card — view mode */}
       {!isEditing && (
         <>
           <div className="border border-[#DBDBDB] rounded-2xl">
             <div className="p-4 sm:p-7 lg:p-10">
-              {/* Name */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 pb-7.5">
                 <div className={LABEL_COL_CLASS}>
                   <ProfileNameIcon />
@@ -113,13 +122,12 @@ export default function MyProfile() {
                   </span>
                 </div>
                 <span className="font-sans text-lg font-semibold text-[#101010] break-all">
-                  {PROFILE_MOCK_NAME}
+                  {user?.user_metadata?.name ?? "—"}
                 </span>
               </div>
 
               <hr className="border-[#DBDBDB]" />
 
-              {/* Email */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 py-7.5">
                 <div className={LABEL_COL_CLASS}>
                   <ProfileEmailIcon />
@@ -128,13 +136,12 @@ export default function MyProfile() {
                   </span>
                 </div>
                 <span className="font-sans text-lg font-semibold text-[#101010] break-all min-w-0">
-                  {PROFILE_MOCK_EMAIL}
+                  {user?.email ?? "—"}
                 </span>
               </div>
 
               <hr className="border-[#DBDBDB]" />
 
-              {/* Password */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 pt-7.5">
                 <div className={LABEL_COL_CLASS}>
                   <ProfilePasswordIcon />
@@ -144,27 +151,17 @@ export default function MyProfile() {
                 </div>
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="font-sans text-lg font-semibold text-[#101010] tracking-widest overflow-hidden">
-                    {showPassword
-                      ? "MyPassword123"
-                      : PROFILE_MOCK_PASSWORD_DISPLAY}
+                    {PROFILE_MOCK_PASSWORD_DISPLAY}
                   </span>
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    aria-label={
-                      showPassword
-                        ? PROFILE_HIDE_PASSWORD_ARIA
-                        : PROFILE_SHOW_PASSWORD_ARIA
-                    }
+                    aria-label={showPassword ? PROFILE_HIDE_PASSWORD_ARIA : PROFILE_SHOW_PASSWORD_ARIA}
                     className="shrink-0 flex items-center justify-center hover:opacity-75 transition-opacity"
                   >
                     <Image
                       src={showPassword ? passwordHideEye : passwordEye}
-                      alt={
-                        showPassword
-                          ? PROFILE_HIDE_PASSWORD_ARIA
-                          : PROFILE_SHOW_PASSWORD_ARIA
-                      }
+                      alt={showPassword ? PROFILE_HIDE_PASSWORD_ARIA : PROFILE_SHOW_PASSWORD_ARIA}
                       width={PROFILE_EYE_SIZE}
                       height={PROFILE_EYE_SIZE}
                       className="pointer-events-none"
@@ -175,12 +172,12 @@ export default function MyProfile() {
             </div>
           </div>
 
-          {/* Logout */}
           <div className="mt-8 sm:mt-12">
             <Button
               variant="secondary"
               className="py-3.5"
               leftIcon={<LogoutIcon />}
+              onClick={() => handleLogout(router)}
             >
               {PROFILE_LOGOUT_TEXT}
             </Button>
@@ -188,18 +185,22 @@ export default function MyProfile() {
         </>
       )}
 
-      {/* Card — edit mode */}
       {isEditing && (
         <Formik
-          initialValues={PROFILE_INITIAL_VALUES}
+          initialValues={{
+            name: user?.user_metadata?.name ?? "",
+            email: user?.email ?? "",
+            newPassword: "",
+            confirmPassword: "",
+          }}
+          enableReinitialize
           validationSchema={PROFILE_VALIDATION_SCHEMA}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, status }) => (
             <Form noValidate>
               <div className="border border-[#DBDBDB] rounded-2xl">
                 <div className="p-4 sm:p-7 lg:p-10">
-                  {/* Name */}
                   <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-8 pb-7.5">
                     <div className={`${LABEL_COL_CLASS} sm:pt-4`}>
                       <ProfileNameIcon />
@@ -213,7 +214,7 @@ export default function MyProfile() {
                         name="name"
                         label=""
                         type="text"
-                        placeholder={PROFILE_MOCK_NAME}
+                        placeholder={PROFILE_NAME_LABEL}
                         className="text-xl! font-semibold! bg-[#F3F1EF]! placeholder:text-[#747474]!"
                       />
                     </div>
@@ -221,7 +222,6 @@ export default function MyProfile() {
 
                   <hr className="border-[#DBDBDB]" />
 
-                  {/* Email */}
                   <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-8 py-7.5">
                     <div className={`${LABEL_COL_CLASS} sm:pt-4`}>
                       <ProfileEmailIcon />
@@ -235,7 +235,7 @@ export default function MyProfile() {
                         name="email"
                         label=""
                         type="email"
-                        placeholder={PROFILE_MOCK_EMAIL}
+                        placeholder={PROFILE_EMAIL_LABEL}
                         className="text-xl! font-semibold! bg-[#F3F1EF]! placeholder:text-[#747474]!"
                       />
                     </div>
@@ -243,7 +243,6 @@ export default function MyProfile() {
 
                   <hr className="border-[#DBDBDB]" />
 
-                  {/* Password */}
                   <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-8 pt-7.5">
                     <div className={`${LABEL_COL_CLASS} sm:pt-4`}>
                       <ProfilePasswordIcon />
@@ -273,7 +272,8 @@ export default function MyProfile() {
                 </div>
               </div>
 
-              {/* Action buttons */}
+              {status && <p className={PROFILE_ERROR_CLASS}>{status}</p>}
+
               <div className="flex justify-end gap-3 sm:gap-4 mt-8">
                 <Button
                   variant="secondary"

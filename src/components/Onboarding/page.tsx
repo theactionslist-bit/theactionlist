@@ -31,6 +31,7 @@ interface OnboardingLayoutProps {
   footerLink?: FooterLink;
   showGoogleButton?: boolean;
   showBackButton?: boolean;
+  onGoogleSignIn?: () => void;
 }
 
 export function OnboardingLayout({
@@ -43,6 +44,7 @@ export function OnboardingLayout({
   footerLink,
   showGoogleButton = true,
   showBackButton = false,
+  onGoogleSignIn,
 }: OnboardingLayoutProps) {
   return (
     <div className="flex flex-1 min-h-screen">
@@ -102,6 +104,7 @@ export function OnboardingLayout({
             {showGoogleButton && (
               <button
                 type="button"
+                onClick={onGoogleSignIn}
                 className="
                   font-sans text-lg font-medium w-full h-15 flex items-center justify-center gap-3
                   rounded-full border-2 border-[#0A0A0A] bg-white py-3 text-[#0A0A0A]

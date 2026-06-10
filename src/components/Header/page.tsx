@@ -2,6 +2,7 @@
 
 import {
   useState,
+  useEffect,
   useRouter,
   usePathname,
   Link,
@@ -9,18 +10,38 @@ import {
   RxHamburgerMenu,
   RxCross2,
   Button,
+  createClient,
   NAV_ITEMS,
   LOGO_ARIA_LABEL,
   MENU_OPEN_ARIA_LABEL,
   MENU_CLOSE_ARIA_LABEL,
   LOGIN_BUTTON_TEXT,
+  PROFILE_BUTTON_TEXT,
   MY_PROFILE_HREF,
+  LOGIN_HREF,
 } from "./import";
+
+import type { User } from "@supabase/supabase-js";
 
 const HeaderSection = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const buttonText = user ? PROFILE_BUTTON_TEXT : LOGIN_BUTTON_TEXT;
+  const buttonHref = user ? MY_PROFILE_HREF : LOGIN_HREF;
 
   return (
     <div
@@ -51,9 +72,9 @@ const HeaderSection = () => {
           <Button
             variant="primary"
             className="ml-3.75 text-[18px]!"
-            onClick={() => router.push(MY_PROFILE_HREF)}
+            onClick={() => router.push(buttonHref)}
           >
-            {LOGIN_BUTTON_TEXT}
+            {buttonText}
           </Button>
         </div>
 
@@ -100,9 +121,9 @@ const HeaderSection = () => {
             <Button
               variant="primary"
               className="w-full text-[18px]!"
-              onClick={() => router.push(MY_PROFILE_HREF)}
+              onClick={() => router.push(buttonHref)}
             >
-              {LOGIN_BUTTON_TEXT}
+              {buttonText}
             </Button>
           </div>
         </div>

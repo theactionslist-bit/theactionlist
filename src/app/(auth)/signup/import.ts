@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export { Formik, Form } from "@/common/imports";
+export { Formik, Form, useRouter } from "@/common/imports";
 export type { FormikHelpers } from "@/common/imports";
 export { Button, FormikControl, loginCover, logoPng, OnboardingLayout } from "@/common/components";
 export {
@@ -12,7 +12,11 @@ export {
   SIGNUP_FOOTER_LINK,
   SIGNUP_INITIAL_VALUES,
   SIGNUP_FIELDS,
+  SIGNUP_EMAIL_EXISTS_ERROR,
+  SIGNUP_OTP_PATH,
+  SIGNUP_ERROR_CLASS,
 } from "./constant";
+export { handleSignupSubmit } from "./action";
 
 export const SIGNUP_VALIDATION_SCHEMA = Yup.object({
   name: Yup.string().required("Name is required"),

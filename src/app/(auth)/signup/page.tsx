@@ -3,6 +3,7 @@
 import {
   Formik,
   Form,
+  useRouter,
   loginCover,
   logoPng,
   FormikControl,
@@ -17,6 +18,8 @@ import {
   SIGNUP_INITIAL_VALUES,
   SIGNUP_FIELDS,
   SIGNUP_VALIDATION_SCHEMA,
+  SIGNUP_ERROR_CLASS,
+  handleSignupSubmit,
 } from "./import";
 import type { FormikHelpers } from "./import";
 
@@ -26,11 +29,13 @@ interface SignupValues {
 }
 
 export default function SignupPage() {
+  const router = useRouter();
+
   function handleSubmit(
     values: SignupValues,
-    { setSubmitting }: FormikHelpers<SignupValues>,
+    helpers: FormikHelpers<SignupValues>,
   ) {
-    setSubmitting(false);
+    handleSignupSubmit(values, helpers, router);
   }
 
   return (
@@ -48,7 +53,7 @@ export default function SignupPage() {
         validationSchema={SIGNUP_VALIDATION_SCHEMA}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, status }) => (
           <Form noValidate className="flex flex-col gap-6">
             {SIGNUP_FIELDS.map((field) => (
               <FormikControl
@@ -60,6 +65,8 @@ export default function SignupPage() {
                 autoComplete={field.autoComplete}
               />
             ))}
+
+            {status && <p className={SIGNUP_ERROR_CLASS}>{status}</p>}
 
             <Button
               type="submit"
