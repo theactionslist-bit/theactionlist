@@ -1,0 +1,9 @@
+export const COVER_IMAGE_ALT = "The Action List — get things done";
+export const LOGO_ALT = "The Action List";
+export const LOGO_WIDTH = 272;
+export const LOGO_HEIGHT = 61;
+export const GOOGLE_ICON_ALT = "Google";
+export const GOOGLE_ICON_SIZE = 30;
+export const BACK_BUTTON_TEXT = "< Back";
+export const BACK_HREF = "/login";
+export const CONTINUE_WITH_GOOGLE_TEXT = "Continue with Google";
