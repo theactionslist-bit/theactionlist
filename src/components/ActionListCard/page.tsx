@@ -4,9 +4,13 @@ import {
   useState,
   useRef,
   useEffect,
+  useRouter,
   Image,
+  Modal,
+  createClient,
   TimeIcon,
   HeartIcon,
+  HeartPinkIcon,
   ShareNetwork,
   RightArrow,
   CARD_DEFAULT_FREQUENCY,
@@ -16,6 +20,8 @@ import {
   CARD_FAVORITE_ARIA,
   CARD_SHARE_ARIA,
   CARD_NEXT_ARIA,
+  CARD_AUTH_MODAL_TITLE,
+  CARD_AUTH_MODAL_DESCRIPTION,
 } from "./import";
 
 interface ActionListCardProps {
@@ -29,6 +35,9 @@ interface ActionListCardProps {
   category?: string;
   categories?: string[];
   onNext?: () => void;
+  actionId?: string;
+  initialLiked?: boolean;
+  onUnfavorite?: () => void;
 }
 
 const ActionListCard = ({
@@ -42,10 +51,40 @@ const ActionListCard = ({
   category = CARD_DEFAULT_CATEGORY,
   categories = CARD_DEFAULT_CATEGORIES,
   onNext,
+  actionId,
+  initialLiked,
+  onUnfavorite,
 }: ActionListCardProps) => {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(initialLiked ?? false);
+  const [toggling, setToggling] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  async function handleHeartClick() {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      setModalOpen(true);
+      return;
+    }
+    if (!actionId) {
+      setLiked((v) => !v);
+      return;
+    }
+    setToggling(true);
+    const { error } = await supabase.rpc("toggle_favorite_action", {
+      p_action_id: actionId,
+    });
+    setToggling(false);
+    if (!error) {
+      setLiked((v) => !v);
+      if (liked) onUnfavorite?.();
+    }
+  }
 
   useEffect(() => {
     if (!categoriesOpen) return;
@@ -72,12 +111,11 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_FAVORITE_ARIA}
-          onClick={() => setLiked((v) => !v)}
-          className="text-[#101010] hover:opacity-60 transition-opacity"
+          onClick={handleHeartClick}
+          disabled={toggling}
+          className={`text-[#101010] hover:opacity-60 transition-opacity${toggling ? " opacity-50 cursor-not-allowed" : ""}`}
         >
-          <HeartIcon
-            className={`transition-colors ${liked ? "fill-[#D89593] stroke-[#D89593]" : "fill-none stroke-[#101010]"}`}
-          />
+          {liked ? <HeartPinkIcon /> : <HeartIcon />}
         </button>
         <button
           type="button"
@@ -106,11 +144,11 @@ const ActionListCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-semibold text-[#101010]">
+          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010]">
             <TimeIcon className="shrink-0" />
             {frequency}
           </span>
-          <span className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-sm font-semibold text-[#101010]">
+          <span className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010]">
             +{frequencyCount}
           </span>
         </div>
@@ -123,7 +161,7 @@ const ActionListCard = ({
 
       {/* Author chip */}
       {authorName && (
-        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-3.5 w-fit mt-4">
+        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit mt-4">
           {authorAvatarSrc ? (
             <Image
               src={authorAvatarSrc}
@@ -135,13 +173,13 @@ const ActionListCard = ({
           ) : (
             <div className="w-7.5 h-7.5 rounded-full bg-[#8B9BA8] shrink-0" />
           )}
-          <span className="font-sans text-base md:text-xl font-semibold text-[#101010] whitespace-nowrap">
+          <span className="font-sans text-base md:text-xl font-medium text-[#101010] whitespace-nowrap">
             {authorName}
           </span>
           <span className="font-sans text-base md:text-xl text-[#101010] select-none">
             ·
           </span>
-          <span className="font-sans text-base md:text-xl font-semibold text-[#101010]">
+          <span className="font-sans text-base md:text-xl font-medium text-[#101010]">
             X
           </span>
         </div>
@@ -152,7 +190,7 @@ const ActionListCard = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-base md:text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors"
           >
             {category}
           </button>
@@ -160,7 +198,7 @@ const ActionListCard = ({
           <button
             type="button"
             onClick={() => setCategoriesOpen((v) => !v)}
-            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-base md:text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors"
           >
             +{categories.length}
           </button>
@@ -169,7 +207,10 @@ const ActionListCard = ({
         {categoriesOpen && (
           <div
             className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
-            style={{ boxShadow: "0px 3px 8px 0px #0000003D", animation: "slide-up-fade 200ms ease-out" }}
+            style={{
+              boxShadow: "0px 3px 8px 0px #0000003D",
+              animation: "slide-up-fade 200ms ease-out",
+            }}
           >
             {categories.map((cat) => (
               <span
@@ -191,6 +232,13 @@ const ActionListCard = ({
           <RightArrow />
         </button>
       </div>
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={CARD_AUTH_MODAL_TITLE}
+        description={CARD_AUTH_MODAL_DESCRIPTION}
+        onPrimaryAction={() => router.push("/login")}
+      />
     </div>
   );
 };

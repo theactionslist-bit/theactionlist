@@ -11,6 +11,7 @@ import {
   RxCross2,
   Button,
   createClient,
+  Modal,
   NAV_ITEMS,
   LOGO_ARIA_LABEL,
   MENU_OPEN_ARIA_LABEL,
@@ -19,12 +20,16 @@ import {
   PROFILE_BUTTON_TEXT,
   MY_PROFILE_HREF,
   LOGIN_HREF,
+  MY_ACTIONS_HREF,
+  MY_ACTIONS_MODAL_TITLE,
+  MY_ACTIONS_MODAL_DESCRIPTION,
 } from "./import";
 
 import type { User } from "@supabase/supabase-js";
 
 const HeaderSection = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -59,6 +64,12 @@ const HeaderSection = () => {
               {index > 0 && <div className="h-4 w-px bg-[#DBDBDB] shrink-0" />}
               <a
                 href={item.href}
+                onClick={(e) => {
+                  if (item.href === MY_ACTIONS_HREF && !user) {
+                    e.preventDefault();
+                    setModalOpen(true);
+                  }
+                }}
                 className={`flex items-center gap-2 px-3 xl:px-5 text-base text-[#101010] whitespace-nowrap ${pathname === item.href ? "font-bold" : "font-semibold"}`}
               >
                 <item.Icon className="shrink-0" />
@@ -89,6 +100,14 @@ const HeaderSection = () => {
         </div>
       </header>
 
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={MY_ACTIONS_MODAL_TITLE}
+        description={MY_ACTIONS_MODAL_DESCRIPTION}
+        onPrimaryAction={() => router.push(LOGIN_HREF)}
+      />
+
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-white flex flex-col px-5 py-5">
           <div className="flex items-center justify-between">
@@ -109,6 +128,13 @@ const HeaderSection = () => {
               <a
                 key={item.label}
                 href={item.href}
+                onClick={(e) => {
+                  if (item.href === MY_ACTIONS_HREF && !user) {
+                    e.preventDefault();
+                    setMobileOpen(false);
+                    setModalOpen(true);
+                  }
+                }}
                 className={`flex items-center gap-3 py-4 text-base text-[#101010] border-b border-gray-100 last:border-b-0 ${pathname === item.href ? "font-bold" : "font-semibold"}`}
               >
                 <item.Icon className="shrink-0" />

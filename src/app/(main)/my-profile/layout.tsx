@@ -12,5 +12,7 @@ export default function MyProfileLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <div className="flex-1 flex flex-col justify-center">{children}</div>
+  );
 }

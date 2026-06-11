@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export { useState, useEffect, Link, Image, Formik, Form } from "@/common/imports";
+export { useState, useEffect, Formik, Form } from "@/common/imports";
 export { useRouter } from "@/common/imports";
 export type { FormikHelpers } from "@/common/imports";
 export type { User } from "@supabase/supabase-js";
@@ -13,9 +13,6 @@ export { default as CancelIcon } from "@/assets/MyProfile/CancelIcon.svg";
 export { default as LogoutIcon } from "@/assets/MyProfile/LogoutIcon.svg";
 export { default as UpdateIcon } from "@/assets/MyProfile/UpdateIcon.svg";
 export { default as EditIcon } from "@/assets/MyProfile/EditIcon.svg";
-
-export { default as passwordEye } from "@/assets/passwordEye.png";
-export { default as passwordHideEye } from "@/assets/passwordhideEye.png";
 
 export { fetchUser } from "./service";
 export { handleProfileUpdate, handleLogout } from "./action";
@@ -34,12 +31,8 @@ export {
   PROFILE_NAME_LABEL,
   PROFILE_EMAIL_LABEL,
   PROFILE_PASSWORD_LABEL,
-  PROFILE_MOCK_PASSWORD_DISPLAY,
   PROFILE_NEW_PASSWORD_PLACEHOLDER,
   PROFILE_CONFIRM_PASSWORD_PLACEHOLDER,
-  PROFILE_SHOW_PASSWORD_ARIA,
-  PROFILE_HIDE_PASSWORD_ARIA,
-  PROFILE_EYE_SIZE,
   PROFILE_ERROR_CLASS,
 } from "./constant";
 

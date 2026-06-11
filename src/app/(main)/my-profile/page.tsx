@@ -4,8 +4,6 @@ import {
   useState,
   useEffect,
   useRouter,
-  Link,
-  Image,
   Formik,
   Form,
   Button,
@@ -17,8 +15,6 @@ import {
   CancelIcon,
   LogoutIcon,
   UpdateIcon,
-  passwordEye,
-  passwordHideEye,
   fetchUser,
   handleProfileUpdate,
   handleLogout,
@@ -35,12 +31,8 @@ import {
   PROFILE_NAME_LABEL,
   PROFILE_EMAIL_LABEL,
   PROFILE_PASSWORD_LABEL,
-  PROFILE_MOCK_PASSWORD_DISPLAY,
   PROFILE_NEW_PASSWORD_PLACEHOLDER,
   PROFILE_CONFIRM_PASSWORD_PLACEHOLDER,
-  PROFILE_SHOW_PASSWORD_ARIA,
-  PROFILE_HIDE_PASSWORD_ARIA,
-  PROFILE_EYE_SIZE,
   PROFILE_ERROR_CLASS,
   PROFILE_VALIDATION_SCHEMA,
 } from "./import";
@@ -63,7 +55,6 @@ export default function MyProfile() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchUser().then(({ data }) => {
@@ -84,9 +75,13 @@ export default function MyProfile() {
   return (
     <div className="px-4 py-6 md:px-8 lg:px-15">
       {isEditing && (
-        <Link href="/" className={BACK_BUTTON_CLASS}>
+        <button
+          type="button"
+          className={BACK_BUTTON_CLASS}
+          onClick={() => setIsEditing(false)}
+        >
           {PROFILE_BACK_TEXT}
-        </Link>
+        </button>
       )}
 
       <div className="flex items-start justify-between mt-8 mb-8 gap-4">
@@ -128,7 +123,7 @@ export default function MyProfile() {
 
               <hr className="border-[#DBDBDB]" />
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 py-7.5">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 pt-7.5">
                 <div className={LABEL_COL_CLASS}>
                   <ProfileEmailIcon />
                   <span className="font-sans text-lg text-[#101010]">
@@ -138,36 +133,6 @@ export default function MyProfile() {
                 <span className="font-sans text-lg font-semibold text-[#101010] break-all min-w-0">
                   {user?.email ?? "—"}
                 </span>
-              </div>
-
-              <hr className="border-[#DBDBDB]" />
-
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 pt-7.5">
-                <div className={LABEL_COL_CLASS}>
-                  <ProfilePasswordIcon />
-                  <span className="font-sans text-lg text-[#101010]">
-                    {PROFILE_PASSWORD_LABEL}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="font-sans text-lg font-semibold text-[#101010] tracking-widest overflow-hidden">
-                    {PROFILE_MOCK_PASSWORD_DISPLAY}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? PROFILE_HIDE_PASSWORD_ARIA : PROFILE_SHOW_PASSWORD_ARIA}
-                    className="shrink-0 flex items-center justify-center hover:opacity-75 transition-opacity"
-                  >
-                    <Image
-                      src={showPassword ? passwordHideEye : passwordEye}
-                      alt={showPassword ? PROFILE_HIDE_PASSWORD_ARIA : PROFILE_SHOW_PASSWORD_ARIA}
-                      width={PROFILE_EYE_SIZE}
-                      height={PROFILE_EYE_SIZE}
-                      className="pointer-events-none"
-                    />
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -236,7 +201,8 @@ export default function MyProfile() {
                         label=""
                         type="email"
                         placeholder={PROFILE_EMAIL_LABEL}
-                        className="text-xl! font-semibold! bg-[#F3F1EF]! placeholder:text-[#747474]!"
+                        disabled
+                        className="text-xl! font-semibold! bg-[#F3F1EF]! placeholder:text-[#747474]! cursor-not-allowed! opacity-60!"
                       />
                     </div>
                   </div>

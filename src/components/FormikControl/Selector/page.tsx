@@ -6,6 +6,7 @@ import {
   useEffect,
   useField,
   DropDownArrow,
+  IoClose,
   SELECTOR_DEFAULT_PLACEHOLDER,
   SELECTOR_SEARCH_PLACEHOLDER,
   SELECTOR_NO_RESULTS_TEXT,
@@ -100,11 +101,26 @@ export default function Selector({
           )}
         </button>
 
-        <div
-          className={`absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        >
-          <DropDownArrow />
-        </div>
+        {selectedOption ? (
+          <button
+            type="button"
+            aria-label="Clear selection"
+            onClick={(e) => {
+              e.stopPropagation();
+              helpers.setValue("");
+              helpers.setTouched(true);
+            }}
+            className="absolute right-5 top-1/2 -translate-y-1/2 text-[#10101099] hover:text-[#101010] transition-colors"
+          >
+            <IoClose size={18} />
+          </button>
+        ) : (
+          <div
+            className={`absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          >
+            <DropDownArrow />
+          </div>
+        )}
       </div>
 
       {open && (
