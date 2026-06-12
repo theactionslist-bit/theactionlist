@@ -49,7 +49,7 @@ export default function Button({
         ...(fontSize && { fontSize }),
       }}
       className={clsx(
-        "inline-flex items-center justify-center gap-2 font-sans font-semibold transition-colors duration-200",
+        "inline-flex items-center justify-center gap-2 font-sans font-semibold transition-colors duration-200 cursor-pointer",
         !height && "h-12",
         !padding && "px-5",
         !borderRadius && "rounded-full",

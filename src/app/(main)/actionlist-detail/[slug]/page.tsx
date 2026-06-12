@@ -1,8 +1,9 @@
+import { notFound } from "next/navigation";
 import {
   buildMetadata,
   ACTIONLIST_DETAIL_SEO_FALLBACK_DESCRIPTION,
   ActionlistDetailContent,
-  fetchCardBySlug,
+  fetchPageDataCached,
 } from "./import";
 
 interface PageProps {
@@ -11,15 +12,18 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const card = await fetchCardBySlug(slug);
+  const data = await fetchPageDataCached(slug);
   return buildMetadata({
-    title: card?.title ?? "Action Detail",
+    title: data?.card.title ?? "Action Detail",
     description: ACTIONLIST_DETAIL_SEO_FALLBACK_DESCRIPTION,
     canonicalUrl: `https://theactionlist.com/actionlist-detail/${slug}`,
     ogType: "article",
   });
 }
 
-export default async function ActionlistDetailPage() {
-  return <ActionlistDetailContent />;
+export default async function ActionlistDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const data = await fetchPageDataCached(slug);
+  if (!data) notFound();
+  return <ActionlistDetailContent card={data.card} relatedCards={data.relatedCards} />;
 }

@@ -53,12 +53,12 @@ const HeaderSection = () => {
       className="sticky top-0 z-20 bg-white"
       style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
     >
-      <header className="max-w-[1440px] mx-auto py-5 flex items-center px-5 lg:px-8 xl:px-15">
+      <header className="max-w-360 mx-auto py-5 flex items-center px-5 lg:px-8 xl:px-15">
         <Link href="/" className="shrink-0">
           <Logo aria-label={LOGO_ARIA_LABEL} role="img" />
         </Link>
 
-        <nav className="hidden lg:flex flex-wrap flex-1 items-center justify-end">
+        <nav className="hidden lg:flex flex-nowrap flex-1 items-center justify-end">
           {NAV_ITEMS.map((item, index) => (
             <span key={item.label} className="flex items-center">
               {index > 0 && <div className="h-4 w-px bg-[#DBDBDB] shrink-0" />}
@@ -70,7 +70,7 @@ const HeaderSection = () => {
                     setModalOpen(true);
                   }
                 }}
-                className={`flex items-center gap-2 px-3 xl:px-5 text-base text-[#101010] whitespace-nowrap ${pathname === item.href ? "font-bold" : "font-semibold"}`}
+                className={`flex items-center gap-2 px-2 xl:px-5 text-sm xl:text-base text-[#101010] whitespace-nowrap ${pathname === item.href ? "font-bold" : "font-semibold"}`}
               >
                 <item.Icon className="shrink-0" />
                 {item.label}
@@ -82,7 +82,7 @@ const HeaderSection = () => {
         <div className="hidden lg:block shrink-0">
           <Button
             variant="primary"
-            className="ml-3.75 text-[18px]!"
+            className="xl:ml-3.75 xl:text-[18px]!"
             onClick={() => router.push(buttonHref)}
           >
             {buttonText}
@@ -131,9 +131,9 @@ const HeaderSection = () => {
                 onClick={(e) => {
                   if (item.href === MY_ACTIONS_HREF && !user) {
                     e.preventDefault();
-                    setMobileOpen(false);
                     setModalOpen(true);
                   }
+                  setMobileOpen(false);
                 }}
                 className={`flex items-center gap-3 py-4 text-base text-[#101010] border-b border-gray-100 last:border-b-0 ${pathname === item.href ? "font-bold" : "font-semibold"}`}
               >

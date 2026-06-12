@@ -7,7 +7,9 @@ import {
   useFormikContext,
   Formik,
   Form,
+  Button,
   BannerImage,
+  ShuffleVector,
   BannerSection,
   FormikControl,
   ActionListCard,
@@ -17,18 +19,23 @@ import {
   HOME_SELECTOR_FIELDS,
   HOME_INITIAL_VALUES,
   HOME_ITEMS_PER_PAGE,
-  fetchCards,
+  fetchAllCards,
   fetchFilters,
+  shuffleArray,
 } from "./import";
 import type { CardRow, FiltersData } from "./import";
 
 type FilterValues = typeof HOME_INITIAL_VALUES;
 
-function FilterObserver({ onFilterChange }: { onFilterChange: (v: FilterValues) => void }) {
+function FilterObserver({
+  onFilterChange,
+}: {
+  onFilterChange: (v: FilterValues) => void;
+}) {
   const { values } = useFormikContext<FilterValues>();
   useEffect(() => {
     onFilterChange(values);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.areas, values.authors, values.frequencies]);
   return null;
 }
@@ -36,8 +43,7 @@ function FilterObserver({ onFilterChange }: { onFilterChange: (v: FilterValues) 
 export default function Home() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [cards, setCards] = useState<CardRow[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
+  const [allCards, setAllCards] = useState<CardRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filtersData, setFiltersData] = useState<FiltersData>({
     areas: [],
@@ -58,44 +64,66 @@ export default function Home() {
     const aIds = filters.areas ? [filters.areas] : undefined;
     const auIds = filters.authors ? [filters.authors] : undefined;
     const fIds = filters.frequencies ? [filters.frequencies] : undefined;
-    fetchCards(currentPage, aIds, auIds, fIds).then(({ data, error }) => {
-      if (!error && data) {
-        setCards(data as CardRow[]);
-        if (data.length > 0) setTotalItems((data[0] as CardRow).total_count);
-        else setTotalItems(0);
-      }
+    fetchAllCards(aIds, auIds, fIds).then(({ data, error }) => {
+      if (!error && data) setAllCards(data as CardRow[]);
       setLoading(false);
     });
-  }, [currentPage, filters]);
+  }, [filters]);
+
+  const displayedCards = allCards.slice(
+    (currentPage - 1) * HOME_ITEMS_PER_PAGE,
+    currentPage * HOME_ITEMS_PER_PAGE,
+  );
+
+  function handleShuffle() {
+    setAllCards(shuffleArray(allCards));
+  }
 
   return (
     <>
-      <BannerSection heading={HOME_BANNER_HEADING} image={BannerImage} strikethroughWord={HOME_BANNER_STRIKETHROUGH_WORD} />
-      <section className="sticky top-(--header-height) z-10 bg-white px-5 py-10 md:px-10 lg:px-15">
+      <BannerSection
+        heading={HOME_BANNER_HEADING}
+        image={BannerImage}
+        strikethroughWord={HOME_BANNER_STRIKETHROUGH_WORD}
+      />
+      <section className="sticky top-(--header-height) z-10 bg-white px-5 pt-10 pb-3.75 md:px-10 lg:px-15">
         <Formik initialValues={HOME_INITIAL_VALUES} onSubmit={() => {}}>
           <>
-          <FilterObserver onFilterChange={(v) => {
-            setFilters(v);
-            setCurrentPage(1);
-          }} />
-          <Form>
-            <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-              {HOME_SELECTOR_FIELDS.map((field) => (
-                <div key={field.name} className="flex-1">
-                  <FormikControl
-                    control="select"
-                    name={field.name}
-                    options={filtersData[field.name as keyof FiltersData]}
-                    placeholder={field.placeholder}
-                  />
-                </div>
-              ))}
-            </div>
-          </Form>
+            <FilterObserver
+              onFilterChange={(v) => {
+                setFilters(v);
+                setCurrentPage(1);
+              }}
+            />
+            <Form>
+              <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+                {HOME_SELECTOR_FIELDS.map((field) => (
+                  <div key={field.name} className="flex-1">
+                    <FormikControl
+                      control="select"
+                      name={field.name}
+                      options={filtersData[field.name as keyof FiltersData]}
+                      placeholder={field.placeholder}
+                    />
+                  </div>
+                ))}
+              </div>
+            </Form>
           </>
         </Formik>
       </section>
-      <div className="px-5 py-10 md:px-10 lg:px-15">
+
+      <div className="flex justify-end items-center px-5 md:px-10 lg:px-15">
+        <Button
+          variant="primary"
+          className="py-1.5"
+          leftIcon={<ShuffleVector />}
+          onClick={handleShuffle}
+        >
+          Shuffle
+        </Button>
+      </div>
+      <div className="px-5 pb-10 md:px-10 lg:px-15">
         {loading ? (
           <div className="flex items-center justify-center py-24">
             <svg
@@ -121,10 +149,11 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8.5 mt-7.5">
-            {cards.map((card) => (
+            {displayedCards.map((card) => (
               <ActionListCard
                 key={card.id}
                 actionId={card.id}
+                slug={card.slug}
                 initialLiked={card.is_selected}
                 onNext={() => router.push(`/actionlist-detail/${card.slug}`)}
                 text={card.title}
@@ -141,7 +170,7 @@ export default function Home() {
 
         <div className="mt-10">
           <Pagination
-            totalItems={totalItems}
+            totalItems={allCards.length}
             itemsPerPage={HOME_ITEMS_PER_PAGE}
             currentPage={currentPage}
             onPageChange={(page) => {

@@ -86,3 +86,33 @@ export async function fetchCards(
     selected_frequency_ids: selectedFrequencyIds?.length ? selectedFrequencyIds : null,
   });
 }
+
+export async function fetchAllCards(
+  selectedAreaIds?: string[],
+  selectedAuthorIds?: string[],
+  selectedFrequencyIds?: string[],
+) {
+  const supabase = createClient();
+  const filters = {
+    selected_area_ids: selectedAreaIds?.length ? selectedAreaIds : null,
+    selected_author_ids: selectedAuthorIds?.length ? selectedAuthorIds : null,
+    selected_frequency_ids: selectedFrequencyIds?.length ? selectedFrequencyIds : null,
+  };
+
+  const countRes = await supabase.rpc("get_cards_data", {
+    page_size: 1,
+    page_number: 1,
+    ...filters,
+  });
+  if (countRes.error || !countRes.data?.length) {
+    return { data: null, error: countRes.error };
+  }
+  const totalCount: number = (countRes.data[0] as CardRow).total_count;
+  if (totalCount === 0) return { data: null, error: null };
+
+  return supabase.rpc("get_cards_data", {
+    page_size: totalCount,
+    page_number: 1,
+    ...filters,
+  });
+}

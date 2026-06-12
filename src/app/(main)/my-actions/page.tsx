@@ -137,6 +137,7 @@ const MyActions = () => {
               <ActionListCard
                 key={card.id}
                 actionId={card.id}
+                slug={card.slug}
                 initialLiked={true}
                 onNext={() => router.push(`/actionlist-detail/${card.slug}`)}
                 onUnfavorite={() => { setCurrentPage(1); setRefreshKey((k) => k + 1); }}

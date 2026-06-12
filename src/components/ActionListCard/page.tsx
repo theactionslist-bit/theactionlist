@@ -7,7 +7,7 @@ import {
   useRouter,
   Image,
   Modal,
-  createClient,
+  useFavoriteToggle,
   TimeIcon,
   HeartIcon,
   HeartPinkIcon,
@@ -17,12 +17,16 @@ import {
   CARD_DEFAULT_FREQUENCY_COUNT,
   CARD_DEFAULT_CATEGORY,
   CARD_DEFAULT_CATEGORIES,
+  useToast,
   CARD_FAVORITE_ARIA,
   CARD_SHARE_ARIA,
   CARD_NEXT_ARIA,
   CARD_AUTH_MODAL_TITLE,
   CARD_AUTH_MODAL_DESCRIPTION,
+  CARD_SHARE_TOAST_SUCCESS,
+  CARD_SHARE_TOAST_ERROR,
 } from "./import";
+
 
 interface ActionListCardProps {
   avatarColor?: string;
@@ -36,6 +40,7 @@ interface ActionListCardProps {
   categories?: string[];
   onNext?: () => void;
   actionId?: string;
+  slug?: string;
   initialLiked?: boolean;
   onUnfavorite?: () => void;
 }
@@ -52,37 +57,27 @@ const ActionListCard = ({
   categories = CARD_DEFAULT_CATEGORIES,
   onNext,
   actionId,
+  slug,
   initialLiked,
   onUnfavorite,
 }: ActionListCardProps) => {
-  const [liked, setLiked] = useState(initialLiked ?? false);
-  const [toggling, setToggling] = useState(false);
+  const { liked, toggling, modalOpen, setModalOpen, handleHeartClick } = useFavoriteToggle({
+    actionId,
+    initialLiked,
+    onUnfavorite,
+  });
+  const { addToast } = useToast();
   const [categoriesOpen, setCategoriesOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  async function handleHeartClick() {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      setModalOpen(true);
-      return;
-    }
-    if (!actionId) {
-      setLiked((v) => !v);
-      return;
-    }
-    setToggling(true);
-    const { error } = await supabase.rpc("toggle_favorite_action", {
-      p_action_id: actionId,
-    });
-    setToggling(false);
-    if (!error) {
-      setLiked((v) => !v);
-      if (liked) onUnfavorite?.();
+  async function handleShareClick() {
+    const actionUrl = `${window.location.origin}/actionlist-detail/${slug}`;
+    try {
+      await navigator.clipboard.writeText(actionUrl);
+      addToast(CARD_SHARE_TOAST_SUCCESS);
+    } catch {
+      addToast(CARD_SHARE_TOAST_ERROR);
     }
   }
 
@@ -103,7 +98,8 @@ const ActionListCard = ({
   return (
     <div
       ref={dropdownRef}
-      className="relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 justify-between"
+      onClick={onNext}
+      className="relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 justify-between cursor-pointer"
       style={{ boxShadow: "0px 3px 8px 0px #0000003D" }}
     >
       {/* Top-right actions */}
@@ -111,16 +107,17 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_FAVORITE_ARIA}
-          onClick={handleHeartClick}
+          onClick={(e) => { e.stopPropagation(); handleHeartClick(); }}
           disabled={toggling}
-          className={`text-[#101010] hover:opacity-60 transition-opacity${toggling ? " opacity-50 cursor-not-allowed" : ""}`}
+          className={`text-[#101010] hover:opacity-60 transition-opacity cursor-pointer ${toggling ? " opacity-50 cursor-not-allowed" : ""}`}
         >
           {liked ? <HeartPinkIcon /> : <HeartIcon />}
         </button>
         <button
           type="button"
           aria-label={CARD_SHARE_ARIA}
-          className="text-[#101010] hover:opacity-60 transition-opacity"
+          onClick={(e) => { e.stopPropagation(); handleShareClick(); }}
+          className="text-[#101010] hover:opacity-60 transition-opacity cursor-pointer"
         >
           <ShareNetwork />
         </button>
@@ -197,7 +194,7 @@ const ActionListCard = ({
 
           <button
             type="button"
-            onClick={() => setCategoriesOpen((v) => !v)}
+            onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
             className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors"
           >
             +{categories.length}
@@ -226,8 +223,7 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_NEXT_ARIA}
-          onClick={onNext}
-          className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0"
+          className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
         >
           <RightArrow />
         </button>

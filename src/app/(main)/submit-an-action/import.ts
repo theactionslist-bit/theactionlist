@@ -25,5 +25,5 @@ export const SUBMIT_FORM_VALIDATION_SCHEMA = Yup.object({
     .required("Email is required"),
   helpsWith: Yup.string().required("Please describe what your action helps with"),
   howItWorks: Yup.string().required("Please describe how it works"),
-  anythingElse: Yup.string(),
+  anythingElse: Yup.string().required("Please describe Anything else we should know?"),
 });

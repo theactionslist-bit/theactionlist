@@ -3,12 +3,11 @@
 import {
   useState,
   useRouter,
-  useParams,
   useEffect,
   Link,
   Image,
-  createClient,
   HeartIcon,
+  HeartPinkIcon,
   ShareIcon,
   TimeIcon,
   InstagramIcon,
@@ -18,8 +17,16 @@ import {
   SwiperType,
   SwiperSlide,
   Navigation,
+  Pagination,
   RelationActionVector,
   ActionListCard,
+  Modal,
+  useFavoriteToggle,
+  useToast,
+  DETAIL_AUTH_MODAL_TITLE,
+  DETAIL_AUTH_MODAL_DESCRIPTION,
+  DETAIL_SHARE_TOAST_SUCCESS,
+  DETAIL_SHARE_TOAST_ERROR,
   DETAIL_BACK_BUTTON_TEXT,
   DETAIL_SECTION_DETAILS,
   DETAIL_SECTION_SOURCES,
@@ -30,16 +37,17 @@ import {
   DETAIL_SHARE_ARIA,
   RELATED_ACTIONS_HEADING,
 } from "../import";
-import type { CardRow, AreaRow, AuthorRow, FrequencyRow, ActionDetail, ActionSourceRow, ActionProductRow } from "../import";
+import type { CardRow, ActionDetail } from "../import";
+
+interface ActionlistDetailContentProps {
+  card: ActionDetail;
+  relatedCards: CardRow[];
+}
 
 const BACK_BUTTON_CLASS =
   "inline-flex items-center px-4 py-2 border-2 border-[#999999] rounded-full font-sans text-lg font-medium text-[#999999] hover:bg-gray-50 transition-colors";
 
 const LABEL_CLASS = "font-display text-3xl text-black whitespace-nowrap";
-
-function slugify(title: string): string {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
 
 function getSocialIcon(url: string) {
   if (url.includes("instagram.com")) return <InstagramIcon />;
@@ -48,135 +56,28 @@ function getSocialIcon(url: string) {
   return null;
 }
 
-export default function ActionlistDetailContent() {
-  const params = useParams<{ slug: string }>();
-  const slug = params?.slug ?? "";
-
+export default function ActionlistDetailContent({ card: initialCard, relatedCards: initialRelatedCards }: ActionlistDetailContentProps) {
   const router = useRouter();
-  const [card, setCard] = useState<ActionDetail | null>(null);
-  const [relatedCards, setRelatedCards] = useState<CardRow[]>([]);
-  const [liked, setLiked] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-  const [fetchError, setFetchError] = useState(false);
+  const [card] = useState<ActionDetail>(initialCard);
+  const [relatedCards] = useState<CardRow[]>(initialRelatedCards);
+  const { liked, setLiked, toggling, modalOpen, setModalOpen, handleHeartClick } =
+    useFavoriteToggle({ actionId: card.id, initialLiked: false });
+  const { addToast } = useToast();
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
 
-  useEffect(() => {
-    if (!slug) return;
-    setLoading(true);
-    setNotFound(false);
-    setFetchError(false);
-
-    (async () => {
-      const supabase = createClient();
-
-      const { data: actionId, error: idErr } = await supabase.rpc("get_action_id_from_slug", { p_slug: slug });
-      if (idErr) { setFetchError(true); setLoading(false); return; }
-      if (!actionId) { setNotFound(true); setLoading(false); return; }
-
-      const aid = actionId as string;
-
-      const { data, error: detailErr } = await supabase
-        .from("actions")
-        .select(`
-          id,
-          serial_number,
-          title,
-          more_info,
-          hex_colour_code,
-          status,
-          products_used,
-          created_at,
-          updated_at,
-          action_authors(author:authors(id, name, social_links)),
-          action_frequencies(frequency:frequencies(id, name)),
-          action_areas(area:areas_of_inspiration(id, name)),
-          action_sources(source_type, link_url, title, description, image),
-          action_products(url, title, description, image)
-        `)
-        .eq("id", aid)
-        .single();
-
-      if (detailErr || !data) { setFetchError(true); setLoading(false); return; }
-
-      const d = data as any;
-      const areas: AreaRow[] = (d.action_areas as any[])?.map((r: any) => r.area).filter(Boolean) ?? [];
-      const authors: AuthorRow[] = (d.action_authors as any[])?.map((r: any) => r.author).filter(Boolean) ?? [];
-      const frequencies: FrequencyRow[] = (d.action_frequencies as any[])?.map((r: any) => r.frequency).filter(Boolean) ?? [];
-      const sources: ActionSourceRow[] = (d.action_sources as ActionSourceRow[]) ?? [];
-      const products: ActionProductRow[] = (d.action_products as ActionProductRow[]) ?? [];
-
-      setCard({
-        id: d.id, slug,
-        serial_number: d.serial_number ?? null,
-        title: d.title, more_info: d.more_info,
-        hex_colour_code: d.hex_colour_code,
-        status: d.status ?? null,
-        products_used: d.products_used ?? null,
-        created_at: d.created_at,
-        updated_at: d.updated_at ?? null,
-        is_selected: false, areas, authors, frequencies, sources, products,
-      });
-
-      const { data: relData } = await supabase.rpc("get_related_actions", {
-        area_ids: areas.map((a) => a.id),
-        author_ids: authors.map((a) => a.id),
-        exclude_id: aid,
-        limit_count: 10,
-      });
-
-      if (relData) {
-        setRelatedCards((relData as any[]).map((r) => ({
-          id: r.action.id,
-          slug: r.action.slug ?? (r.action.title ? slugify(r.action.title) : ""),
-          title: r.action.title,
-          hex_colour_code: r.action.hex_colour_code,
-          more_info: r.action.more_info ?? "",
-          created_at: r.action.created_at ?? "",
-          is_selected: false,
-          current_page: 0, total_count: 0, has_next: false, has_prev: false,
-          areas: r.areas_of_inspiration ?? [],
-          authors: r.authors ?? [],
-          frequencies: r.frequencies ?? [],
-        }) as CardRow));
-      }
-
-      setLoading(false);
-    })();
-  }, [slug]);
+  async function handleShareClick() {
+    const actionUrl = `${window.location.origin}/actionlist-detail/${card.slug}`;
+    try {
+      await navigator.clipboard.writeText(actionUrl);
+      addToast(DETAIL_SHARE_TOAST_SUCCESS);
+    } catch {
+      addToast(DETAIL_SHARE_TOAST_ERROR);
+    }
+  }
 
   useEffect(() => {
     if (card) setLiked(card.is_selected);
-  }, [card]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-40">
-        <svg className="animate-spin w-10 h-10 text-[#D89593]" viewBox="0 0 24 24" fill="none" aria-label="Loading">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-        </svg>
-      </div>
-    );
-  }
-
-  if (fetchError) {
-    return (
-      <div className="flex flex-col items-center justify-center py-40 gap-4">
-        <p className="font-sans text-xl text-[#101010]">Something went wrong. Please try again.</p>
-        <Link href="/" className={BACK_BUTTON_CLASS}>{DETAIL_BACK_BUTTON_TEXT}</Link>
-      </div>
-    );
-  }
-
-  if (notFound || !card) {
-    return (
-      <div className="flex flex-col items-center justify-center py-40 gap-4">
-        <p className="font-sans text-xl text-[#101010]">Action not found.</p>
-        <Link href="/" className={BACK_BUTTON_CLASS}>{DETAIL_BACK_BUTTON_TEXT}</Link>
-      </div>
-    );
-  }
+  }, [card, setLiked]);
 
   const author = card.authors[0];
   const socialLinks = author?.social_links ?? [];
@@ -192,19 +93,17 @@ export default function ActionlistDetailContent() {
           <button
             type="button"
             aria-label={DETAIL_HEART_ARIA}
-            onClick={() => setLiked((v) => !v)}
-            className="hover:opacity-70 transition-opacity"
+            onClick={handleHeartClick}
+            disabled={toggling}
+            className={`hover:opacity-70 transition-opacity cursor-pointer ${toggling ? " opacity-50 cursor-not-allowed" : ""}`}
           >
-            <HeartIcon
-              className={`transition-colors ${
-                liked ? "fill-[#D89593] stroke-[#D89593]" : "fill-none stroke-black"
-              }`}
-            />
+            {liked ? <HeartPinkIcon /> : <HeartIcon />}
           </button>
           <button
             type="button"
             aria-label={DETAIL_SHARE_ARIA}
-            className="hover:opacity-70 transition-opacity"
+            onClick={handleShareClick}
+            className="hover:opacity-70 transition-opacity cursor-pointer"
           >
             <ShareIcon className="stroke-black" />
           </button>
@@ -351,7 +250,7 @@ export default function ActionlistDetailContent() {
             type="button"
             aria-label="Previous"
             onClick={() => swiperInstance?.slidePrev()}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white hover:bg-gray-50 transition-colors"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white hover:bg-gray-50 transition-colors"
           >
             <RelationActionVector className="rotate-180" />
           </button>
@@ -359,9 +258,10 @@ export default function ActionlistDetailContent() {
           <div className="overflow-hidden">
             <Swiper
               className="related-actions-swiper"
-              modules={[Navigation]}
+              modules={[Navigation, Pagination]}
               onSwiper={setSwiperInstance}
               spaceBetween={24}
+              pagination={{ clickable: true }}
               slidesPerView={1}
               breakpoints={{
                 768: { slidesPerView: 2 },
@@ -380,6 +280,7 @@ export default function ActionlistDetailContent() {
                     category={item.areas[0]?.name}
                     categories={item.areas.map((a) => a.name)}
                     actionId={item.id}
+                    slug={item.slug}
                     onNext={() => router.push(`/actionlist-detail/${item.slug}`)}
                   />
                 </SwiperSlide>
@@ -391,12 +292,19 @@ export default function ActionlistDetailContent() {
             type="button"
             aria-label="Next"
             onClick={() => swiperInstance?.slideNext()}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white hover:bg-gray-50 transition-colors"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white hover:bg-gray-50 transition-colors"
           >
             <RelationActionVector />
           </button>
         </div>
       </div>
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={DETAIL_AUTH_MODAL_TITLE}
+        description={DETAIL_AUTH_MODAL_DESCRIPTION}
+        onPrimaryAction={() => router.push("/login")}
+      />
     </div>
   );
 }

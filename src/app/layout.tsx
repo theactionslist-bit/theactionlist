@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Goudy_Bookletter_1911, Quicksand } from "next/font/google";
+import { ToastProvider } from "@/context/ToastContext";
 import "./globals.css";
 
 const goudyBookletter = Goudy_Bookletter_1911({
@@ -36,7 +37,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="en"
       className={`${goudyBookletter.variable} ${quicksand.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col max-w-360 mx-auto w-full bg-white">{children}</body>
+      <body className="min-h-full flex flex-col max-w-360 mx-auto w-full bg-white">
+        <ToastProvider>{children}</ToastProvider>
+      </body>
     </html>
   );
 }

@@ -1,4 +1,6 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
+import type { CardRow } from "@/app/(main)/service";
 
 export interface AreaRow {
   id: string;
@@ -48,6 +50,43 @@ export interface ActionDetail {
   frequencies: FrequencyRow[];
   sources: ActionSourceRow[];
   products: ActionProductRow[];
+}
+
+function slugify(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export async function fetchRelatedCards(
+  areaIds: string[],
+  authorIds: string[],
+  excludeId: string,
+): Promise<CardRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("get_related_actions", {
+    area_ids: areaIds,
+    author_ids: authorIds,
+    exclude_id: excludeId,
+    limit_count: 10,
+  });
+  if (!data) return [];
+  return (data as any[]).map((r) => ({
+    id: r.action.id,
+    slug: r.action.slug ?? (r.action.title ? slugify(r.action.title) : ""),
+    title: r.action.title,
+    hex_colour_code: r.action.hex_colour_code,
+    more_info: r.action.more_info ?? "",
+    created_at: r.action.created_at ?? "",
+    is_selected: false,
+    current_page: 0, total_count: 0, has_next: false, has_prev: false,
+    areas: r.areas_of_inspiration ?? [],
+    authors: r.authors ?? [],
+    frequencies: r.frequencies ?? [],
+  }) as CardRow);
+}
+
+export interface ActionDetailPageData {
+  card: ActionDetail;
+  relatedCards: CardRow[];
 }
 
 export async function fetchCardBySlug(slug: string): Promise<ActionDetail | null> {
@@ -100,3 +139,16 @@ export async function fetchCardBySlug(slug: string): Promise<ActionDetail | null
     products: (d.action_products as ActionProductRow[]) ?? [],
   };
 }
+
+async function fetchPageData(slug: string): Promise<ActionDetailPageData | null> {
+  const card = await fetchCardBySlug(slug);
+  if (!card) return null;
+  const relatedCards = await fetchRelatedCards(
+    card.areas.map((a) => a.id),
+    card.authors.map((a) => a.id),
+    card.id,
+  );
+  return { card, relatedCards };
+}
+
+export const fetchPageDataCached = cache(fetchPageData);

@@ -48,7 +48,12 @@ export const DETAIL_AUTHOR_NAME = "Peter Thornton";
 export const DETAIL_AUTHOR_AVATAR_COLOR = "#888888";
 
 export const DETAIL_HEART_ARIA = "Save to favourites";
+export const DETAIL_AUTH_MODAL_TITLE = "Save this action for later";
+export const DETAIL_AUTH_MODAL_DESCRIPTION =
+  "Create a free account to build your personal action list, save favourites, and come back anytime.";
 export const DETAIL_SHARE_ARIA = "Share this action";
+export const DETAIL_SHARE_TOAST_SUCCESS = "Link copied successfully!";
+export const DETAIL_SHARE_TOAST_ERROR = "Failed to copy link.";
 export const DETAIL_STAR_CHAR = "★";
 
 export const RELATED_ACTIONS_HEADING = "Related Action";
