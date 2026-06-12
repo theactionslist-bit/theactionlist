@@ -19,6 +19,7 @@ import {
   Navigation,
   Pagination,
   RelationActionVector,
+  IoGlobeOutline,
   ActionListCard,
   Modal,
   useFavoriteToggle,
@@ -49,11 +50,97 @@ const BACK_BUTTON_CLASS =
 
 const LABEL_CLASS = "font-display text-3xl text-black whitespace-nowrap";
 
+interface VideoInfo {
+  type: "youtube" | "vimeo" | "direct";
+  embedUrl: string;
+  thumbnailUrl?: string;
+}
+
+function getVideoInfo(url: string): VideoInfo | null {
+  const ytMatch = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+  );
+  if (ytMatch) {
+    const videoId = ytMatch[1];
+    return {
+      type: "youtube",
+      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`,
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+    };
+  }
+
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) {
+    return {
+      type: "vimeo",
+      embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`,
+    };
+  }
+
+  if (/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url)) {
+    return { type: "direct", embedUrl: url };
+  }
+
+  return null;
+}
+
+function VideoEmbed({ url, title }: { url: string; title: string }) {
+  const [playing, setPlaying] = useState(false);
+  const info = getVideoInfo(url);
+  if (!info) return null;
+
+  if (info.type === "direct") {
+    return (
+      <video src={info.embedUrl} controls className="w-full h-48 bg-black" />
+    );
+  }
+
+  if (playing) {
+    return (
+      <iframe
+        src={info.embedUrl}
+        title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="w-full h-48 border-0"
+      />
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setPlaying(true)}
+      aria-label={`Play ${title}`}
+      className="relative w-full h-48 overflow-hidden group block"
+    >
+      {info.thumbnailUrl ? (
+        <Image src={info.thumbnailUrl} alt={title} fill className="object-cover" />
+      ) : (
+        <div className="w-full h-full bg-[#1a1a1a]" />
+      )}
+      <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors">
+        <svg
+          viewBox="0 0 68 48"
+          className="w-16 h-11 drop-shadow-md group-hover:scale-105 transition-transform"
+          aria-hidden="true"
+        >
+          <path
+            d="M66.5 7.5a8.5 8.5 0 0 0-6-6C55.8 0 34 0 34 0S12.2 0 7.5 1.5a8.5 8.5 0 0 0-6 6C0 12.2 0 24 0 24s0 11.8 1.5 16.5a8.5 8.5 0 0 0 6 6C12.2 48 34 48 34 48s21.8 0 26.5-1.5a8.5 8.5 0 0 0 6-6C68 35.8 68 24 68 24s0-11.8-1.5-16.5z"
+            fill="#FF0000"
+          />
+          <path d="M27 34l18-10-18-10v20z" fill="#fff" />
+        </svg>
+      </div>
+    </button>
+  );
+}
+
 function getSocialIcon(url: string) {
   if (url.includes("instagram.com")) return <InstagramIcon />;
   if (url.includes("twitter.com") || url.includes("x.com")) return <XIcon className="[&_path]:fill-[#10101099]" />;
   if (url.includes("facebook.com")) return <FacebookIcon />;
-  return null;
+  return <IoGlobeOutline size={24} color="#6B6A69" />;
 }
 
 export default function ActionlistDetailContent({ card: initialCard, relatedCards: initialRelatedCards }: ActionlistDetailContentProps) {
@@ -138,25 +225,49 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
           <section className="contents">
             <h3 className={LABEL_CLASS}>{DETAIL_SECTION_SOURCES}</h3>
             <div className="flex flex-wrap gap-4">
-              {card.sources.map((source, i) => (
-                <a
-                  key={i}
-                  href={source.link_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-83.5 border border-[#DBDBDB] rounded-xl overflow-hidden flex flex-col hover:opacity-80 transition-opacity"
-                >
-                  {source.image && (
-                    <div className="relative w-full h-48 shrink-0">
-                      <Image src={source.image} alt={source.title} fill className="object-cover p-4" />
+              {card.sources.map((source, i) => {
+                const videoInfo = getVideoInfo(source.link_url);
+                if (videoInfo) {
+                  return (
+                    <div
+                      key={i}
+                      className="w-83.5 border border-[#DBDBDB] rounded-xl overflow-hidden flex flex-col"
+                    >
+                      <VideoEmbed url={source.link_url} title={source.title} />
+                      <div className="p-4 flex flex-col gap-2">
+                        <a
+                          href={source.link_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:opacity-80 transition-opacity"
+                        >
+                          <p className="font-sans font-semibold text-xl text-black">{source.title}</p>
+                        </a>
+                        <p className="font-sans text-base text-[#363636] leading-7">{source.description}</p>
+                      </div>
                     </div>
-                  )}
-                  <div className="p-4 flex flex-col gap-2">
-                    <p className="font-sans font-semibold text-xl text-black">{source.title}</p>
-                    <p className="font-sans text-base text-[#363636] leading-7">{source.description}</p>
-                  </div>
-                </a>
-              ))}
+                  );
+                }
+                return (
+                  <a
+                    key={i}
+                    href={source.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-83.5 border border-[#DBDBDB] rounded-xl overflow-hidden flex flex-col hover:opacity-80 transition-opacity"
+                  >
+                    {source.image && (
+                      <div className="relative w-full h-48 shrink-0">
+                        <Image src={source.image} alt={source.title} fill className="object-cover p-4" />
+                      </div>
+                    )}
+                    <div className="p-4 flex flex-col gap-2">
+                      <p className="font-sans font-semibold text-xl text-black">{source.title}</p>
+                      <p className="font-sans text-base text-[#363636] leading-7">{source.description}</p>
+                    </div>
+                  </a>
+                );
+              })}
             </div>
           </section>
         )}
@@ -209,28 +320,28 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                 href={`/?author_name=${encodeURIComponent(author.name)}`}
                 className="inline-flex items-center gap-2 bg-[#EFEFEF] rounded-md px-4 py-2 hover:opacity-70 transition-opacity"
               >
-                <div className="w-7.5 h-7.5 rounded-full bg-[#8B9BA8] shrink-0" />
+                <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
+                  <span className="font-sans text-xs font-semibold text-white leading-none">
+                    {author.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
                 <span className="font-sans text-base font-semibold text-[#4B5563]">
                   {author.name}
                 </span>
               </Link>
               {socialLinks.length > 0 && (
                 <div className="flex items-center gap-5">
-                  {socialLinks.map((url: string) => {
-                    const icon = getSocialIcon(url);
-                    if (!icon) return null;
-                    return (
-                      <a
-                        key={url}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:opacity-70 transition-opacity"
-                      >
-                        {icon}
-                      </a>
-                    );
-                  })}
+                  {socialLinks.map((url: string) => (
+                    <a
+                      key={url}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:opacity-70 transition-opacity"
+                    >
+                      {getSocialIcon(url)}
+                    </a>
+                  ))}
                 </div>
               )}
             </div>

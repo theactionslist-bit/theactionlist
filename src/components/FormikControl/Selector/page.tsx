@@ -86,12 +86,14 @@ export default function Selector({
                 ? "border-red-400"
                 : open
                   ? "border-[#D89593] bg-white"
-                  : "border-[#DBDBDB]"
+                  : selectedOption
+                    ? "border-[#D89593]"
+                    : "border-[#DBDBDB]"
             }
           `}
         >
           {selectedOption ? (
-            <span className="xl:text-[26px] text-xl font-semibold text-[#101010]">
+            <span className="xl:text-[24px] text-xl font-semibold text-[#D89593]">
               {selectedOption.label}
             </span>
           ) : (
@@ -112,7 +114,7 @@ export default function Selector({
             }}
             className="absolute right-5 top-1/2 -translate-y-1/2 text-[#10101099] hover:text-[#101010] transition-colors bg-[#cccccc42] border border-[#DBDBDB] p-1 rounded-full"
           >
-            <IoClose size={18} color="black"/>
+            <IoClose size={18} color="black" />
           </button>
         ) : (
           <div

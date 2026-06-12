@@ -19,6 +19,7 @@ export { default as InstagramIcon } from "@/assets/footer/instagram.svg";
 export { default as FacebookIcon } from "@/assets/footer/facebook.svg";
 export { default as XIcon } from "@/assets/footer/XLogo.svg";
 export { default as RelationActionVector } from "@/assets/RelationActionVector.svg";
+export { IoGlobeOutline } from "react-icons/io5";
 export {
   DETAIL_BACK_BUTTON_TEXT,
   DETAIL_SECTION_DETAILS,

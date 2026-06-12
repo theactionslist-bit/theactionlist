@@ -4,11 +4,12 @@ import {
   createPortal,
   Image,
   Button,
+  useState,
+  useEffect,
   modalImagePng,
-  MODAL_DEFAULT_PRIMARY_TEXT,
-  MODAL_DEFAULT_SECONDARY_TEXT,
+  MODAL_CLOSE_ARIA,
 } from "./import";
-import type { StaticImageData } from "./import";
+import type { StaticImageData, ReactNode } from "./import";
 
 interface ModalProps {
   isOpen: boolean;
@@ -16,11 +17,13 @@ interface ModalProps {
   title?: string;
   description?: string;
   image?: StaticImageData | string;
+  customIcon?: ReactNode;
   primaryButtonText?: string;
   secondaryButtonText?: string;
   onPrimaryAction?: () => void;
   onSecondaryAction?: () => void;
   closeOnOverlayClick?: boolean;
+  showCloseButton?: boolean;
 }
 
 export function Modal({
@@ -29,14 +32,19 @@ export function Modal({
   title,
   description,
   image = modalImagePng,
-  primaryButtonText = MODAL_DEFAULT_PRIMARY_TEXT,
-  secondaryButtonText = MODAL_DEFAULT_SECONDARY_TEXT,
+  customIcon,
+  primaryButtonText,
+  secondaryButtonText,
   onPrimaryAction,
   onSecondaryAction,
   closeOnOverlayClick = true,
+  showCloseButton = false,
 }: ModalProps) {
 
-  if (!isOpen || typeof document === "undefined") return null;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!isOpen || !mounted) return null;
 
   function handlePrimary() {
     onPrimaryAction?.();
@@ -61,15 +69,27 @@ export function Modal({
         className="relative bg-white w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl rounded-2xl shadow-xl flex flex-col items-center gap-4 sm:gap-5 px-6 pt-8 pb-10 sm:p-10 md:p-12 animate-[modal-scale-in_0.25s_ease-out]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Image */}
+        {showCloseButton && (
+          <button
+            aria-label={MODAL_CLOSE_ARIA}
+            onClick={onClose}
+            className="absolute top-4 right-4 text-2xl text-[#101010] hover:opacity-60 transition-opacity leading-none"
+          >
+            ×
+          </button>
+        )}
+
+        {/* Icon / Image */}
         <div>
-          <Image
-            src={image}
-            alt={title ?? "Modal image"}
-            width={170}
-            height={170}
-            className="w-28 h-28 sm:w-36 sm:h-36 md:w-42.5 md:h-42.5"
-          />
+          {customIcon ?? (
+            <Image
+              src={image}
+              alt={title ?? "Modal image"}
+              width={170}
+              height={170}
+              className="w-28 h-28 sm:w-36 sm:h-36 md:w-42.5 md:h-42.5"
+            />
+          )}
         </div>
 
         {/* Text */}
@@ -85,14 +105,20 @@ export function Modal({
         )}
 
         {/* Buttons */}
-        <div className="flex gap-3 mt-1 w-full sm:w-auto justify-center">
-          <Button variant="secondary" onClick={handleSecondary} className="border-[#0A0A0A]! text-[#0A0A0A]! flex-1 sm:flex-none">
-            {secondaryButtonText}
-          </Button>
-          <Button variant="primary" onClick={handlePrimary} className="flex-1 sm:flex-none">
-            {primaryButtonText}
-          </Button>
-        </div>
+        {(primaryButtonText || secondaryButtonText) && (
+          <div className="flex gap-3 mt-1 w-full sm:w-auto justify-center">
+            {secondaryButtonText && (
+              <Button variant="secondary" onClick={handleSecondary} className="border-[#0A0A0A]! text-[#0A0A0A]! flex-1 sm:flex-none">
+                {secondaryButtonText}
+              </Button>
+            )}
+            {primaryButtonText && (
+              <Button variant="primary" onClick={handlePrimary} className="flex-1 sm:flex-none">
+                {primaryButtonText}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>,
     document.body,

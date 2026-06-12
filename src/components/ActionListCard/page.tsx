@@ -99,7 +99,7 @@ const ActionListCard = ({
     <div
       ref={dropdownRef}
       onClick={onNext}
-      className="relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 justify-between cursor-pointer"
+      className="relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 h-full cursor-pointer"
       style={{ boxShadow: "0px 3px 8px 0px #0000003D" }}
     >
       {/* Top-right actions */}
@@ -152,13 +152,13 @@ const ActionListCard = ({
       </div>
 
       {/* Main content text */}
-      <p className="font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010]">
+      <p className="flex-1 font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010]">
         {text}
       </p>
 
       {/* Author chip */}
       {authorName && (
-        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit mt-4">
+        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit">
           {authorAvatarSrc ? (
             <Image
               src={authorAvatarSrc}
@@ -168,7 +168,11 @@ const ActionListCard = ({
               className="w-5 h-5 rounded-full object-cover shrink-0"
             />
           ) : (
-            <div className="w-7.5 h-7.5 rounded-full bg-[#8B9BA8] shrink-0" />
+            <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
+              <span className="font-sans text-xs font-semibold text-white leading-none">
+                {authorName?.charAt(0).toUpperCase()}
+              </span>
+            </div>
           )}
           <span className="font-sans text-base md:text-xl font-medium text-[#101010] whitespace-nowrap">
             {authorName}
@@ -195,7 +199,7 @@ const ActionListCard = ({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
-            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
           >
             +{categories.length}
           </button>

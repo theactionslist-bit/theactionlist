@@ -1,3 +1,5 @@
+
+// Use 'Fisher-Yates' for virtually every use case in this codebase. It's O(n), unbiased, and a one-liner to implement.
 export function shuffleArray<T>(arr: T[]): T[] {
   const result = [...arr];
   for (let i = result.length - 1; i > 0; i--) {
