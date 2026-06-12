@@ -6,7 +6,7 @@ export type { ReactNode, MouseEventHandler } from "react";
 export { default as Image } from "next/image";
 export type { StaticImageData } from "next/image";
 export { default as Link } from "next/link";
-export { useRouter, usePathname, useParams } from "next/navigation";
+export { useRouter, usePathname, useParams, useSearchParams } from "next/navigation";
 
 // Formik
 export { Formik, Form, useField, useFormikContext } from "formik";

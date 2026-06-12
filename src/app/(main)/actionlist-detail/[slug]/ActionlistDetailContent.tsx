@@ -167,12 +167,13 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             <h3 className={LABEL_CLASS}>{DETAIL_SECTION_HELPS}</h3>
             <div className="flex flex-wrap gap-3">
               {card.areas.map((area) => (
-                <span
+                <Link
                   key={area.id}
-                  className="border-[#DBDBDB] border-2 rounded-xl px-5 py-2.5 font-sans text-xl text-[#101010]"
+                  href={`/?area_of_inspiration=${encodeURIComponent(area.name)}`}
+                  className="border-[#DBDBDB] border-2 rounded-xl px-5 py-2.5 font-sans text-xl text-[#101010] hover:opacity-70 transition-opacity"
                 >
                   {area.name}
-                </span>
+                </Link>
               ))}
             </div>
           </section>
@@ -184,15 +185,16 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             <h3 className={LABEL_CLASS}>{DETAIL_SECTION_BEST_TIME}</h3>
             <div className="flex flex-wrap gap-6">
               {card.frequencies.map((freq) => (
-                <div
+                <Link
                   key={freq.id}
-                  className="flex items-center gap-2 border border-[#DBDBDB] px-4 py-2.5 rounded-lg"
+                  href={`/?best_time_to_try=${encodeURIComponent(freq.name)}`}
+                  className="flex items-center gap-2 border border-[#DBDBDB] px-4 py-2.5 rounded-lg hover:opacity-70 transition-opacity"
                 >
                   <div className="w-8 h-8 flex items-center justify-center shrink-0">
                     <TimeIcon />
                   </div>
                   <span className="font-sans text-xl font-semibold text-black">{freq.name}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
@@ -203,12 +205,15 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
           <section className="contents">
             <h3 className={LABEL_CLASS}>{DETAIL_SECTION_SUGGESTED}</h3>
             <div className="flex items-center gap-6 flex-wrap">
-              <div className="inline-flex items-center gap-2 bg-[#EFEFEF] rounded-md px-4 py-2">
+              <Link
+                href={`/?author_name=${encodeURIComponent(author.name)}`}
+                className="inline-flex items-center gap-2 bg-[#EFEFEF] rounded-md px-4 py-2 hover:opacity-70 transition-opacity"
+              >
                 <div className="w-7.5 h-7.5 rounded-full bg-[#8B9BA8] shrink-0" />
                 <span className="font-sans text-base font-semibold text-[#4B5563]">
                   {author.name}
                 </span>
-              </div>
+              </Link>
               {socialLinks.length > 0 && (
                 <div className="flex items-center gap-5">
                   {socialLinks.map((url: string) => {

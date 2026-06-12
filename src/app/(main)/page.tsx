@@ -3,7 +3,9 @@
 import {
   useState,
   useEffect,
+  useRef,
   useRouter,
+  useSearchParams,
   useFormikContext,
   Formik,
   Form,
@@ -29,10 +31,41 @@ type FilterValues = typeof HOME_INITIAL_VALUES;
 
 function FilterObserver({
   onFilterChange,
+  initAuthorId,
+  initAreaId,
+  initFrequencyId,
 }: {
   onFilterChange: (v: FilterValues) => void;
+  initAuthorId?: string;
+  initAreaId?: string;
+  initFrequencyId?: string;
 }) {
-  const { values } = useFormikContext<FilterValues>();
+  const { values, setFieldValue } = useFormikContext<FilterValues>();
+  const initAuthorAppliedRef = useRef(false);
+  const initAreaAppliedRef = useRef(false);
+  const initFrequencyAppliedRef = useRef(false);
+
+  useEffect(() => {
+    if (initAuthorId && !initAuthorAppliedRef.current) {
+      initAuthorAppliedRef.current = true;
+      setFieldValue("authors", initAuthorId);
+    }
+  }, [initAuthorId, setFieldValue]);
+
+  useEffect(() => {
+    if (initAreaId && !initAreaAppliedRef.current) {
+      initAreaAppliedRef.current = true;
+      setFieldValue("areas", initAreaId);
+    }
+  }, [initAreaId, setFieldValue]);
+
+  useEffect(() => {
+    if (initFrequencyId && !initFrequencyAppliedRef.current) {
+      initFrequencyAppliedRef.current = true;
+      setFieldValue("frequencies", initFrequencyId);
+    }
+  }, [initFrequencyId, setFieldValue]);
+
   useEffect(() => {
     onFilterChange(values);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,6 +75,10 @@ function FilterObserver({
 
 export default function Home() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const authorNameParam = searchParams.get("author_name");
+  const areaNameParam = searchParams.get("area_of_inspiration");
+  const frequencyNameParam = searchParams.get("best_time_to_try");
   const [currentPage, setCurrentPage] = useState(1);
   const [allCards, setAllCards] = useState<CardRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +88,15 @@ export default function Home() {
     frequencies: [],
   });
   const [filters, setFilters] = useState<FilterValues>(HOME_INITIAL_VALUES);
+  const [initAuthorId, setInitAuthorId] = useState<string | undefined>(undefined);
+  const [urlAuthorApplied, setUrlAuthorApplied] = useState(false);
+  const initResolvedRef = useRef(false);
+  const [initAreaId, setInitAreaId] = useState<string | undefined>(undefined);
+  const [urlAreaApplied, setUrlAreaApplied] = useState(false);
+  const areaInitResolvedRef = useRef(false);
+  const [initFrequencyId, setInitFrequencyId] = useState<string | undefined>(undefined);
+  const [urlFrequencyApplied, setUrlFrequencyApplied] = useState(false);
+  const frequencyInitResolvedRef = useRef(false);
 
   useEffect(() => {
     const aIds = filters.areas ? [filters.areas] : undefined;
@@ -60,14 +106,83 @@ export default function Home() {
   }, [filters]);
 
   useEffect(() => {
+    if (!authorNameParam || initResolvedRef.current || !filtersData.authors.length) return;
+    initResolvedRef.current = true;
+    const match = filtersData.authors.find(
+      (opt) => opt.label.toLowerCase() === authorNameParam.toLowerCase(),
+    );
+    if (match) setInitAuthorId(match.value);
+  }, [filtersData.authors, authorNameParam]);
+
+  // Mark URL param as applied only after filters.authors is actually set to the resolved ID
+  useEffect(() => {
+    if (initAuthorId && filters.authors === initAuthorId && !urlAuthorApplied) {
+      setUrlAuthorApplied(true);
+    }
+  }, [filters.authors, initAuthorId, urlAuthorApplied]);
+
+  // Once applied, clear URL param when the user removes the author filter
+  useEffect(() => {
+    if (!urlAuthorApplied || filters.authors !== "") return;
+    setUrlAuthorApplied(false);
+    router.replace("/", { scroll: false });
+  }, [filters.authors, urlAuthorApplied, router]);
+
+  useEffect(() => {
+    if (!areaNameParam || areaInitResolvedRef.current || !filtersData.areas.length) return;
+    areaInitResolvedRef.current = true;
+    const match = filtersData.areas.find(
+      (opt) => opt.label.toLowerCase() === areaNameParam.toLowerCase(),
+    );
+    if (match) setInitAreaId(match.value);
+  }, [filtersData.areas, areaNameParam]);
+
+  useEffect(() => {
+    if (initAreaId && filters.areas === initAreaId && !urlAreaApplied) {
+      setUrlAreaApplied(true);
+    }
+  }, [filters.areas, initAreaId, urlAreaApplied]);
+
+  useEffect(() => {
+    if (!urlAreaApplied || filters.areas !== "") return;
+    setUrlAreaApplied(false);
+    router.replace("/", { scroll: false });
+  }, [filters.areas, urlAreaApplied, router]);
+
+  useEffect(() => {
+    if (!frequencyNameParam || frequencyInitResolvedRef.current || !filtersData.frequencies.length) return;
+    frequencyInitResolvedRef.current = true;
+    const match = filtersData.frequencies.find(
+      (opt) => opt.label.toLowerCase() === frequencyNameParam.toLowerCase(),
+    );
+    if (match) setInitFrequencyId(match.value);
+  }, [filtersData.frequencies, frequencyNameParam]);
+
+  useEffect(() => {
+    if (initFrequencyId && filters.frequencies === initFrequencyId && !urlFrequencyApplied) {
+      setUrlFrequencyApplied(true);
+    }
+  }, [filters.frequencies, initFrequencyId, urlFrequencyApplied]);
+
+  useEffect(() => {
+    if (!urlFrequencyApplied || filters.frequencies !== "") return;
+    setUrlFrequencyApplied(false);
+    router.replace("/", { scroll: false });
+  }, [filters.frequencies, urlFrequencyApplied, router]);
+
+  useEffect(() => {
+    let ignored = false;
     setLoading(true);
     const aIds = filters.areas ? [filters.areas] : undefined;
     const auIds = filters.authors ? [filters.authors] : undefined;
     const fIds = filters.frequencies ? [filters.frequencies] : undefined;
     fetchAllCards(aIds, auIds, fIds).then(({ data, error }) => {
-      if (!error && data) setAllCards(data as CardRow[]);
-      setLoading(false);
+      if (!ignored) {
+        if (!error && data) setAllCards(data as CardRow[]);
+        setLoading(false);
+      }
     });
+    return () => { ignored = true; };
   }, [filters]);
 
   const displayedCards = allCards.slice(
@@ -94,6 +209,9 @@ export default function Home() {
                 setFilters(v);
                 setCurrentPage(1);
               }}
+              initAuthorId={initAuthorId}
+              initAreaId={initAreaId}
+              initFrequencyId={initFrequencyId}
             />
             <Form>
               <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
