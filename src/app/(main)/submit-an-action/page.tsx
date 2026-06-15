@@ -3,10 +3,13 @@
 import {
   Formik,
   Form,
+  useState,
   BannerImage,
   BannerSection,
   FormikControl,
   Button,
+  Modal,
+  BsCheck2,
   SUBMIT_ACTIONS_BANNER_HEADING,
   SUBMIT_FORM_SECTION_1,
   SUBMIT_FORM_SECTION_2,
@@ -19,6 +22,8 @@ import {
   SUBMIT_FORM_HOW_IT_WORKS_PLACEHOLDER,
   SUBMIT_FORM_ANYTHING_ELSE_PLACEHOLDER,
   SUBMIT_FORM_VALIDATION_SCHEMA,
+  SUCCESS_MODAL_TITLE,
+  SUCCESS_MODAL_DESCRIPTION,
 } from "./import";
 import type { FormikHelpers } from "./import";
 
@@ -31,11 +36,14 @@ interface SubmitActionValues {
 }
 
 const SubmitAnAction = () => {
+  const [showSuccessModal, setShowSuccessModal] = useState(true);
+
   function handleSubmit(
     _values: SubmitActionValues,
     { setSubmitting }: FormikHelpers<SubmitActionValues>
   ) {
     setSubmitting(false);
+    setShowSuccessModal(true);
   }
 
   return (
@@ -45,7 +53,7 @@ const SubmitAnAction = () => {
         image={BannerImage}
       />
 
-      <section className="px-4 py-10 md:px-8 lg:px-15 lg:w-3/4 max-w-full">
+      <section className="px-4 pb-10 pt-20 md:px-8 lg:px-15 lg:w-3/4 max-w-full">
         <Formik
           initialValues={SUBMIT_FORM_INITIAL_VALUES}
           validationSchema={SUBMIT_FORM_VALIDATION_SCHEMA}
@@ -109,6 +117,22 @@ const SubmitAnAction = () => {
           )}
         </Formik>
       </section>
+
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        customIcon={
+          <div className="flex items-center justify-center w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-[#D89593]/20 cursor-pointer">
+            <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#D89593]">
+              <BsCheck2 className="w-10 h-10 sm:w-12 sm:h-12 text-white cursor-pointer" />
+            </div>
+          </div>
+        }
+        title={SUCCESS_MODAL_TITLE}
+        description={SUCCESS_MODAL_DESCRIPTION}
+        showCloseButton={true}
+        closeOnOverlayClick={true}
+      />
     </>
   );
 };

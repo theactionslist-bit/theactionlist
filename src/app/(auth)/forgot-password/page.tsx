@@ -3,32 +3,53 @@
 import {
   Formik,
   Form,
+  useState,
   loginCover,
   logoPng,
+  Button,
   FormikControl,
   OnboardingLayout,
-  Button,
   FORGOT_PASSWORD_HEADING,
   FORGOT_PASSWORD_DESCRIPTION,
   FORGOT_PASSWORD_BUTTON_TEXT,
   FORGOT_PASSWORD_SUBMITTING_TEXT,
+  FORGOT_PASSWORD_SUCCESS_MESSAGE,
   FORGOT_PASSWORD_INITIAL_VALUES,
   FORGOT_PASSWORD_FIELDS,
   FORGOT_PASSWORD_VALIDATION_SCHEMA,
+  FORGOT_PASSWORD_ERROR_CLASS,
+  FORGOT_PASSWORD_SUCCESS_CLASS,
+  handleForgotPasswordSubmit,
 } from "./import";
 import type { FormikHelpers } from "./import";
 
 interface ForgotPasswordValues {
-  password: string;
-  confirmPassword: string;
+  email: string;
 }
 
-export default function PasswordPage() {
+export default function ForgotPasswordPage() {
+  const [sent, setSent] = useState(false);
+
   function handleSubmit(
     values: ForgotPasswordValues,
-    { setSubmitting }: FormikHelpers<ForgotPasswordValues>,
+    helpers: FormikHelpers<ForgotPasswordValues>
   ) {
-    setSubmitting(false);
+    handleForgotPasswordSubmit(values, helpers, () => setSent(true));
+  }
+
+  if (sent) {
+    return (
+      <OnboardingLayout
+        heading={FORGOT_PASSWORD_HEADING}
+        description={FORGOT_PASSWORD_DESCRIPTION}
+        coverImage={loginCover}
+        logo={logoPng}
+        showGoogleButton={false}
+        showBackButton={true}
+      >
+        <p className={FORGOT_PASSWORD_SUCCESS_CLASS}>{FORGOT_PASSWORD_SUCCESS_MESSAGE}</p>
+      </OnboardingLayout>
+    );
   }
 
   return (
@@ -45,7 +66,7 @@ export default function PasswordPage() {
         validationSchema={FORGOT_PASSWORD_VALIDATION_SCHEMA}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, status }) => (
           <Form noValidate className="flex flex-col gap-6">
             {FORGOT_PASSWORD_FIELDS.map((field) => (
               <FormikControl
@@ -58,15 +79,15 @@ export default function PasswordPage() {
               />
             ))}
 
+            {status && <p className={FORGOT_PASSWORD_ERROR_CLASS}>{status}</p>}
+
             <Button
               type="submit"
               variant="primary"
               loading={isSubmitting}
               className="w-full h-15 text-lg!"
             >
-              {isSubmitting
-                ? FORGOT_PASSWORD_SUBMITTING_TEXT
-                : FORGOT_PASSWORD_BUTTON_TEXT}
+              {isSubmitting ? FORGOT_PASSWORD_SUBMITTING_TEXT : FORGOT_PASSWORD_BUTTON_TEXT}
             </Button>
           </Form>
         )}

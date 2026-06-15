@@ -3,6 +3,7 @@
 import {
   Formik,
   Form,
+  useRouter,
   loginCover,
   logoPng,
   Button,
@@ -12,24 +13,27 @@ import {
   RESET_PASSWORD_DESCRIPTION,
   RESET_PASSWORD_BUTTON_TEXT,
   RESET_PASSWORD_SUBMITTING_TEXT,
-  RESET_PASSWORD_FOOTER_TEXT,
-  RESET_PASSWORD_FOOTER_LINK,
   RESET_PASSWORD_INITIAL_VALUES,
   RESET_PASSWORD_FIELDS,
   RESET_PASSWORD_VALIDATION_SCHEMA,
+  RESET_PASSWORD_ERROR_CLASS,
+  handleResetPasswordSubmit,
 } from "./import";
 import type { FormikHelpers } from "./import";
 
 interface ResetPasswordValues {
-  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 export default function ResetPasswordPage() {
+  const router = useRouter();
+
   function handleSubmit(
     values: ResetPasswordValues,
-    { setSubmitting }: FormikHelpers<ResetPasswordValues>
+    helpers: FormikHelpers<ResetPasswordValues>
   ) {
-    setSubmitting(false);
+    handleResetPasswordSubmit(values, helpers, router);
   }
 
   return (
@@ -40,15 +44,13 @@ export default function ResetPasswordPage() {
       logo={logoPng}
       showGoogleButton={false}
       showBackButton={false}
-      footerText={RESET_PASSWORD_FOOTER_TEXT}
-      footerLink={RESET_PASSWORD_FOOTER_LINK}
     >
       <Formik
         initialValues={RESET_PASSWORD_INITIAL_VALUES}
         validationSchema={RESET_PASSWORD_VALIDATION_SCHEMA}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, status }) => (
           <Form noValidate className="flex flex-col gap-6">
             {RESET_PASSWORD_FIELDS.map((field) => (
               <FormikControl
@@ -60,6 +62,8 @@ export default function ResetPasswordPage() {
                 autoComplete={field.autoComplete}
               />
             ))}
+
+            {status && <p className={RESET_PASSWORD_ERROR_CLASS}>{status}</p>}
 
             <Button
               type="submit"

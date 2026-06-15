@@ -15,13 +15,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #ffffff;
     --foreground: #ededed;
   }
 }
 
 html {
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -45,6 +46,11 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateX(calc(100% + 1rem)); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 /* Related Actions carousel — equal-height cards */
 .related-actions-swiper .swiper-wrapper {
   align-items: stretch;
@@ -53,11 +59,33 @@ body {
   height: auto;
   display: flex;
   flex-direction: column;
-  margin-right: 34px;
 }
 .related-actions-swiper .swiper-slide > div {
   flex: 1;
 }
 .swiper-wrapper {
   padding: 30px 0;
+}
+
+/* Pagination dots */
+.related-actions-swiper .swiper-pagination-bullet {
+  background: #DBDBDB;
+  opacity: 1;
+}
+.related-actions-swiper .swiper-pagination-bullet-active {
+  background: #D89593;
+}
+
+/* Hide dots on tablet+ */
+@media (min-width: 768px) {
+  .related-actions-swiper .swiper-pagination {
+    display: none;
+  }
+}
+
+/* Space for dots below cards on mobile */
+@media (max-width: 767px) {
+  .related-actions-swiper {
+    padding-bottom: 32px !important;
+  }
 }

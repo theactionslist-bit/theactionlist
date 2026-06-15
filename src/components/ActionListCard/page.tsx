@@ -4,19 +4,29 @@ import {
   useState,
   useRef,
   useEffect,
+  useRouter,
   Image,
+  Modal,
+  useFavoriteToggle,
   TimeIcon,
   HeartIcon,
+  HeartPinkIcon,
   ShareNetwork,
   RightArrow,
   CARD_DEFAULT_FREQUENCY,
   CARD_DEFAULT_FREQUENCY_COUNT,
   CARD_DEFAULT_CATEGORY,
   CARD_DEFAULT_CATEGORIES,
+  useToast,
   CARD_FAVORITE_ARIA,
   CARD_SHARE_ARIA,
   CARD_NEXT_ARIA,
+  CARD_AUTH_MODAL_TITLE,
+  CARD_AUTH_MODAL_DESCRIPTION,
+  CARD_SHARE_TOAST_SUCCESS,
+  CARD_SHARE_TOAST_ERROR,
 } from "./import";
+
 
 interface ActionListCardProps {
   avatarColor?: string;
@@ -29,6 +39,10 @@ interface ActionListCardProps {
   category?: string;
   categories?: string[];
   onNext?: () => void;
+  actionId?: string;
+  slug?: string;
+  initialLiked?: boolean;
+  onUnfavorite?: () => void;
 }
 
 const ActionListCard = ({
@@ -42,10 +56,30 @@ const ActionListCard = ({
   category = CARD_DEFAULT_CATEGORY,
   categories = CARD_DEFAULT_CATEGORIES,
   onNext,
+  actionId,
+  slug,
+  initialLiked,
+  onUnfavorite,
 }: ActionListCardProps) => {
-  const [liked, setLiked] = useState(false);
+  const { liked, toggling, modalOpen, setModalOpen, handleHeartClick } = useFavoriteToggle({
+    actionId,
+    initialLiked,
+    onUnfavorite,
+  });
+  const { addToast } = useToast();
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  async function handleShareClick() {
+    const actionUrl = `${window.location.origin}/actionlist-detail/${slug}`;
+    try {
+      await navigator.clipboard.writeText(actionUrl);
+      addToast(CARD_SHARE_TOAST_SUCCESS);
+    } catch {
+      addToast(CARD_SHARE_TOAST_ERROR);
+    }
+  }
 
   useEffect(() => {
     if (!categoriesOpen) return;
@@ -64,7 +98,8 @@ const ActionListCard = ({
   return (
     <div
       ref={dropdownRef}
-      className="relative rounded-xl bg-white px-4 py-[22px] flex flex-col gap-5 justify-between"
+      onClick={onNext}
+      className="relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 h-full cursor-pointer"
       style={{ boxShadow: "0px 3px 8px 0px #0000003D" }}
     >
       {/* Top-right actions */}
@@ -72,17 +107,17 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_FAVORITE_ARIA}
-          onClick={() => setLiked((v) => !v)}
-          className="text-[#101010] hover:opacity-60 transition-opacity"
+          onClick={(e) => { e.stopPropagation(); handleHeartClick(); }}
+          disabled={toggling}
+          className={`text-[#101010] hover:opacity-60 transition-opacity cursor-pointer ${toggling ? " opacity-50 cursor-not-allowed" : ""}`}
         >
-          <HeartIcon
-            className={`transition-colors ${liked ? "fill-[#D89593] stroke-[#D89593]" : "fill-none stroke-[#101010]"}`}
-          />
+          {liked ? <HeartPinkIcon /> : <HeartIcon />}
         </button>
         <button
           type="button"
           aria-label={CARD_SHARE_ARIA}
-          className="text-[#101010] hover:opacity-60 transition-opacity"
+          onClick={(e) => { e.stopPropagation(); handleShareClick(); }}
+          className="text-[#101010] hover:opacity-60 transition-opacity cursor-pointer"
         >
           <ShareNetwork />
         </button>
@@ -106,24 +141,24 @@ const ActionListCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-xl font-semibold text-[#101010]">
+          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010]">
             <TimeIcon className="shrink-0" />
             {frequency}
           </span>
-          <span className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-sm font-semibold text-[#101010]">
+          <span className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010]">
             +{frequencyCount}
           </span>
         </div>
       </div>
 
       {/* Main content text */}
-      <p className="font-display text-[28px] leading-snug text-[#101010]">
+      <p className="flex-1 font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010]">
         {text}
       </p>
 
       {/* Author chip */}
       {authorName && (
-        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-3.5 w-fit mt-4">
+        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit">
           {authorAvatarSrc ? (
             <Image
               src={authorAvatarSrc}
@@ -133,15 +168,19 @@ const ActionListCard = ({
               className="w-5 h-5 rounded-full object-cover shrink-0"
             />
           ) : (
-            <div className="w-7.5 h- rounded-full bg-[#8B9BA8] shrink-0" />
+            <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
+              <span className="font-sans text-xs font-semibold text-white leading-none">
+                {authorName?.charAt(0).toUpperCase()}
+              </span>
+            </div>
           )}
-          <span className="font-sans text-xl font-semibold text-[#101010] whitespace-nowrap">
+          <span className="font-sans text-base md:text-xl font-medium text-[#101010] whitespace-nowrap">
             {authorName}
           </span>
-          <span className="font-sans text-xl text-[#101010] select-none">
+          <span className="font-sans text-base md:text-xl text-[#101010] select-none">
             ·
           </span>
-          <span className="font-sans text-xl font-semibold text-[#101010]">
+          <span className="font-sans text-base md:text-xl font-medium text-[#101010]">
             X
           </span>
         </div>
@@ -152,15 +191,15 @@ const ActionListCard = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors"
           >
             {category}
           </button>
 
           <button
             type="button"
-            onClick={() => setCategoriesOpen((v) => !v)}
-            className="border border-[#DBDBDB] rounded-lg px-4 py-3.5 font-sans text-xl font-semibold text-[#101010] hover:bg-gray-50 transition-colors"
+            onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
+            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
           >
             +{categories.length}
           </button>
@@ -169,7 +208,10 @@ const ActionListCard = ({
         {categoriesOpen && (
           <div
             className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
-            style={{ boxShadow: "0px 3px 8px 0px #0000003D", animation: "slide-up-fade 200ms ease-out" }}
+            style={{
+              boxShadow: "0px 3px 8px 0px #0000003D",
+              animation: "slide-up-fade 200ms ease-out",
+            }}
           >
             {categories.map((cat) => (
               <span
@@ -185,12 +227,18 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_NEXT_ARIA}
-          onClick={onNext}
-          className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0"
+          className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
         >
           <RightArrow />
         </button>
       </div>
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={CARD_AUTH_MODAL_TITLE}
+        description={CARD_AUTH_MODAL_DESCRIPTION}
+        onPrimaryAction={() => router.push("/login")}
+      />
     </div>
   );
 };

@@ -12,7 +12,7 @@ import {
 
 const NewsletterSection = () => {
   return (
-    <div className="px-5 pt-7 pb-12 md:px-10 md:pb-12 lg:px-15 lg:pt-8 lg:pb-14">
+    <div id="newsletter" className="scroll-mt-(--header-height) px-5 pt-7 pb-12 md:px-10 md:pb-12 lg:px-15 lg:pt-8 lg:pb-14">
       <h1 className="font-display text-3xl md:text-4xl lg:text-[46px] pb-4 text-[#101010]">
         {NEWSLETTER_HEADING}
       </h1>

@@ -1,44 +1,9 @@
 export const MY_ACTIONS_BANNER_HEADING = "My Actions";
 
 export const MY_ACTIONS_SELECTOR_FIELDS = [
-  {
-    name: "areas",
-    placeholder: "Help me with everything",
-    // label: "Life Area",
-    options: [
-      { value: "health", label: "Health & Fitness" },
-      { value: "mind", label: "Mind & Focus" },
-      { value: "relationships", label: "Relationships" },
-      { value: "career", label: "Career & Work" },
-      { value: "finance", label: "Finance" },
-      { value: "creativity", label: "Creativity" },
-    ],
-  },
-  {
-    name: "authors",
-    placeholder: "Suggested by anyone",
-    options: [
-      { value: "grove", label: "Andy Grove" },
-      { value: "chris-sparks", label: "Chris Sparks" },
-      { value: "gurwinder-sparks", label: "Gurwinder Sparks" },
-      { value: "mel-sparks", label: "Mel Sparks" },
-      { value: "ravikant", label: "Naval Ravikant" },
-      { value: "grant", label: "Adam Grant" },
-      { value: "burkeman", label: "Oliver Burkeman" },
-      { value: "brogan", label: "Alex Brogan" },
-      { value: "puri", label: "Shaan Puri" },
-      { value: "clear", label: "James Clear" },
-    ],
-  },
-  {
-    name: "frequencies",
-    placeholder: "That I can do anytime",
-    options: [
-      { value: "easy", label: "Easy" },
-      { value: "moderate", label: "Moderate" },
-      { value: "challenging", label: "Challenging" },
-    ],
-  },
+  { name: "areas",       placeholder: "Help me with everything" },
+  { name: "authors",     placeholder: "Suggested by anyone" },
+  { name: "frequencies", placeholder: "That I can do anytime" },
 ];
 
 export const MY_ACTIONS_ITEMS_PER_PAGE = 12;
@@ -311,3 +276,6 @@ export const MY_ACTIONS_SAMPLE_CARDS = [
     categoryCount: 1,
   },
 ];
+export const MY_ACTIONS_SEO_TITLE = "My Actions";
+export const MY_ACTIONS_SEO_DESCRIPTION =
+  "Your personal collection of saved actions, ready when you are.";

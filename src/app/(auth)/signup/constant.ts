@@ -9,3 +9,11 @@ export const SIGNUP_FIELDS = [
   { control: "input" as const, type: "text", label: "Name", name: "name", autoComplete: "name" },
   { control: "input" as const, type: "email", label: "Email", name: "email", autoComplete: "email" },
 ];
+
+export const SIGNUP_EMAIL_EXISTS_ERROR =
+  "An account with this email already exists. Please log in instead.";
+export const SIGNUP_OTP_PATH = "/otp";
+export const SIGNUP_ERROR_CLASS = "text-sm font-medium text-red-600";
+export const SIGNUP_SEO_TITLE = "Sign Up";
+export const SIGNUP_SEO_DESCRIPTION =
+  "Create a free account and start building your personal action list.";

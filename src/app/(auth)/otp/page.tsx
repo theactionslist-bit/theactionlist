@@ -1,11 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
 import {
+  useState,
+  useRef,
+  useRouter,
+  useSearchParams,
   loginCover,
   logoPng,
   OnboardingLayout,
   Button,
+  Suspense,
   OTP_LENGTH,
   OTP_HEADING,
   OTP_DESCRIPTION,
@@ -13,16 +17,26 @@ import {
   OTP_VERIFYING_TEXT,
   OTP_RESEND_TEXT,
   OTP_RESENDING_TEXT,
+  OTP_ERROR_CLASS,
+  handleVerifyOtp,
+  handleResendSignupOtp,
 } from "./import";
 
-export default function OTPPage() {
+function OTPContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") ?? "";
+  const name = searchParams.get("name") ?? "";
+
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleOtpChange = (index: number, value: string): void => {
     if (!/^\d*$/.test(value)) return;
+    setError("");
 
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
@@ -48,22 +62,21 @@ export default function OTPPage() {
     if (otpValue.length !== OTP_LENGTH) return;
 
     setIsSubmitting(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } finally {
-      setIsSubmitting(false);
-    }
+    await handleVerifyOtp(email, otpValue, name, setError, router);
+    setIsSubmitting(false);
   };
 
   const handleResendOtp = async (): Promise<void> => {
     setResendLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setOtp(Array(OTP_LENGTH).fill(""));
-      inputRefs.current[0]?.focus();
-    } finally {
-      setResendLoading(false);
-    }
+    await handleResendSignupOtp(
+      email,
+      () => {
+        setOtp(Array(OTP_LENGTH).fill(""));
+        inputRefs.current[0]?.focus();
+      },
+      setError
+    );
+    setResendLoading(false);
   };
 
   return (
@@ -101,6 +114,8 @@ export default function OTPPage() {
           ))}
         </div>
 
+        {error && <p className={OTP_ERROR_CLASS}>{error}</p>}
+
         <Button
           type="submit"
           variant="primary"
@@ -127,5 +142,13 @@ export default function OTPPage() {
         </div>
       </form>
     </OnboardingLayout>
+  );
+}
+
+export default function OTPPage() {
+  return (
+    <Suspense>
+      <OTPContent />
+    </Suspense>
   );
 }

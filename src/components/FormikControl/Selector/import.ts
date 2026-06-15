@@ -1,5 +1,6 @@
 export { useState, useRef, useEffect, useField } from "@/common/imports";
 export { default as DropDownArrow } from "@/assets/DropDownArrow.svg";
+export { IoClose } from "react-icons/io5";
 export {
   SELECTOR_DEFAULT_PLACEHOLDER,
   SELECTOR_SEARCH_PLACEHOLDER,
