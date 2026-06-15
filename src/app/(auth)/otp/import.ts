@@ -1,4 +1,4 @@
-export { useState, useRef } from "@/common/imports";
+export { useState, useRef, Suspense } from "@/common/imports";
 export { useRouter, useSearchParams } from "next/navigation";
 export { loginCover, logoPng, OnboardingLayout, Button } from "@/common/components";
 export {

@@ -9,6 +9,7 @@ import {
   logoPng,
   OnboardingLayout,
   Button,
+  Suspense,
   OTP_LENGTH,
   OTP_HEADING,
   OTP_DESCRIPTION,
@@ -21,7 +22,7 @@ import {
   handleResendSignupOtp,
 } from "./import";
 
-export default function OTPPage() {
+function OTPContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
@@ -141,5 +142,13 @@ export default function OTPPage() {
         </div>
       </form>
     </OnboardingLayout>
+  );
+}
+
+export default function OTPPage() {
+  return (
+    <Suspense>
+      <OTPContent />
+    </Suspense>
   );
 }

@@ -1,5 +1,5 @@
 // React
-export { useState, useRef, useEffect } from "react";
+export { useState, useRef, useEffect, Suspense } from "react";
 export type { ReactNode, MouseEventHandler } from "react";
 
 // Next.js

@@ -6,6 +6,7 @@ import {
   useRef,
   useRouter,
   useSearchParams,
+  Suspense,
   useFormikContext,
   Formik,
   Form,
@@ -73,7 +74,7 @@ function FilterObserver({
   return null;
 }
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const authorNameParam = searchParams.get("author_name");
@@ -299,5 +300,13 @@ export default function Home() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
   );
 }

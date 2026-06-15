@@ -1,4 +1,4 @@
-export { useState, useEffect, useRef, useRouter, useSearchParams, Formik, Form, useFormikContext } from "@/common/imports";
+export { useState, useEffect, useRef, useRouter, useSearchParams, Suspense, Formik, Form, useFormikContext } from "@/common/imports";
 export { BannerSection, FormikControl, ActionListCard, Pagination, Button } from "@/common/components";
 export { default as BannerImage } from "@/assets/BannerImage.jpg";
 export { default as ShuffleVector } from "@/assets/ShuffleVector.svg";

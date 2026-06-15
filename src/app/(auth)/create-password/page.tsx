@@ -10,6 +10,7 @@ import {
   Button,
   FormikControl,
   OnboardingLayout,
+  Suspense,
   CREATE_PASSWORD_HEADING,
   CREATE_PASSWORD_DESCRIPTION,
   CREATE_PASSWORD_BUTTON_TEXT,
@@ -27,7 +28,7 @@ interface CreatePasswordValues {
   confirmPassword: string;
 }
 
-export default function CreatePasswordPage() {
+function CreatePasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
@@ -81,5 +82,13 @@ export default function CreatePasswordPage() {
         )}
       </Formik>
     </OnboardingLayout>
+  );
+}
+
+export default function CreatePasswordPage() {
+  return (
+    <Suspense>
+      <CreatePasswordForm />
+    </Suspense>
   );
 }
