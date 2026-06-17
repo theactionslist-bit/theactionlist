@@ -91,7 +91,7 @@ const HeaderSection = () => {
 
         <div className="flex-1 flex justify-end items-center lg:hidden">
           <button
-            className="p-2 text-[#101010]"
+            className="p-2 text-[#101010] cursor-pointer"
             onClick={() => setMobileOpen(true)}
             aria-label={MENU_OPEN_ARIA_LABEL}
           >
@@ -115,7 +115,7 @@ const HeaderSection = () => {
               <Logo aria-label={LOGO_ARIA_LABEL} role="img" />
             </Link>
             <button
-              className="p-2 text-[#101010]"
+              className="p-2 text-[#101010] cursor-pointer"
               onClick={() => setMobileOpen(false)}
               aria-label={MENU_CLOSE_ARIA_LABEL}
             >

@@ -150,7 +150,7 @@ export default function Selector({
                   <button
                     type="button"
                     onClick={() => selectOption(opt)}
-                    className={`w-full text-left px-4 py-3.5 font-sans xl:text-[26px] text-xl font-medium hover:bg-gray-50 transition-colors ${
+                    className={`w-full text-left px-4 py-3.5 font-sans xl:text-[26px] text-xl font-medium hover:bg-gray-50 transition-colors cursor-pointer ${
                       field.value === opt.value
                         ? "text-[#D89593] font-semibold"
                         : "text-[#101010]"

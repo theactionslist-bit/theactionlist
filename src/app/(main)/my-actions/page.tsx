@@ -61,7 +61,14 @@ const MyActions = () => {
       setTotalItems(data[0]?.total_count ?? 0);
       setCardsLoading(false);
     });
-  }, [currentPage, filters, refreshKey]);
+  }, [currentPage, refreshKey]);
+
+  const filteredCards = cards.filter((card) => {
+    if (filters.areas && !card.areas.some((a) => a.id === filters.areas)) return false;
+    if (filters.authors && !card.authors.some((a) => a.id === filters.authors)) return false;
+    if (filters.frequencies && !card.frequencies.some((f) => f.id === filters.frequencies)) return false;
+    return true;
+  });
 
   return (
     <>
@@ -116,7 +123,7 @@ const MyActions = () => {
               />
             </svg>
           </div>
-        ) : cards.length === 0 ? (
+        ) : filteredCards.length === 0 ? (
           <div className="flex flex-col justify-center items-center my-30">
             <Image
               src={NosavedImage}
@@ -133,7 +140,7 @@ const MyActions = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8.5 mt-7.5">
-            {cards.map((card) => (
+            {filteredCards.map((card) => (
               <ActionListCard
                 key={card.id}
                 actionId={card.id}
