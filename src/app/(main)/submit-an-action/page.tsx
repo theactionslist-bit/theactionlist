@@ -36,7 +36,7 @@ interface SubmitActionValues {
 }
 
 const SubmitAnAction = () => {
-  const [showSuccessModal, setShowSuccessModal] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   function handleSubmit(
     _values: SubmitActionValues,

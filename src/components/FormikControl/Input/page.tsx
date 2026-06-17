@@ -41,7 +41,7 @@ export default function Input({ label, type, className, ...props }: InputProps) 
           {...props}
           type={inputType}
           className={`
-            font-sans text-base w-full h-17
+            font-sans text-base w-full h-16.75
             rounded-xl border-2 bg-gray-50
             px-4 text-gray-900 placeholder:text-gray-400
             outline-none transition-all
