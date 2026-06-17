@@ -113,7 +113,7 @@ export default function Selector({
               helpers.setValue("");
               helpers.setTouched(true);
             }}
-            className="absolute right-5 top-1/2 -translate-y-1/2 text-[#10101099] hover:text-[#101010] transition-colors bg-[#cccccc42] border border-[#DBDBDB] p-1 rounded-full"
+            className="absolute right-5 top-1/2 -translate-y-1/2 text-[#10101099] hover:text-[#101010] transition-colors bg-[#cccccc42] border border-[#DBDBDB] p-1 rounded-full cursor-pointer"
           >
             <IoClose size={18} color="black" />
           </button>
