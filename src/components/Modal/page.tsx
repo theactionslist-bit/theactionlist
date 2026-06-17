@@ -8,6 +8,8 @@ import {
   useEffect,
   modalImagePng,
   MODAL_CLOSE_ARIA,
+  MODAL_DEFAULT_PRIMARY_TEXT,
+  MODAL_DEFAULT_SECONDARY_TEXT,
 } from "./import";
 import type { StaticImageData, ReactNode } from "./import";
 
@@ -33,8 +35,8 @@ export function Modal({
   description,
   image = modalImagePng,
   customIcon,
-  primaryButtonText,
-  secondaryButtonText,
+  primaryButtonText = MODAL_DEFAULT_PRIMARY_TEXT,
+  secondaryButtonText = MODAL_DEFAULT_SECONDARY_TEXT,
   onPrimaryAction,
   onSecondaryAction,
   closeOnOverlayClick = true,
@@ -105,7 +107,7 @@ export function Modal({
         )}
 
         {/* Buttons */}
-        {(primaryButtonText || secondaryButtonText) && (
+        {(onPrimaryAction !== undefined || onSecondaryAction !== undefined) && (
           <div className="flex gap-3 mt-1 w-full sm:w-auto justify-center">
             {secondaryButtonText && (
               <Button variant="secondary" onClick={handleSecondary} className="border-[#0A0A0A]! text-[#0A0A0A]! flex-1 sm:flex-none">
