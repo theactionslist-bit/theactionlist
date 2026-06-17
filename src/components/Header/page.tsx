@@ -61,7 +61,7 @@ const HeaderSection = () => {
         <nav className="hidden lg:flex flex-nowrap flex-1 items-center justify-end">
           {NAV_ITEMS.map((item, index) => (
             <span key={item.label} className="flex items-center">
-              {index > 0 && <div className="h-4 w-px bg-[#DBDBDB] shrink-0" />}
+              {index > 0 && <div className="h-7.5 w-px bg-[#DBDBDB] shrink-0" />}
               <a
                 href={item.href}
                 onClick={(e) => {
