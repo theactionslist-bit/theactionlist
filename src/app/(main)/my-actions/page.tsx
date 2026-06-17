@@ -18,7 +18,7 @@ import {
   MY_ACTIONS_SELECTOR_FIELDS,
   MY_ACTIONS_ITEMS_PER_PAGE,
   fetchFilters,
-  fetchFavoriteActions,
+  fetchAllFavoriteActions,
 } from "./import";
 import type { FiltersData, CardRow } from "./import";
 
@@ -41,11 +41,10 @@ const MyActions = () => {
     frequencies: [],
   });
   const [filters, setFilters] = useState<FilterValues>(MY_ACTIONS_INITIAL_VALUES);
-  const [cards, setCards] = useState<CardRow[]>([]);
+  const [allCards, setAllCards] = useState<CardRow[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     const aIds = filters.areas ? [filters.areas] : undefined;
@@ -56,19 +55,22 @@ const MyActions = () => {
 
   useEffect(() => {
     setCardsLoading(true);
-    fetchFavoriteActions(currentPage).then((data) => {
-      setCards(data);
-      setTotalItems(data[0]?.total_count ?? 0);
+    fetchAllFavoriteActions().then((data) => {
+      setAllCards(data);
       setCardsLoading(false);
     });
-  }, [currentPage, refreshKey]);
+  }, [refreshKey]);
 
-  const filteredCards = cards.filter((card) => {
+  const filteredCards = allCards.filter((card) => {
     if (filters.areas && !card.areas.some((a) => a.id === filters.areas)) return false;
     if (filters.authors && !card.authors.some((a) => a.id === filters.authors)) return false;
     if (filters.frequencies && !card.frequencies.some((f) => f.id === filters.frequencies)) return false;
     return true;
   });
+
+  const totalItems = filteredCards.length;
+  const pageStart = (currentPage - 1) * MY_ACTIONS_ITEMS_PER_PAGE;
+  const currentPageCards = filteredCards.slice(pageStart, pageStart + MY_ACTIONS_ITEMS_PER_PAGE);
 
   return (
     <>
@@ -123,7 +125,7 @@ const MyActions = () => {
               />
             </svg>
           </div>
-        ) : filteredCards.length === 0 ? (
+        ) : currentPageCards.length === 0 ? (
           <div className="flex flex-col justify-center items-center my-30">
             <Image
               src={NosavedImage}
@@ -140,7 +142,7 @@ const MyActions = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8.5 mt-7.5">
-            {filteredCards.map((card) => (
+            {currentPageCards.map((card) => (
               <ActionListCard
                 key={card.id}
                 actionId={card.id}
@@ -159,17 +161,19 @@ const MyActions = () => {
             ))}
           </div>
         )}
-        <div className="mt-10">
-          <Pagination
-            totalItems={totalItems}
-            itemsPerPage={MY_ACTIONS_ITEMS_PER_PAGE}
-            currentPage={currentPage}
-            onPageChange={(page) => {
-              setCurrentPage(page);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-          />
-        </div>
+        {totalItems > MY_ACTIONS_ITEMS_PER_PAGE && (
+          <div className="mt-10">
+            <Pagination
+              totalItems={totalItems}
+              itemsPerPage={MY_ACTIONS_ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          </div>
+        )}
       </div>
     </>
   );
