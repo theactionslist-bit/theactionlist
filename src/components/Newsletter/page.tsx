@@ -29,7 +29,7 @@ const NewsletterSection = () => {
         />
         <button
           type="button"
-          className="px-5 md:px-7 py-1.5 md:py-2.5 rounded-lg bg-[#101010] text-white text-base md:text-xl lg:text-2xl font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200"
+          className="px-5 md:px-7 py-1.5 md:py-2.5 rounded-lg bg-[#101010] text-white text-base md:text-xl lg:text-2xl font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer"
         >
           {NEWSLETTER_BUTTON_TEXT}
         </button>

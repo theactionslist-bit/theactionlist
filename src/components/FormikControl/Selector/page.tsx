@@ -81,6 +81,7 @@ export default function Selector({
             px-5 pr-12 text-gray-900
             outline-none transition-all
             hover:bg-white
+            cursor-pointer
             ${
               hasError
                 ? "border-red-400"

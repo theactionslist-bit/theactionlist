@@ -235,7 +235,7 @@ function HomeContent() {
       <div className="flex justify-end items-center px-5 md:px-10 lg:px-15">
         <Button
           variant="primary"
-          className="py-1.5"
+          className="py-1.5 cursor-pointer"
           leftIcon={<ShuffleVector />}
           onClick={handleShuffle}
         >
