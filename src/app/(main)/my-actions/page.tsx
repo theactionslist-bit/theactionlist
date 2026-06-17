@@ -126,7 +126,7 @@ const MyActions = () => {
             </svg>
           </div>
         ) : currentPageCards.length === 0 ? (
-          <div className="flex flex-col justify-center items-center my-30">
+          <div className="flex flex-col justify-center items-center lg:my-30">
             <Image
               src={NosavedImage}
               alt="The Action List — get things done"

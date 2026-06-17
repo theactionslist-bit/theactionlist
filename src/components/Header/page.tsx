@@ -147,7 +147,7 @@ const HeaderSection = () => {
             <Button
               variant="primary"
               className="w-full text-[18px]!"
-              onClick={() => router.push(buttonHref)}
+              onClick={() => { setMobileOpen(false); router.push(buttonHref); }}
             >
               {buttonText}
             </Button>
