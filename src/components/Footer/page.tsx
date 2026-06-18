@@ -2,17 +2,19 @@ import {
   Logo,
   Link,
   InstagramIcon,
-  FacebookIcon,
   XIcon,
   LOGO_ARIA_LABEL,
   PRIVACY_POLICY_TEXT,
   PRIVACY_POLICY_HREF,
-  COPYRIGHT_TEXT,
+  COPYRIGHT_PREFIX,
+  COPYRIGHT_SUFFIX,
   INSTAGRAM_HREF,
   X_HREF,
   INSTAGRAM_ARIA,
   X_ARIA,
 } from "./import";
+
+const COPYRIGHT_TEXT = `${COPYRIGHT_PREFIX}${new Date().getFullYear()}${COPYRIGHT_SUFFIX}`;
 
 const FooterSection = () => {
   return (
@@ -26,7 +28,7 @@ const FooterSection = () => {
         </Link>
         <div className="flex flex-col items-center gap-5 md:flex-row md:gap-10">
           <div className="text-[#10101099] text-base md:text-lg lg:text-xl flex flex-col md:items-end items-start">
-            <Link href={PRIVACY_POLICY_HREF}>{PRIVACY_POLICY_TEXT}</Link>
+            <Link href={PRIVACY_POLICY_HREF} target="_blank" rel="noopener noreferrer">{PRIVACY_POLICY_TEXT}</Link>
             <p>{COPYRIGHT_TEXT}</p>
           </div>
           <div className="flex gap-4 items-center">
@@ -36,7 +38,6 @@ const FooterSection = () => {
             <Link href={X_HREF} target="_blank" rel="noopener noreferrer" aria-label={X_ARIA}>
               <XIcon className="[&_path]:fill-[#10101099]" />
             </Link>
-            <FacebookIcon />
           </div>
         </div>
       </div>

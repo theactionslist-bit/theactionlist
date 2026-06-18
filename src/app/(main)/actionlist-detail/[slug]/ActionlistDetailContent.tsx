@@ -231,10 +231,10 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                   return (
                     <div
                       key={i}
-                      className="w-83.5 border border-[#DBDBDB] rounded-xl overflow-hidden flex flex-col"
+                      className="w-83.5 border border-[#DBDBDB] rounded-xl overflow-hidden flex flex-col p-4"
                     >
                       <VideoEmbed url={source.link_url} title={source.title} />
-                      <div className="p-4 flex flex-col gap-2">
+                      <div className="py-4 flex flex-col gap-2">
                         <a
                           href={source.link_url}
                           target="_blank"

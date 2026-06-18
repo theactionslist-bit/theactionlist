@@ -45,6 +45,7 @@ const NewsletterSection = () => {
           {NEWSLETTER_CONSENT_TEXT}{" "}
           <a
             href={NEWSLETTER_TERMS_HREF}
+            target="_blank" rel="noopener noreferrer"
             className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
           >
             {NEWSLETTER_TERMS_TEXT}
@@ -52,6 +53,7 @@ const NewsletterSection = () => {
           and{" "}
           <a
             href={NEWSLETTER_PRIVACY_HREF}
+            target="_blank" rel="noopener noreferrer"
             className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
           >
             {NEWSLETTER_PRIVACY_TEXT}
