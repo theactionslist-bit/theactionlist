@@ -92,7 +92,7 @@ const HeaderSection = () => {
 
         <div className="flex-1 flex justify-end items-center lg:hidden">
           <button
-            className="p-2 text-[#101010] cursor-pointer"
+            className="md:p-2 text-[#101010] cursor-pointer"
             onClick={() => setMobileOpen(true)}
             aria-label={MENU_OPEN_ARIA_LABEL}
           >
