@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
         coverImage={loginCover}
         logo={logoPng}
         showGoogleButton={false}
-        showBackButton={true}
+        showBackButton={false}
       >
         <p className={FORGOT_PASSWORD_SUCCESS_CLASS}>{FORGOT_PASSWORD_SUCCESS_MESSAGE}</p>
       </OnboardingLayout>
@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
       coverImage={loginCover}
       logo={logoPng}
       showGoogleButton={false}
-      showBackButton={true}
+      showBackButton={false}
     >
       <Formik
         initialValues={FORGOT_PASSWORD_INITIAL_VALUES}

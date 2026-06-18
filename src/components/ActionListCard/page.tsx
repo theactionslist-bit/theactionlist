@@ -198,7 +198,6 @@ const ActionListCard = ({
 
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
             className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
           >
             +{categories.length}
@@ -227,6 +226,7 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_NEXT_ARIA}
+          onClick={(e) => { setCategoriesOpen((v) => !v); }}
           className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
         >
           <RightArrow />

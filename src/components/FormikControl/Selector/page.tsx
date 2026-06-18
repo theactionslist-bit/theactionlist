@@ -135,7 +135,7 @@ export default function Selector({
               onChange={(e) => setSearch(e.target.value)}
               placeholder={SELECTOR_SEARCH_PLACEHOLDER}
               autoFocus
-              className="w-full px-3 py-2 font-sans lg:text-xl text-lg rounded-lg border-2 border-[#DBDBDB] bg-gray-50 outline-none focus:border-[#D89593] focus:bg-white transition-all"
+              className="w-full px-3 py-2 font-sans lg:text-xl text-lg rounded-lg border-2 border-[#DBDBDB] bg-gray-50 outline-none focus:border-[#D89593] focus:bg-white transition-all [&::placeholder]:text-[#737373] placeholder:font-semibold"
             />
           </div>
 
