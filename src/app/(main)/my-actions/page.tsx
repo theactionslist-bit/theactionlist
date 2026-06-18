@@ -41,10 +41,11 @@ const MyActions = () => {
     frequencies: [],
   });
   const [filters, setFilters] = useState<FilterValues>(MY_ACTIONS_INITIAL_VALUES);
-  const [allCards, setAllCards] = useState<CardRow[]>([]);
+  const [cards, setCards] = useState<CardRow[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     const aIds = filters.areas ? [filters.areas] : undefined;
@@ -63,18 +64,7 @@ const MyActions = () => {
       setTotalItems(data[0]?.total_count ?? 0);
       setCardsLoading(false);
     });
-  }, [refreshKey]);
-
-  const filteredCards = allCards.filter((card) => {
-    if (filters.areas && !card.areas.some((a) => a.id === filters.areas)) return false;
-    if (filters.authors && !card.authors.some((a) => a.id === filters.authors)) return false;
-    if (filters.frequencies && !card.frequencies.some((f) => f.id === filters.frequencies)) return false;
-    return true;
-  });
-
-  const totalItems = filteredCards.length;
-  const pageStart = (currentPage - 1) * MY_ACTIONS_ITEMS_PER_PAGE;
-  const currentPageCards = filteredCards.slice(pageStart, pageStart + MY_ACTIONS_ITEMS_PER_PAGE);
+  }, [currentPage, filters, refreshKey]);
 
   return (
     <>
@@ -129,7 +119,7 @@ const MyActions = () => {
               />
             </svg>
           </div>
-        ) : currentPageCards.length === 0 ? (
+        ) : cards.length === 0 ? (
           <div className="flex flex-col justify-center items-center lg:my-30">
             <Image
               src={NosavedImage}
@@ -146,7 +136,7 @@ const MyActions = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8.5 mt-7.5">
-            {currentPageCards.map((card) => (
+            {cards.map((card) => (
               <ActionListCard
                 key={card.id}
                 actionId={card.id}
