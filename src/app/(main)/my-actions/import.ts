@@ -1,6 +1,5 @@
 export { useState, useEffect, useRouter, useFormikContext, Formik, Form, Image } from "@/common/imports";
-export { fetchFilters } from "@/app/(main)/service";
-export { fetchAllFavoriteActions } from "./service";
+export { fetchFavoriteActions, fetchFavoriteFilters } from "./service";
 export type { FiltersData } from "@/app/(main)/service";
 export type { CardRow } from "@/app/(main)/service";
 export { BannerSection, FormikControl, ActionListCard, Pagination } from "@/common/components";

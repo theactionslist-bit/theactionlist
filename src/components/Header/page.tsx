@@ -71,6 +71,7 @@ const HeaderSection = () => {
                   }
                 }}
                 className={`flex items-center gap-2 px-2 xl:px-5 text-sm xl:text-base text-[#101010] whitespace-nowrap ${pathname === item.href ? "font-bold" : "font-semibold"}`}
+                style={{ fontFamily: "var(--font-inter)" }}
               >
                 <item.Icon className="shrink-0" />
                 {item.label}

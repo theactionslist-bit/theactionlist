@@ -14,7 +14,7 @@ function renderHeading(text: string, word: string) {
     <span key={i}>
       {part}
       {i < parts.length - 1 && (
-        <span style={{ position: "relative", display: "inline-block" }}>
+        <span style={{ position: "relative", display: "inline-block"}}>
           {word}
           <span
             style={{

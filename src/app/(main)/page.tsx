@@ -202,6 +202,7 @@ function HomeContent() {
         image={BannerImage}
         strikethroughWord={HOME_BANNER_STRIKETHROUGH_WORD}
       />
+      
       <section className="sticky top-(--header-height) z-10 bg-white px-5 pt-10 pb-3.75 md:px-10 lg:px-15">
         <Formik initialValues={HOME_INITIAL_VALUES} onSubmit={() => {}}>
           <>
@@ -242,6 +243,7 @@ function HomeContent() {
           Shuffle
         </Button>
       </div>
+
       <div className="px-5 pb-10 md:px-10 lg:px-15">
         {loading ? (
           <div className="flex items-center justify-center py-24">

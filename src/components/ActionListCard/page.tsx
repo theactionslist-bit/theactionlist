@@ -152,13 +152,13 @@ const ActionListCard = ({
       </div>
 
       {/* Main content text */}
-      <p className="flex-1 font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010]">
+      <p className="flex-1 font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010] mb-4 mt-4">
         {text}
       </p>
 
       {/* Author chip */}
       {authorName && (
-        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit">
+        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit mb-1">
           {authorAvatarSrc ? (
             <Image
               src={authorAvatarSrc}
@@ -169,7 +169,7 @@ const ActionListCard = ({
             />
           ) : (
             <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
-              <span className="font-sans text-xs font-semibold text-white leading-none">
+              <span className="font-sans font-semibold text-white leading-none text-base">
                 {authorName?.charAt(0).toUpperCase()}
               </span>
             </div>

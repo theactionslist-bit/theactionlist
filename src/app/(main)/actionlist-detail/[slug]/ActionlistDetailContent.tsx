@@ -198,7 +198,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
       </div>
 
       {/* Hero */}
-      <div className="flex items-start gap-6 mb-16">
+      <div className="flex gap-6 mb-16 items-center">
         <div
           className="w-16 h-16 rounded-full shrink-0 mt-1"
           style={{ backgroundColor: card.hex_colour_code }}

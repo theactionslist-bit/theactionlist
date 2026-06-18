@@ -17,8 +17,8 @@ import {
   MY_ACTIONS_INITIAL_VALUES,
   MY_ACTIONS_SELECTOR_FIELDS,
   MY_ACTIONS_ITEMS_PER_PAGE,
-  fetchFilters,
-  fetchAllFavoriteActions,
+  fetchFavoriteActions,
+  fetchFavoriteFilters,
 } from "./import";
 import type { FiltersData, CardRow } from "./import";
 
@@ -50,13 +50,17 @@ const MyActions = () => {
     const aIds = filters.areas ? [filters.areas] : undefined;
     const auIds = filters.authors ? [filters.authors] : undefined;
     const fIds = filters.frequencies ? [filters.frequencies] : undefined;
-    fetchFilters(aIds, auIds, fIds).then(setFiltersData);
+    fetchFavoriteFilters(aIds, auIds, fIds).then(setFiltersData);
   }, [filters]);
 
   useEffect(() => {
+    const aIds = filters.areas ? [filters.areas] : undefined;
+    const auIds = filters.authors ? [filters.authors] : undefined;
+    const fIds = filters.frequencies ? [filters.frequencies] : undefined;
     setCardsLoading(true);
-    fetchAllFavoriteActions().then((data) => {
-      setAllCards(data);
+    fetchFavoriteActions(currentPage, aIds, auIds, fIds).then((data) => {
+      setCards(data);
+      setTotalItems(data[0]?.total_count ?? 0);
       setCardsLoading(false);
     });
   }, [refreshKey]);
