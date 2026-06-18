@@ -19,6 +19,9 @@ import {
   FORGOT_PASSWORD_VALIDATION_SCHEMA,
   FORGOT_PASSWORD_ERROR_CLASS,
   FORGOT_PASSWORD_SUCCESS_CLASS,
+  FORGOT_PASSWORD_FOOTER_TEXT,
+  FORGOT_PASSWORD_FOOTER_LINK_LABEL,
+  FORGOT_PASSWORD_FOOTER_LINK_HREF,
   handleForgotPasswordSubmit,
 } from "./import";
 import type { FormikHelpers } from "./import";
@@ -60,6 +63,8 @@ export default function ForgotPasswordPage() {
       logo={logoPng}
       showGoogleButton={false}
       showBackButton={false}
+      footerText={FORGOT_PASSWORD_FOOTER_TEXT}
+      footerLink={{ href: FORGOT_PASSWORD_FOOTER_LINK_HREF, label: FORGOT_PASSWORD_FOOTER_LINK_LABEL }}
     >
       <Formik
         initialValues={FORGOT_PASSWORD_INITIAL_VALUES}
