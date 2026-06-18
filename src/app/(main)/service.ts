@@ -110,9 +110,18 @@ export async function fetchAllCards(
   const totalCount: number = (countRes.data[0] as CardRow).total_count;
   if (totalCount === 0) return { data: null, error: null };
 
-  return supabase.rpc("get_cards_data", {
-    page_size: HOME_ITEMS_PER_PAGE,
-    page_number: 1,
-    ...filters,
-  });
+  const totalPages = Math.ceil(totalCount / HOME_ITEMS_PER_PAGE);
+  const pageRequests = Array.from({ length: totalPages }, (_, i) =>
+    supabase.rpc("get_cards_data", {
+      page_size: HOME_ITEMS_PER_PAGE,
+      page_number: i + 1,
+      ...filters,
+    }),
+  );
+
+  const results = await Promise.all(pageRequests);
+  const firstError = results.find((r) => r.error);
+  if (firstError) return { data: null, error: firstError.error };
+
+  return { data: results.flatMap((r) => (r.data as CardRow[]) ?? []), error: null };
 }

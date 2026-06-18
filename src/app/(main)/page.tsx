@@ -23,6 +23,7 @@ import {
   HOME_INITIAL_VALUES,
   HOME_ITEMS_PER_PAGE,
   fetchCards,
+  fetchAllCards,
   fetchFilters,
   shuffleArray,
 } from "./import";
@@ -82,6 +83,7 @@ function HomeContent() {
   const frequencyNameParam = searchParams.get("best_time_to_try");
   const [currentPage, setCurrentPage] = useState(1);
   const [allCards, setAllCards] = useState<CardRow[]>([]);
+  const [isShuffled, setIsShuffled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filtersData, setFiltersData] = useState<FiltersData>({
     areas: [],
@@ -194,6 +196,7 @@ function HomeContent() {
 
   useEffect(() => {
     if (!filtersSettled) return;
+    if (isShuffled) return;
     let ignored = false;
     setLoading(true);
     const aIds = filters.areas ? [filters.areas] : undefined;
@@ -211,12 +214,25 @@ function HomeContent() {
       ignored = true;
       clearTimeout(timer);
     };
-  }, [filters, filtersSettled, currentPage]);
+  }, [filters, filtersSettled, currentPage, isShuffled]);
 
-  const displayedCards = allCards;
+  const displayedCards = isShuffled
+    ? allCards.slice((currentPage - 1) * HOME_ITEMS_PER_PAGE, currentPage * HOME_ITEMS_PER_PAGE)
+    : allCards;
 
-  function handleShuffle() {
-    setAllCards(shuffleArray(allCards));
+  async function handleShuffle() {
+    if (isShuffled) {
+      setAllCards(shuffleArray(allCards));
+      return;
+    }
+    const aIds = filters.areas ? [filters.areas] : undefined;
+    const auIds = filters.authors ? [filters.authors] : undefined;
+    const fIds = filters.frequencies ? [filters.frequencies] : undefined;
+    const { data, error } = await fetchAllCards(aIds, auIds, fIds);
+    if (!error && data) {
+      setAllCards(shuffleArray(data as CardRow[]));
+      setIsShuffled(true);
+    }
   }
 
   return (
@@ -234,6 +250,7 @@ function HomeContent() {
               onFilterChange={(v) => {
                 setFilters(v);
                 setCurrentPage(1);
+                setIsShuffled(false);
               }}
               initAuthorId={initAuthorId}
               initAreaId={initAreaId}
