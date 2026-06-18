@@ -48,7 +48,7 @@ interface ActionlistDetailContentProps {
 const BACK_BUTTON_CLASS =
   "inline-flex items-center px-4 py-2 border-2 border-[#999999] rounded-full font-sans text-lg font-medium text-[#999999] hover:bg-gray-50 transition-colors";
 
-const LABEL_CLASS = "font-display text-3xl text-black whitespace-nowrap";
+const LABEL_CLASS = "font-display text-[30px] leading-[20px] text-black whitespace-nowrap mt-2";
 
 interface VideoInfo {
   type: "youtube" | "vimeo" | "direct";
@@ -173,7 +173,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
     <div className="px-4 py-6 md:px-8 lg:px-15">
       {/* Top navigation */}
       <div className="flex items-center justify-between mb-10">
-        <Link href="/" className={BACK_BUTTON_CLASS}>
+        <Link href="/" className={BACK_BUTTON_CLASS} style={{ fontFamily: "var(--font-inter)", fontWeight: 600 }}>
           {DETAIL_BACK_BUTTON_TEXT}
         </Link>
         <div className="flex items-center gap-4">
@@ -182,7 +182,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label={DETAIL_HEART_ARIA}
             onClick={handleHeartClick}
             disabled={toggling}
-            className={`hover:opacity-70 transition-opacity cursor-pointer ${toggling ? " opacity-50 cursor-not-allowed" : ""}`}
+            className={`bg-[#F3F1EF] p-2 rounded-full hover:opacity-70 transition-opacity cursor-pointer ${toggling ? " opacity-50 cursor-not-allowed" : ""}`}
           >
             {liked ? <HeartPinkIcon /> : <HeartIcon />}
           </button>
@@ -190,7 +190,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             type="button"
             aria-label={DETAIL_SHARE_ARIA}
             onClick={handleShareClick}
-            className="hover:opacity-70 transition-opacity cursor-pointer"
+            className="bg-[#F3F1EF] p-2 rounded-full hover:opacity-70 transition-opacity cursor-pointer"
           >
             <ShareIcon className="stroke-black" />
           </button>
@@ -281,7 +281,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                 <Link
                   key={area.id}
                   href={`/?area_of_inspiration=${encodeURIComponent(area.name)}`}
-                  className="border-[#DBDBDB] border-2 rounded-xl px-5 py-2.5 font-sans text-xl text-[#101010] hover:opacity-70 transition-opacity"
+                  className="border-[#DBDBDB] border-2 rounded-xl px-5 py-2.5 font-sans text-[20px] leading-3.5 text-[#101010] hover:opacity-70 transition-opacity font-medium h-12 flex items-center justify-center"
                 >
                   {area.name}
                 </Link>
@@ -301,10 +301,10 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                   href={`/?best_time_to_try=${encodeURIComponent(freq.name)}`}
                   className="flex items-center gap-2 border border-[#DBDBDB] px-4 py-2.5 rounded-lg hover:opacity-70 transition-opacity"
                 >
-                  <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                  <div className="w-6 h-6 flex items-center justify-center shrink-0">
                     <TimeIcon />
                   </div>
-                  <span className="font-sans text-xl font-semibold text-black">{freq.name}</span>
+                  <span className="font-sans text-xl font-semibold text-black text-[20px] leading-3.5">{freq.name}</span>
                 </Link>
               ))}
             </div>
@@ -351,7 +351,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
 
       {/* Bottom navigation */}
       <div className="mt-16">
-        <Link href="/" className={BACK_BUTTON_CLASS}>
+        <Link href="/" className={BACK_BUTTON_CLASS} style={{ fontFamily: "var(--font-inter)", fontWeight: 600 }}>
           {DETAIL_BACK_BUTTON_TEXT}
         </Link>
       </div>
