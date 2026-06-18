@@ -1,6 +1,9 @@
-export const FORGOT_PASSWORD_HEADING = "Forgot Password?";
-export const FORGOT_PASSWORD_DESCRIPTION = "Enter your email and we'll send you a reset link.";
-export const FORGOT_PASSWORD_BUTTON_TEXT = "Send Reset Link";
+export const FORGOT_PASSWORD_HEADING = "Forgot Your Password?";
+export const FORGOT_PASSWORD_DESCRIPTION = "Enter your email address and we'll send you a link to reset your password";
+export const FORGOT_PASSWORD_BUTTON_TEXT = "Submit";
+export const FORGOT_PASSWORD_FOOTER_TEXT = "Already have an account?";
+export const FORGOT_PASSWORD_FOOTER_LINK_LABEL = "Login";
+export const FORGOT_PASSWORD_FOOTER_LINK_HREF = "/login";
 export const FORGOT_PASSWORD_SUBMITTING_TEXT = "Sending…";
 export const FORGOT_PASSWORD_SUCCESS_MESSAGE =
   "Check your inbox — we've sent a password reset link to your email.";

@@ -226,7 +226,7 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_NEXT_ARIA}
-          onClick={(e) => { setCategoriesOpen((v) => !v); }}
+          onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
           className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
         >
           <RightArrow />
