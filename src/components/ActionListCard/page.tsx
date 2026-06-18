@@ -206,6 +206,7 @@ const ActionListCard = ({
 
         {categoriesOpen && (
           <div
+            onClick={(e) => e.stopPropagation()}
             className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
             style={{
               boxShadow: "0px 3px 8px 0px #0000003D",
