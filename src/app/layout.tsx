@@ -42,8 +42,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="en"
       className={`${goudyBookletter.variable} ${quicksand.variable} ${inter.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col max-w-360 mx-auto w-full bg-white">
+      <body className="min-h-full flex flex-col max-w-360 mx-auto w-full bg-white" suppressHydrationWarning>
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

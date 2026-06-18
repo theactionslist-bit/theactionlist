@@ -22,7 +22,7 @@ import {
   HOME_SELECTOR_FIELDS,
   HOME_INITIAL_VALUES,
   HOME_ITEMS_PER_PAGE,
-  fetchAllCards,
+  fetchCards,
   fetchFilters,
   shuffleArray,
 } from "./import";
@@ -91,38 +91,44 @@ function HomeContent() {
   const [filters, setFilters] = useState<FilterValues>(HOME_INITIAL_VALUES);
   const [initAuthorId, setInitAuthorId] = useState<string | undefined>(undefined);
   const [urlAuthorApplied, setUrlAuthorApplied] = useState(false);
-  const initResolvedRef = useRef(false);
+  const [authorProcessed, setAuthorProcessed] = useState(false);
   const [initAreaId, setInitAreaId] = useState<string | undefined>(undefined);
   const [urlAreaApplied, setUrlAreaApplied] = useState(false);
-  const areaInitResolvedRef = useRef(false);
+  const [areaProcessed, setAreaProcessed] = useState(false);
   const [initFrequencyId, setInitFrequencyId] = useState<string | undefined>(undefined);
   const [urlFrequencyApplied, setUrlFrequencyApplied] = useState(false);
-  const frequencyInitResolvedRef = useRef(false);
+  const [freqProcessed, setFreqProcessed] = useState(false);
+
+  // True once all URL params have been applied to `filters` (or confirmed no match).
+  // Prevents fetchAllCards from firing before filters are in their final initial state.
+  const hasUrlParams = !!(authorNameParam || areaNameParam || frequencyNameParam);
+  const [filtersSettled, setFiltersSettled] = useState(!hasUrlParams);
 
   useEffect(() => {
     const aIds = filters.areas ? [filters.areas] : undefined;
     const auIds = filters.authors ? [filters.authors] : undefined;
     const fIds = filters.frequencies ? [filters.frequencies] : undefined;
-    fetchFilters(aIds, auIds, fIds).then(setFiltersData);
+    const timer = setTimeout(() => {
+      fetchFilters(aIds, auIds, fIds).then(setFiltersData);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [filters]);
 
   useEffect(() => {
-    if (!authorNameParam || initResolvedRef.current || !filtersData.authors.length) return;
-    initResolvedRef.current = true;
+    if (!authorNameParam || authorProcessed || !filtersData.authors.length) return;
+    setAuthorProcessed(true);
     const match = filtersData.authors.find(
       (opt) => opt.label.toLowerCase() === authorNameParam.toLowerCase(),
     );
     if (match) setInitAuthorId(match.value);
-  }, [filtersData.authors, authorNameParam]);
+  }, [filtersData.authors, authorNameParam, authorProcessed]);
 
-  // Mark URL param as applied only after filters.authors is actually set to the resolved ID
   useEffect(() => {
     if (initAuthorId && filters.authors === initAuthorId && !urlAuthorApplied) {
       setUrlAuthorApplied(true);
     }
   }, [filters.authors, initAuthorId, urlAuthorApplied]);
 
-  // Once applied, clear URL param when the user removes the author filter
   useEffect(() => {
     if (!urlAuthorApplied || filters.authors !== "") return;
     setUrlAuthorApplied(false);
@@ -130,13 +136,13 @@ function HomeContent() {
   }, [filters.authors, urlAuthorApplied, router]);
 
   useEffect(() => {
-    if (!areaNameParam || areaInitResolvedRef.current || !filtersData.areas.length) return;
-    areaInitResolvedRef.current = true;
+    if (!areaNameParam || areaProcessed || !filtersData.areas.length) return;
+    setAreaProcessed(true);
     const match = filtersData.areas.find(
       (opt) => opt.label.toLowerCase() === areaNameParam.toLowerCase(),
     );
     if (match) setInitAreaId(match.value);
-  }, [filtersData.areas, areaNameParam]);
+  }, [filtersData.areas, areaNameParam, areaProcessed]);
 
   useEffect(() => {
     if (initAreaId && filters.areas === initAreaId && !urlAreaApplied) {
@@ -151,13 +157,13 @@ function HomeContent() {
   }, [filters.areas, urlAreaApplied, router]);
 
   useEffect(() => {
-    if (!frequencyNameParam || frequencyInitResolvedRef.current || !filtersData.frequencies.length) return;
-    frequencyInitResolvedRef.current = true;
+    if (!frequencyNameParam || freqProcessed || !filtersData.frequencies.length) return;
+    setFreqProcessed(true);
     const match = filtersData.frequencies.find(
       (opt) => opt.label.toLowerCase() === frequencyNameParam.toLowerCase(),
     );
     if (match) setInitFrequencyId(match.value);
-  }, [filtersData.frequencies, frequencyNameParam]);
+  }, [filtersData.frequencies, frequencyNameParam, freqProcessed]);
 
   useEffect(() => {
     if (initFrequencyId && filters.frequencies === initFrequencyId && !urlFrequencyApplied) {
@@ -171,25 +177,43 @@ function HomeContent() {
     router.replace("/", { scroll: false });
   }, [filters.frequencies, urlFrequencyApplied, router]);
 
+  // Latch filtersSettled to true once each URL param is either applied or confirmed no match.
+  // Once true it never reverts, so user-driven filter changes after init work normally.
   useEffect(() => {
+    if (filtersSettled) return;
+    const authorOk = !authorNameParam || (authorProcessed && (!initAuthorId || urlAuthorApplied));
+    const areaOk = !areaNameParam || (areaProcessed && (!initAreaId || urlAreaApplied));
+    const freqOk = !frequencyNameParam || (freqProcessed && (!initFrequencyId || urlFrequencyApplied));
+    if (authorOk && areaOk && freqOk) setFiltersSettled(true);
+  }, [
+    filtersSettled, authorNameParam, areaNameParam, frequencyNameParam,
+    authorProcessed, areaProcessed, freqProcessed,
+    initAuthorId, initAreaId, initFrequencyId,
+    urlAuthorApplied, urlAreaApplied, urlFrequencyApplied,
+  ]);
+
+  useEffect(() => {
+    if (!filtersSettled) return;
     let ignored = false;
     setLoading(true);
     const aIds = filters.areas ? [filters.areas] : undefined;
     const auIds = filters.authors ? [filters.authors] : undefined;
     const fIds = filters.frequencies ? [filters.frequencies] : undefined;
-    fetchAllCards(aIds, auIds, fIds).then(({ data, error }) => {
-      if (!ignored) {
-        if (!error && data) setAllCards(data as CardRow[]);
-        setLoading(false);
-      }
-    });
-    return () => { ignored = true; };
-  }, [filters]);
+    const timer = setTimeout(() => {
+      fetchCards(currentPage, aIds, auIds, fIds).then(({ data, error }) => {
+        if (!ignored) {
+          if (!error && data) setAllCards(data as CardRow[]);
+          setLoading(false);
+        }
+      });
+    }, 150);
+    return () => {
+      ignored = true;
+      clearTimeout(timer);
+    };
+  }, [filters, filtersSettled, currentPage]);
 
-  const displayedCards = allCards.slice(
-    (currentPage - 1) * HOME_ITEMS_PER_PAGE,
-    currentPage * HOME_ITEMS_PER_PAGE,
-  );
+  const displayedCards = allCards;
 
   function handleShuffle() {
     setAllCards(shuffleArray(allCards));
@@ -291,7 +315,7 @@ function HomeContent() {
 
         <div className="mt-10">
           <Pagination
-            totalItems={allCards.length}
+            totalItems={allCards[0]?.total_count || 0}
             itemsPerPage={HOME_ITEMS_PER_PAGE}
             currentPage={currentPage}
             onPageChange={(page) => {

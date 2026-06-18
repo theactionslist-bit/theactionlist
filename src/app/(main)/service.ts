@@ -111,7 +111,7 @@ export async function fetchAllCards(
   if (totalCount === 0) return { data: null, error: null };
 
   return supabase.rpc("get_cards_data", {
-    page_size: totalCount,
+    page_size: HOME_ITEMS_PER_PAGE,
     page_number: 1,
     ...filters,
   });
