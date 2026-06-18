@@ -36,6 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html
       lang="en"
       className={`${goudyBookletter.variable} ${quicksand.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
     >
       <body className="min-h-full flex flex-col max-w-360 mx-auto w-full bg-white">
         <ToastProvider>{children}</ToastProvider>

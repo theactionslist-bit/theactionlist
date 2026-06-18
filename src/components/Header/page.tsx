@@ -61,7 +61,7 @@ const HeaderSection = () => {
         <nav className="hidden lg:flex flex-nowrap flex-1 items-center justify-end">
           {NAV_ITEMS.map((item, index) => (
             <span key={item.label} className="flex items-center">
-              {index > 0 && <div className="h-4 w-px bg-[#DBDBDB] shrink-0" />}
+              {index > 0 && <div className="h-7.5 w-px bg-[#DBDBDB] shrink-0" />}
               <a
                 href={item.href}
                 onClick={(e) => {
@@ -91,7 +91,7 @@ const HeaderSection = () => {
 
         <div className="flex-1 flex justify-end items-center lg:hidden">
           <button
-            className="p-2 text-[#101010]"
+            className="p-2 text-[#101010] cursor-pointer"
             onClick={() => setMobileOpen(true)}
             aria-label={MENU_OPEN_ARIA_LABEL}
           >
@@ -115,7 +115,7 @@ const HeaderSection = () => {
               <Logo aria-label={LOGO_ARIA_LABEL} role="img" />
             </Link>
             <button
-              className="p-2 text-[#101010]"
+              className="p-2 text-[#101010] cursor-pointer"
               onClick={() => setMobileOpen(false)}
               aria-label={MENU_CLOSE_ARIA_LABEL}
             >
@@ -147,7 +147,7 @@ const HeaderSection = () => {
             <Button
               variant="primary"
               className="w-full text-[18px]!"
-              onClick={() => router.push(buttonHref)}
+              onClick={() => { setMobileOpen(false); router.push(buttonHref); }}
             >
               {buttonText}
             </Button>

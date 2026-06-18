@@ -81,6 +81,7 @@ export default function Selector({
             px-5 pr-12 text-gray-900
             outline-none transition-all
             hover:bg-white
+            cursor-pointer
             ${
               hasError
                 ? "border-red-400"
@@ -112,7 +113,7 @@ export default function Selector({
               helpers.setValue("");
               helpers.setTouched(true);
             }}
-            className="absolute right-5 top-1/2 -translate-y-1/2 text-[#10101099] hover:text-[#101010] transition-colors bg-[#cccccc42] border border-[#DBDBDB] p-1 rounded-full"
+            className="absolute right-5 top-1/2 -translate-y-1/2 text-[#10101099] hover:text-[#101010] transition-colors bg-[#cccccc42] border border-[#DBDBDB] p-1 rounded-full cursor-pointer"
           >
             <IoClose size={18} color="black" />
           </button>
@@ -149,7 +150,7 @@ export default function Selector({
                   <button
                     type="button"
                     onClick={() => selectOption(opt)}
-                    className={`w-full text-left px-4 py-3.5 font-sans xl:text-[26px] text-xl font-medium hover:bg-gray-50 transition-colors ${
+                    className={`w-full text-left px-4 py-3.5 font-sans xl:text-[26px] text-xl font-medium hover:bg-gray-50 transition-colors cursor-pointer ${
                       field.value === opt.value
                         ? "text-[#D89593] font-semibold"
                         : "text-[#101010]"

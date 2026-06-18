@@ -29,30 +29,30 @@ const NewsletterSection = () => {
         />
         <button
           type="button"
-          className="px-5 md:px-7 py-2.5 md:py-3 rounded-lg bg-[#101010] text-white text-base md:text-xl lg:text-2xl font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200"
+          className="px-5 md:px-7 py-1.5 md:py-2.5 rounded-lg bg-[#101010] text-white text-base md:text-xl lg:text-2xl font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer"
         >
           {NEWSLETTER_BUTTON_TEXT}
         </button>
       </div>
 
       {/* Consent checkbox */}
-      <label className="flex items-start gap-2 cursor-pointer">
+      <label className="flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"
-          className="mt-1 w-4 h-4 shrink-0 accent-[#101010] cursor-pointer"
+          className="w-4 h-4 shrink-0 accent-[#101010] cursor-pointer"
         />
         <span className="text-base md:text-lg leading-6 md:leading-7 text-[#101010]">
           {NEWSLETTER_CONSENT_TEXT}{" "}
           <a
             href={NEWSLETTER_TERMS_HREF}
-            className="font-bold underline text-[#101010] hover:opacity-70 transition-opacity"
+            className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
           >
             {NEWSLETTER_TERMS_TEXT}
           </a>{" "}
           and{" "}
           <a
             href={NEWSLETTER_PRIVACY_HREF}
-            className="font-bold underline text-[#101010] hover:opacity-70 transition-opacity"
+            className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
           >
             {NEWSLETTER_PRIVACY_TEXT}
           </a>
