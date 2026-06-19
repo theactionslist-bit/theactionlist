@@ -163,13 +163,13 @@ const ActionListCard = ({
             <TimeIcon className="shrink-0" />
             {frequency}
           </span>
-          <button
+          {(frequencyCount-1 > 0) && <button
             type="button"
             className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={(e) => { e.stopPropagation(); setCategoriesOpen(false); setFrequencyOpen((v) => !v); }}
           >
-            +{frequencyCount}
-          </button>
+            +{frequencyCount - 1}
+          </button>}
         </div>
       </div>
 
@@ -218,13 +218,13 @@ const ActionListCard = ({
             {category}
           </button>
 
-          <button
+          { (categories.length - 1 > 0) &&<button
             type="button"
             className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={(e) => { e.stopPropagation(); setFrequencyOpen(false); setCategoriesOpen((v) => !v); }}
           >
-            +{categories.length}
-          </button>
+            +{categories.length - 1}
+          </button>}
         </div>
 
         {categoriesOpen && (
