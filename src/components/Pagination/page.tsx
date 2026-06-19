@@ -62,7 +62,7 @@ export default function Pagination({
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label={PAGINATION_PREV_ARIA}
-        className="w-10 h-10 flex items-center justify-center rounded-md border border-[#DBDBDB] bg-[#F3F1EF] text-[#101010] hover:bg-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed font-sans font-semibold  cursor-pointer"
+        className="w-10 h-10 flex items-center justify-center rounded-md border border-[#DBDBDB] text-[#101010] hover:bg-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed font-sans font-semibold  cursor-pointer"
       >
         <PaginationPreArrow />
       </button>
@@ -84,7 +84,7 @@ export default function Pagination({
             className={`w-10.5 h-10.5 flex items-center justify-center rounded-md border font-sans text-base transition-colors cursor-pointer${
               currentPage === page
                 ? "border-2 border-[#101010] bg-white text-[#101010] font-bold"
-                : "border-[#DBDBDB] bg-[#F3F1EF] text-[#101010] hover:bg-white"
+                : "border-2 border-[#DBDBDB]  text-[#101010] hover:bg-white"
             }`}
           >
             {page}
@@ -96,7 +96,7 @@ export default function Pagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label={PAGINATION_NEXT_ARIA}
-        className="w-10 h-10 flex items-center justify-center rounded-md border border-[#DBDBDB] bg-[#F3F1EF] text-[#101010] hover:bg-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed font-sans font-semibold cursor-pointer"
+        className="w-10 h-10 flex items-center justify-center rounded-md border border-[#DBDBDB] text-[#101010] hover:bg-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed font-sans font-semibold cursor-pointer"
       >
         <PaginationNexArrow />
       </button>

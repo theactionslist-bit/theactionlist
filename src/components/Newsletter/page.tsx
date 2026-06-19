@@ -1,4 +1,8 @@
+"use client";
+
 import {
+  useState,
+  type FormEvent,
   NEWSLETTER_HEADING,
   NEWSLETTER_BODY,
   NEWSLETTER_PLACEHOLDER,
@@ -8,9 +12,44 @@ import {
   NEWSLETTER_TERMS_HREF,
   NEWSLETTER_PRIVACY_TEXT,
   NEWSLETTER_PRIVACY_HREF,
-} from "./constant";
+} from "./import";
 
 const NewsletterSection = () => {
+  const [email, setEmail] = useState("");
+  const [consented, setConsented] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!consented || !email) return;
+
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage({ text: "You're subscribed! Check your inbox.", ok: true });
+        setEmail("");
+        setConsented(false);
+      } else {
+        setMessage({ text: data.error ?? "Something went wrong.", ok: false });
+      }
+    } catch {
+      setMessage({ text: "Network error. Please try again.", ok: false });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div id="newsletter" className="scroll-mt-(--header-height) px-5 pt-7 pb-12 md:px-10 md:pb-12 lg:px-15 lg:pt-8 lg:pb-14">
       <h1 className="font-display text-3xl md:text-4xl lg:text-[46px] pb-4 text-[#101010]">
@@ -21,43 +60,59 @@ const NewsletterSection = () => {
       </p>
 
       {/* Email subscribe form */}
-      <div className="my-7.5 flex items-center w-full max-w-xl bg-[#F3F1EF] rounded-xl p-2 gap-2">
-        <input
-          type="email"
-          placeholder={NEWSLETTER_PLACEHOLDER}
-          className="flex-1 min-w-0 px-4 py-1.5 bg-transparent text-base md:text-xl lg:text-2xl text-[#101010] placeholder:text-gray-400 outline-none"
-        />
-        <button
-          type="button"
-          className="px-5 md:px-7 py-1.5 md:py-2.5 rounded-lg bg-[#101010] text-white text-base md:text-xl lg:text-2xl font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer"
-        >
-          {NEWSLETTER_BUTTON_TEXT}
-        </button>
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="my-7.5 flex items-center w-full max-w-xl bg-[#F3F1EF] rounded-xl p-2 gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={NEWSLETTER_PLACEHOLDER}
+            required
+            className="flex-1 min-w-0 px-4 py-1.5 bg-transparent text-base md:text-xl lg:text-2xl text-[#101010] placeholder:text-gray-400 outline-none"
+          />
+          <button
+            type="submit"
+            disabled={!consented || !email || loading}
+            className="px-5 md:px-7 py-1.5 md:py-2.5 rounded-lg bg-[#101010] text-white text-base md:text-xl lg:text-2xl font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Subscribing…" : NEWSLETTER_BUTTON_TEXT}
+          </button>
+        </div>
 
-      {/* Consent checkbox */}
-      <label className="flex items-center gap-2 cursor-pointer">
-        <input
-          type="checkbox"
-          className="w-4 h-4 shrink-0 accent-[#101010] cursor-pointer"
-        />
-        <span className="text-base md:text-lg leading-6 md:leading-7 text-[#101010]">
-          {NEWSLETTER_CONSENT_TEXT}{" "}
-          <a
-            href={NEWSLETTER_TERMS_HREF}
-            className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
-          >
-            {NEWSLETTER_TERMS_TEXT}
-          </a>{" "}
-          and{" "}
-          <a
-            href={NEWSLETTER_PRIVACY_HREF}
-            className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
-          >
-            {NEWSLETTER_PRIVACY_TEXT}
-          </a>
-        </span>
-      </label>
+        {message && (
+          <p className={`mb-4 text-sm font-medium ${message.ok ? "text-green-600" : "text-red-500"}`}>
+            {message.text}
+          </p>
+        )}
+
+        {/* Consent checkbox */}
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={consented}
+            onChange={(e) => setConsented(e.target.checked)}
+            className="w-4 h-4 shrink-0 accent-[#101010] cursor-pointer"
+          />
+          <span className="text-base md:text-lg leading-6 md:leading-7 text-[#101010]">
+            {NEWSLETTER_CONSENT_TEXT}{" "}
+            <a
+              href={NEWSLETTER_TERMS_HREF}
+              target="_blank" rel="noopener noreferrer"
+              className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
+            >
+              {NEWSLETTER_TERMS_TEXT}
+            </a>{" "}
+            and{" "}
+            <a
+              href={NEWSLETTER_PRIVACY_HREF}
+              target="_blank" rel="noopener noreferrer"
+              className="font-bold underline underline-offset-[3.5px] text-[#101010] hover:opacity-70 transition-opacity"
+            >
+              {NEWSLETTER_PRIVACY_TEXT}
+            </a>
+          </span>
+        </label>
+      </form>
     </div>
   );
 };

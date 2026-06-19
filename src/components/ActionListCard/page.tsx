@@ -152,13 +152,13 @@ const ActionListCard = ({
       </div>
 
       {/* Main content text */}
-      <p className="flex-1 font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010]">
+      <p className="flex-1 font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010] mb-4 mt-4">
         {text}
       </p>
 
       {/* Author chip */}
       {authorName && (
-        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit">
+        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit mb-1">
           {authorAvatarSrc ? (
             <Image
               src={authorAvatarSrc}
@@ -169,7 +169,7 @@ const ActionListCard = ({
             />
           ) : (
             <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
-              <span className="font-sans text-xs font-semibold text-white leading-none">
+              <span className="font-sans font-semibold text-white leading-none text-base">
                 {authorName?.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -198,7 +198,6 @@ const ActionListCard = ({
 
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
             className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
           >
             +{categories.length}
@@ -207,6 +206,7 @@ const ActionListCard = ({
 
         {categoriesOpen && (
           <div
+            onClick={(e) => e.stopPropagation()}
             className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
             style={{
               boxShadow: "0px 3px 8px 0px #0000003D",
@@ -227,6 +227,7 @@ const ActionListCard = ({
         <button
           type="button"
           aria-label={CARD_NEXT_ARIA}
+          onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
           className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
         >
           <RightArrow />

@@ -3,12 +3,12 @@
 import {
   Formik,
   Form,
-  useState,
   loginCover,
   logoPng,
   Button,
   FormikControl,
   OnboardingLayout,
+  useToast,
   FORGOT_PASSWORD_HEADING,
   FORGOT_PASSWORD_DESCRIPTION,
   FORGOT_PASSWORD_BUTTON_TEXT,
@@ -18,7 +18,9 @@ import {
   FORGOT_PASSWORD_FIELDS,
   FORGOT_PASSWORD_VALIDATION_SCHEMA,
   FORGOT_PASSWORD_ERROR_CLASS,
-  FORGOT_PASSWORD_SUCCESS_CLASS,
+  FORGOT_PASSWORD_FOOTER_TEXT,
+  FORGOT_PASSWORD_FOOTER_LINK_LABEL,
+  FORGOT_PASSWORD_FOOTER_LINK_HREF,
   handleForgotPasswordSubmit,
 } from "./import";
 import type { FormikHelpers } from "./import";
@@ -28,28 +30,16 @@ interface ForgotPasswordValues {
 }
 
 export default function ForgotPasswordPage() {
-  const [sent, setSent] = useState(false);
+  const { addToast } = useToast();
 
   function handleSubmit(
     values: ForgotPasswordValues,
     helpers: FormikHelpers<ForgotPasswordValues>
   ) {
-    handleForgotPasswordSubmit(values, helpers, () => setSent(true));
-  }
-
-  if (sent) {
-    return (
-      <OnboardingLayout
-        heading={FORGOT_PASSWORD_HEADING}
-        description={FORGOT_PASSWORD_DESCRIPTION}
-        coverImage={loginCover}
-        logo={logoPng}
-        showGoogleButton={false}
-        showBackButton={true}
-      >
-        <p className={FORGOT_PASSWORD_SUCCESS_CLASS}>{FORGOT_PASSWORD_SUCCESS_MESSAGE}</p>
-      </OnboardingLayout>
-    );
+    handleForgotPasswordSubmit(values, helpers, () => {
+      addToast(FORGOT_PASSWORD_SUCCESS_MESSAGE);
+      helpers.resetForm();
+    });
   }
 
   return (
@@ -59,7 +49,9 @@ export default function ForgotPasswordPage() {
       coverImage={loginCover}
       logo={logoPng}
       showGoogleButton={false}
-      showBackButton={true}
+      showBackButton={false}
+      footerText={FORGOT_PASSWORD_FOOTER_TEXT}
+      footerLink={{ href: FORGOT_PASSWORD_FOOTER_LINK_HREF, label: FORGOT_PASSWORD_FOOTER_LINK_LABEL }}
     >
       <Formik
         initialValues={FORGOT_PASSWORD_INITIAL_VALUES}

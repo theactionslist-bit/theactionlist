@@ -55,7 +55,7 @@ export function OnboardingLayout({
           alt={COVER_IMAGE_ALT}
           fill
           className="object-cover"
-          preload={true}
+          priority
         />
       </div>
 
