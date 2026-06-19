@@ -322,6 +322,7 @@ function HomeContent() {
                 avatarColor={card.hex_colour_code}
                 frequency={card.frequencies[0]?.name}
                 frequencyCount={card.frequencies.length}
+                frequencies={card.frequencies.map((f) => f.name)}
                 authorName={card.authors[0]?.name}
                 category={card.areas[0]?.name}
                 categories={card.areas.map((a) => a.name)}
