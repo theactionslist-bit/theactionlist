@@ -38,12 +38,30 @@ interface SubmitActionValues {
 const SubmitAnAction = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  function handleSubmit(
-    _values: SubmitActionValues,
-    { setSubmitting }: FormikHelpers<SubmitActionValues>
+  async function handleSubmit(
+    values: SubmitActionValues,
+    { setSubmitting, setStatus }: FormikHelpers<SubmitActionValues>
   ) {
-    setSubmitting(false);
-    setShowSuccessModal(true);
+    setStatus(undefined);
+    try {
+      const res = await fetch("/api/submit-action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setStatus(data.error ?? "Submission failed. Please try again.");
+        return;
+      }
+
+      setShowSuccessModal(true);
+    } catch {
+      setStatus("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -59,8 +77,11 @@ const SubmitAnAction = () => {
           validationSchema={SUBMIT_FORM_VALIDATION_SCHEMA}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, status }) => (
             <Form noValidate className="flex flex-col gap-5">
+              {status && (
+                <p className="text-sm font-medium text-red-500">{status}</p>
+              )}
 
               {SUBMIT_FORM_TOP_FIELDS.map((field) => (
                 <FormikControl
