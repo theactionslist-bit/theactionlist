@@ -117,6 +117,7 @@ const ActionListCard = ({
     <div
       ref={dropdownRef}
       onClick={onNext}
+      onMouseEnter={() => { if (slug) router.prefetch(`/actionlist-detail/${slug}`); }}
       className={`relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 h-full cursor-pointer${(categoriesOpen || frequencyOpen) ? " z-2" : ""}`}
       style={{ boxShadow: "0px 3px 8px 0px #0000003D" }}
     >
@@ -275,6 +276,7 @@ const ActionListCard = ({
           <RightArrow />
         </button>
       </div>
+      
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
