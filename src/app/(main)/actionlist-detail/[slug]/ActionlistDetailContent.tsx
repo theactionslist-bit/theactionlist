@@ -215,10 +215,14 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
         {/* Details */}
         <section className="contents">
           <h3 className={LABEL_CLASS}>{DETAIL_SECTION_DETAILS}</h3>
-          <div className="flex flex-col gap-6">
-            <p className="font-sans text-xl font-medium text-black leading-relaxed">
-              {card.more_info}
-            </p>
+          <div className="flex flex-col gap-4">
+            {card.more_info.split("\n").map((line, i) =>
+              line.trim() ? (
+                <p key={i} className="font-sans text-xl font-medium text-black leading-relaxed">
+                  {line}
+                </p>
+              ) : null
+            )}
           </div>
         </section>
 
