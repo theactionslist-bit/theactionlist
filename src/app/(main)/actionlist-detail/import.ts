@@ -1,4 +1,5 @@
 import "swiper/css";
+import "swiper/css/pagination";
 
 export { useState, useEffect, useRouter, useParams, Link, Image } from "@/common/imports";
 export { createClient } from "@/lib/supabase/client";
