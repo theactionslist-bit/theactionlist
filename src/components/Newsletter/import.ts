@@ -1,4 +1,5 @@
 export { useState, type FormEvent } from "react";
+export { useToast } from "@/context/ToastContext";
 
 export {
   NEWSLETTER_HEADING,

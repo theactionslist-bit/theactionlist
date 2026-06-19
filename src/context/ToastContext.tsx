@@ -5,7 +5,7 @@ import { Toaster } from "@/components/Toast/page";
 import type { Toast } from "@/components/Toast/page";
 
 interface ToastContextValue {
-  addToast: (message: string, duration?: number) => void;
+  addToast: (message: string, variant?: "success" | "error", duration?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -13,9 +13,9 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  function addToast(message: string, duration?: number) {
+  function addToast(message: string, variant?: "success" | "error", duration?: number) {
     const id = Math.random().toString(36).slice(2) + Date.now();
-    setToasts((prev) => [...prev, { id, message, duration }]);
+    setToasts((prev) => [...prev, { id, message, variant, duration }]);
   }
 
   const removeToast = useCallback((id: string) => {

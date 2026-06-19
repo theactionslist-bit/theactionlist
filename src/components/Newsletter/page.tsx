@@ -3,6 +3,7 @@
 import {
   useState,
   type FormEvent,
+  useToast,
   NEWSLETTER_HEADING,
   NEWSLETTER_BODY,
   NEWSLETTER_PLACEHOLDER,
@@ -18,14 +19,13 @@ const NewsletterSection = () => {
   const [email, setEmail] = useState("");
   const [consented, setConsented] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
+  const { addToast } = useToast();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!consented || !email) return;
 
     setLoading(true);
-    setMessage(null);
 
     try {
       const res = await fetch("/api/newsletter", {
@@ -37,14 +37,14 @@ const NewsletterSection = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage({ text: "You're subscribed! Check your inbox.", ok: true });
+        addToast("You're subscribed! Check your inbox.", "success");
         setEmail("");
         setConsented(false);
       } else {
-        setMessage({ text: data.error ?? "Something went wrong.", ok: false });
+        addToast(data.error ?? "Something went wrong.", "error");
       }
     } catch {
-      setMessage({ text: "Network error. Please try again.", ok: false });
+      addToast("Network error. Please try again.", "error");
     } finally {
       setLoading(false);
     }
@@ -78,12 +78,6 @@ const NewsletterSection = () => {
             {loading ? "Subscribing…" : NEWSLETTER_BUTTON_TEXT}
           </button>
         </div>
-
-        {message && (
-          <p className={`mb-4 text-sm font-medium ${message.ok ? "text-green-600" : "text-red-500"}`}>
-            {message.text}
-          </p>
-        )}
 
         {/* Consent checkbox */}
         <label className="flex items-center gap-2 cursor-pointer">
