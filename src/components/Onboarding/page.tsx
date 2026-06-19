@@ -77,6 +77,7 @@ export function OnboardingLayout({
           )}
 
           {/* Logo */}
+          <Link href={process.env.NEXT_PUBLIC_BASE_URL || ''}>
           <div className="mb-10">
             <Image
               src={logo}
@@ -85,6 +86,7 @@ export function OnboardingLayout({
               height={LOGO_HEIGHT}
             />
           </div>
+          </Link>
 
           {/* Heading */}
           <h1 className="font-display text-[50px] leading-9.5 font-normal text-[#101010] mb-6.25">

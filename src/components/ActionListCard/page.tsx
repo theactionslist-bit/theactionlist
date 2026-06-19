@@ -144,7 +144,7 @@ const ActionListCard = ({
       {/* Header row: avatar + frequency badges */}
       <div className="flex items-center justify-between mb-3">
         <div
-          className="w-16 h-16 rounded-full overflow-hidden shrink-0"
+          className="w-15.5 h-15.5 rounded-full overflow-hidden shrink-0"
           style={{ backgroundColor: avatarSrc ? undefined : avatarColor }}
         >
           {avatarSrc && (
@@ -213,7 +213,7 @@ const ActionListCard = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
           >
             {category}
           </button>

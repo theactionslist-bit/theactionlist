@@ -151,6 +151,8 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
     useFavoriteToggle({ actionId: card.id, initialLiked: false });
   const { addToast } = useToast();
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
 
   async function handleShareClick() {
     const actionUrl = `${window.location.origin}/actionlist-detail/${card.slug}`;
@@ -200,7 +202,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
       {/* Hero */}
       <div className="flex gap-6 mb-16 items-center">
         <div
-          className="w-16 h-16 rounded-full shrink-0 mt-1"
+          className="w-15.5 h-15.5 rounded-full shrink-0 mt-1"
           style={{ backgroundColor: card.hex_colour_code }}
         />
         <h1 className="font-display text-4xl lg:text-5xl leading-tight text-black">
@@ -365,28 +367,30 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
           <button
             type="button"
             aria-label="Previous"
+            disabled={isBeginning}
             onClick={() => swiperInstance?.slidePrev()}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white hover:bg-gray-50 transition-colors"
+            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector className="rotate-180" />
           </button>
 
-          <div className="overflow-hidden">
+          <div className="overflow-x-hidden">
             <Swiper
-              className="related-actions-swiper"
+              className="related-actions-swiper md:px-4! px-2!"
               modules={[Navigation, Pagination]}
-              onSwiper={setSwiperInstance}
+              onSwiper={(swiper) => { setSwiperInstance(swiper); setIsBeginning(swiper.isBeginning); setIsEnd(swiper.isEnd); }}
+              onSlideChange={(swiper) => { setIsBeginning(swiper.isBeginning); setIsEnd(swiper.isEnd); }}
               spaceBetween={24}
               pagination={{ clickable: true }}
               slidesPerView={1}
               breakpoints={{
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 2 },
-                1280: { slidesPerView: 3 },
+                768: { slidesPerView: 2, pagination: { enabled: false } },
+                1024: { slidesPerView: 2, pagination: { enabled: false } },
+                1280: { slidesPerView: 3, pagination: { enabled: false } },
               }}
             >
               {relatedCards.map((item, i) => (
-                <SwiperSlide key={i}>
+                <SwiperSlide key={i} >
                   <ActionListCard
                     avatarColor={item.hex_colour_code}
                     text={item.title}
@@ -408,8 +412,9 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
           <button
             type="button"
             aria-label="Next"
+            disabled={isEnd}
             onClick={() => swiperInstance?.slideNext()}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white hover:bg-gray-50 transition-colors"
+            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector />
           </button>

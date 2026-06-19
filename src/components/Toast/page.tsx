@@ -5,6 +5,7 @@ export interface Toast {
   id: string;
   message: string;
   duration?: number;
+  variant?: "success" | "error";
 }
 
 function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) => void }) {
@@ -15,7 +16,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
 
   return (
     <div
-      className="flex items-center gap-3 bg-[#22C55E] text-white px-4 py-3 rounded-xl shadow-lg min-w-[280px] max-w-sm w-full"
+      className={`flex items-center gap-3 ${toast.variant === "error" ? "bg-[#EF4444]" : "bg-[#22C55E]"} text-white px-4 py-3 rounded-xl shadow-lg min-w-[280px] max-w-sm w-full`}
       style={{ animation: "toast-slide-in 0.25s ease-out" }}
     >
       <span className="flex-1 font-sans text-base font-medium">{toast.message}</span>
