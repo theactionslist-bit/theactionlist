@@ -40,7 +40,7 @@ const SubmitAnAction = () => {
 
   async function handleSubmit(
     values: SubmitActionValues,
-    { setSubmitting, setStatus }: FormikHelpers<SubmitActionValues>
+    { setSubmitting, setStatus, resetForm }: FormikHelpers<SubmitActionValues>
   ) {
     setStatus(undefined);
     try {
@@ -56,6 +56,7 @@ const SubmitAnAction = () => {
         return;
       }
 
+      resetForm();
       setShowSuccessModal(true);
     } catch {
       setStatus("Network error. Please try again.");

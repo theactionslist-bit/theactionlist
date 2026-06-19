@@ -393,6 +393,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                     authorName={item.authors[0]?.name}
                     frequency={item.frequencies[0]?.name}
                     frequencyCount={item.frequencies.length}
+                    frequencies={item.frequencies.map((f) => f.name)}
                     category={item.areas[0]?.name}
                     categories={item.areas.map((a) => a.name)}
                     actionId={item.id}

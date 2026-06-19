@@ -15,6 +15,7 @@ import {
   RightArrow,
   CARD_DEFAULT_FREQUENCY,
   CARD_DEFAULT_FREQUENCY_COUNT,
+  CARD_DEFAULT_FREQUENCIES,
   CARD_DEFAULT_CATEGORY,
   CARD_DEFAULT_CATEGORIES,
   useToast,
@@ -38,6 +39,7 @@ interface ActionListCardProps {
   authorAvatarSrc?: string;
   category?: string;
   categories?: string[];
+  frequencies?: string[];
   onNext?: () => void;
   actionId?: string;
   slug?: string;
@@ -55,6 +57,7 @@ const ActionListCard = ({
   authorAvatarSrc,
   category = CARD_DEFAULT_CATEGORY,
   categories = CARD_DEFAULT_CATEGORIES,
+  frequencies = CARD_DEFAULT_FREQUENCIES,
   onNext,
   actionId,
   slug,
@@ -68,6 +71,7 @@ const ActionListCard = ({
   });
   const { addToast } = useToast();
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [frequencyOpen, setFrequencyOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -95,11 +99,25 @@ const ActionListCard = ({
     return () => document.removeEventListener("mousedown", handle);
   }, [categoriesOpen]);
 
+  useEffect(() => {
+    if (!frequencyOpen) return;
+    function handle(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setFrequencyOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [frequencyOpen]);
+
   return (
     <div
       ref={dropdownRef}
       onClick={onNext}
-      className="relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 h-full cursor-pointer"
+      className={`relative rounded-xl bg-white px-4 py-5.5 flex flex-col gap-5 h-full cursor-pointer${(categoriesOpen || frequencyOpen) ? " z-2" : ""}`}
       style={{ boxShadow: "0px 3px 8px 0px #0000003D" }}
     >
       {/* Top-right actions */}
@@ -145,9 +163,13 @@ const ActionListCard = ({
             <TimeIcon className="shrink-0" />
             {frequency}
           </span>
-          <span className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010]">
+          <button
+            type="button"
+            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
+            onClick={(e) => { e.stopPropagation(); setCategoriesOpen(false); setFrequencyOpen((v) => !v); }}
+          >
             +{frequencyCount}
-          </span>
+          </button>
         </div>
       </div>
 
@@ -199,6 +221,7 @@ const ActionListCard = ({
           <button
             type="button"
             className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
+            onClick={(e) => { e.stopPropagation(); setFrequencyOpen(false); setCategoriesOpen((v) => !v); }}
           >
             +{categories.length}
           </button>
@@ -224,10 +247,29 @@ const ActionListCard = ({
           </div>
         )}
 
+        {frequencyOpen && (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
+            style={{
+              boxShadow: "0px 3px 8px 0px #0000003D",
+              animation: "slide-up-fade 200ms ease-out",
+            }}
+          >
+            {frequencies.map((freq) => (
+              <span
+                key={freq}
+                className="border border-[#DBDBDB] rounded-lg px-3 py-1.5 font-sans text-sm font-semibold text-[#101010] whitespace-nowrap"
+              >
+                {freq}
+              </span>
+            ))}
+          </div>
+        )}
+
         <button
           type="button"
           aria-label={CARD_NEXT_ARIA}
-          onClick={(e) => { e.stopPropagation(); setCategoriesOpen((v) => !v); }}
           className="flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
         >
           <RightArrow />

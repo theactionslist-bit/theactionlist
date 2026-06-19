@@ -11,6 +11,7 @@ export { default as RightArrow } from "@/assets/ActionDetailCard/RightArrow.svg"
 export {
   CARD_DEFAULT_FREQUENCY,
   CARD_DEFAULT_FREQUENCY_COUNT,
+  CARD_DEFAULT_FREQUENCIES,
   CARD_DEFAULT_CATEGORY,
   CARD_DEFAULT_CATEGORIES,
   CARD_FAVORITE_ARIA,
