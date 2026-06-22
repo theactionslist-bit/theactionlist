@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export { Formik, Form, useRouter } from "@/common/imports";
 export type { FormikHelpers } from "@/common/imports";
-export { Button, FormikControl, loginCover, logoPng, OnboardingLayout } from "@/common/components";
+export { Button, FormikControl, loginCover, OnboardingLayout } from "@/common/components";
 export {
   RESET_PASSWORD_HEADING,
   RESET_PASSWORD_DESCRIPTION,

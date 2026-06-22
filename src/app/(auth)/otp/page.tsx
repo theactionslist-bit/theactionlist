@@ -6,7 +6,6 @@ import {
   useRouter,
   useSearchParams,
   loginCover,
-  logoPng,
   OnboardingLayout,
   Button,
   Suspense,
@@ -85,7 +84,7 @@ function OTPContent() {
       heading={OTP_HEADING}
       description={OTP_DESCRIPTION}
       coverImage={loginCover}
-      logo={logoPng}
+      // logo={logoPng}
       showGoogleButton={false}
       showBackButton={true}
     >

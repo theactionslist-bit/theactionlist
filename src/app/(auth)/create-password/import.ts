@@ -3,7 +3,7 @@ import * as Yup from "yup";
 export { Formik, Form, useRouter, Suspense } from "@/common/imports";
 export { useSearchParams } from "next/navigation";
 export type { FormikHelpers } from "@/common/imports";
-export { Button, FormikControl, loginCover, logoPng, OnboardingLayout } from "@/common/components";
+export { Button, FormikControl, loginCover, OnboardingLayout } from "@/common/components";
 export {
   CREATE_PASSWORD_HEADING,
   CREATE_PASSWORD_DESCRIPTION,

@@ -11,7 +11,7 @@ export default function AuthLayout({
 }) {
   return (
     <div
-      className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col"
+      className="min-h-screen xl:h-screen xl:overflow-hidden flex flex-col"
       style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
     >
       {children}
