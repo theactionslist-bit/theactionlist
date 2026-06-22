@@ -22,7 +22,7 @@ export async function handleResetPasswordSubmit(
 ) {
   const { error } = await updatePassword(values.password);
   if (error) {
-    setStatus(error.message);
+    setStatus('The OTP is no longer valid.');
     setSubmitting(false);
     return;
   }
