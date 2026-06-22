@@ -79,7 +79,7 @@ const SubmitAnAction = () => {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, status }) => (
-            <Form noValidate className="flex flex-col gap-5">
+            <Form noValidate className="flex flex-col gap-2">
               {status && (
                 <p className="text-sm font-medium text-red-500">{status}</p>
               )}
@@ -96,7 +96,7 @@ const SubmitAnAction = () => {
                 />
               ))}
 
-              <h2 className="font-display text-2xl md:text-3xl text-[#101010] mt-5">
+              <h2 className="font-display text-[22px] text-[#101010] mt-5">
                 {SUBMIT_FORM_SECTION_1}
               </h2>
               <FormikControl
@@ -108,7 +108,7 @@ const SubmitAnAction = () => {
                 autoComplete={SUBMIT_FORM_HELPS_WITH_FIELD.autoComplete}
               />
 
-              <h2 className="font-display text-2xl md:text-3xl text-[#101010] mt-5">
+              <h2 className="font-display text-[22px] text-[#101010] mt-5">
                 {SUBMIT_FORM_SECTION_2}
               </h2>
               <FormikControl
@@ -119,7 +119,7 @@ const SubmitAnAction = () => {
                 rows={5}
               />
 
-              <h2 className="font-display text-2xl md:text-3xl text-[#101010] mt-5">
+              <h2 className="font-display text-[22px] text-[#101010] mt-5">
                 {SUBMIT_FORM_SECTION_3}
               </h2>
               <FormikControl

@@ -26,9 +26,9 @@ export default function Textarea({ label, rows = 4, ...props }: TextareaProps) {
         {...field}
         {...props}
         className={`
-          font-sans text-base w-full rounded-xl border-2 bg-gray-50
+          font-sans text-base w-full rounded-xl border-2
           px-4 py-3 text-gray-900 placeholder:text-gray-400 placeholder:text-[16px]
-          outline-none transition-all resize-y
+          outline-none transition-all resize-none
           hover:bg-white
           focus:bg-white
           ${

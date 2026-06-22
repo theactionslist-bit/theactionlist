@@ -76,9 +76,9 @@ export default function Selector({
           type="button"
           onClick={() => setOpen((v) => !v)}
           className={`
-            font-sans text-sm w-full h-17 text-left
+            font-sans text-sm w-full text-left
             rounded-xl border-2
-            px-5 pr-12 text-gray-900
+            px-5 py-3 text-gray-900
             outline-none transition-all
             hover:bg-white
             cursor-pointer
@@ -98,7 +98,7 @@ export default function Selector({
               {selectedOption.label}
             </span>
           ) : (
-            <span className="xl:text-[26px] text-xl font-semibold text-[#101010]">
+            <span className="xl:text-[22px] text-xl font-semibold text-[#101010]">
               {placeholder}
             </span>
           )}
@@ -150,7 +150,7 @@ export default function Selector({
                   <button
                     type="button"
                     onClick={() => selectOption(opt)}
-                    className={`w-full text-left px-4 py-3.5 font-sans xl:text-[26px] text-xl font-medium hover:bg-gray-50 transition-colors cursor-pointer ${
+                    className={`w-full text-left px-4 py-3.5 font-sans xl:text-[22px] text-xl font-medium hover:bg-gray-50 transition-colors cursor-pointer ${
                       field.value === opt.value
                         ? "text-[#D89593] font-semibold"
                         : "text-[#101010]"

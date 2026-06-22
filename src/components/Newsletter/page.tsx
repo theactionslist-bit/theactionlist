@@ -68,12 +68,12 @@ const NewsletterSection = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={NEWSLETTER_PLACEHOLDER}
             required
-            className="flex-1 min-w-0 px-4 py-1.5 bg-transparent text-base md:text-xl lg:text-2xl text-[#101010] placeholder:text-gray-400 outline-none"
+            className="flex-1 min-w-0 px-4 py-1.5 bg-transparent text-base md:text-xl text-[#101010] placeholder:text-gray-400 outline-none"
           />
           <button
             type="submit"
             disabled={!consented || !email || loading}
-            className="px-5 md:px-7 py-1.5 md:py-2.5 rounded-lg bg-[#101010] text-white text-base md:text-xl lg:text-2xl font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-5 md:px-7 py-1.5 md:py-2.5 rounded-lg bg-[#101010] text-white text-base md:text-xl  font-medium whitespace-nowrap hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Subscribing…" : NEWSLETTER_BUTTON_TEXT}
           </button>

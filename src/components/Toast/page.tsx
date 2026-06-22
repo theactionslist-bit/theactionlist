@@ -39,7 +39,7 @@ export function Toaster({ toasts, onRemove }: { toasts: Toast[]; onRemove: (id: 
   useEffect(() => { setMounted(true); }, []);
   if (!mounted) return null;
   return createPortal(
-    <div className="fixed top-[calc(var(--header-height)+1rem)] right-4 z-50 flex flex-col gap-2">
+    <div className="fixed top-6 right-4 z-50 flex flex-col gap-2">
       {toasts.map((t) => (
         <ToastItem key={t.id} toast={t} onRemove={onRemove} />
       ))}
