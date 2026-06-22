@@ -25,7 +25,7 @@ interface OnboardingLayoutProps {
   heading: string;
   description: string;
   coverImage: StaticImageData | string;
-  logo: StaticImageData | string;
+  logo?: StaticImageData | string;
   children: React.ReactNode;
   footerText?: string;
   footerLink?: FooterLink;
@@ -78,16 +78,18 @@ export function OnboardingLayout({
 
           <div className="flex-1 flex flex-col justify-center">
             {/* Logo */}
-            <Link href={process.env.NEXT_PUBLIC_BASE_URL || ''}>
-            <div className="mb-19">
-              <Image
-                src={logo}
-                alt={LOGO_ALT}
-                width={LOGO_WIDTH}
-                height={LOGO_HEIGHT}
-              />
-            </div>
-            </Link>
+            {logo && (
+              <Link href={process.env.NEXT_PUBLIC_BASE_URL || ''}>
+              <div className="mb-19">
+                <Image
+                  src={logo}
+                  alt={LOGO_ALT}
+                  width={LOGO_WIDTH}
+                  height={LOGO_HEIGHT}
+                />
+              </div>
+              </Link>
+            )}
 
             {/* Heading */}
             <h1 className="font-display text-[50px] leading-9.5 font-normal text-[#101010] mb-6.25">

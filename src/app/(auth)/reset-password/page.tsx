@@ -5,7 +5,6 @@ import {
   Form,
   useRouter,
   loginCover,
-  logoPng,
   Button,
   FormikControl,
   OnboardingLayout,
@@ -41,9 +40,8 @@ export default function ResetPasswordPage() {
       heading={RESET_PASSWORD_HEADING}
       description={RESET_PASSWORD_DESCRIPTION}
       coverImage={loginCover}
-      logo={logoPng}
       showGoogleButton={false}
-      showBackButton={false}
+      showBackButton={true}
     >
       <Formik
         initialValues={RESET_PASSWORD_INITIAL_VALUES}

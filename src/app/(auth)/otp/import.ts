@@ -1,6 +1,6 @@
 export { useState, useRef, Suspense } from "@/common/imports";
 export { useRouter, useSearchParams } from "next/navigation";
-export { loginCover, logoPng, OnboardingLayout, Button } from "@/common/components";
+export { loginCover, OnboardingLayout, Button } from "@/common/components";
 export {
   OTP_LENGTH,
   OTP_HEADING,

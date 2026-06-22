@@ -6,7 +6,6 @@ import {
   useRouter,
   useSearchParams,
   loginCover,
-  logoPng,
   Button,
   FormikControl,
   OnboardingLayout,
@@ -46,9 +45,8 @@ function CreatePasswordForm() {
       heading={CREATE_PASSWORD_HEADING}
       description={CREATE_PASSWORD_DESCRIPTION}
       coverImage={loginCover}
-      logo={logoPng}
       showGoogleButton={false}
-      showBackButton={false}
+      showBackButton={true}
     >
       <Formik
         initialValues={CREATE_PASSWORD_INITIAL_VALUES}
