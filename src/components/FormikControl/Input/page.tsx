@@ -40,10 +40,11 @@ export default function Input({ label, type, className, ...props }: InputProps) 
           {...field}
           {...props}
           type={inputType}
+          autoComplete="off"
           className={`
-            font-sans text-base w-full h-16.75
-            rounded-xl border-2 bg-gray-50
-            px-4 text-gray-900 placeholder:text-gray-400
+            font-sans text-base w-full
+            rounded-xl border-2
+            px-5 py-3.5 text-gray-900 placeholder:text-[#10101099]
             outline-none transition-all
             hover:bg-white
             focus:bg-white

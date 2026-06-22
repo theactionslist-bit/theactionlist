@@ -54,6 +54,19 @@ interface VideoInfo {
   type: "youtube" | "vimeo" | "direct";
   embedUrl: string;
   thumbnailUrl?: string;
+  timestampSeconds?: number;
+}
+
+function parseTimestamp(url: string): number | undefined {
+  const match = url.match(/[?&](?:t|start)=(\d+)s?/);
+  if (!match) return undefined;
+  return parseInt(match[1], 10);
+}
+
+function formatTimestamp(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
 function getVideoInfo(url: string): VideoInfo | null {
@@ -62,10 +75,13 @@ function getVideoInfo(url: string): VideoInfo | null {
   );
   if (ytMatch) {
     const videoId = ytMatch[1];
+    const timestampSeconds = parseTimestamp(url);
+    const startParam = timestampSeconds ? `&start=${timestampSeconds}` : "";
     return {
       type: "youtube",
-      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1${startParam}`,
       thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+      timestampSeconds,
     };
   }
 
@@ -132,6 +148,11 @@ function VideoEmbed({ url, title }: { url: string; title: string }) {
           <path d="M27 34l18-10-18-10v20z" fill="#fff" />
         </svg>
       </div>
+      {info.timestampSeconds !== undefined && (
+        <div className="absolute bottom-2 right-2 bg-black/70 text-white font-sans text-xs font-semibold px-1.5 py-0.5 rounded pointer-events-none">
+          {formatTimestamp(info.timestampSeconds)}
+        </div>
+      )}
     </button>
   );
 }
@@ -148,7 +169,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
   const [card] = useState<ActionDetail>(initialCard);
   const [relatedCards] = useState<CardRow[]>(initialRelatedCards);
   const { liked, setLiked, toggling, modalOpen, setModalOpen, handleHeartClick } =
-    useFavoriteToggle({ actionId: card.id, initialLiked: false });
+    useFavoriteToggle({ actionId: card.id, initialLiked: card.is_selected });
   const { addToast } = useToast();
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
@@ -199,19 +220,20 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
         </div>
       </div>
 
-      {/* Hero */}
-      <div className="flex gap-6 mb-16 items-center">
-        <div
-          className="w-15.5 h-15.5 rounded-full shrink-0 mt-1"
-          style={{ backgroundColor: card.hex_colour_code }}
-        />
-        <h1 className="font-display text-4xl lg:text-5xl leading-tight text-black">
-          {card.title}
-        </h1>
-      </div>
-
       {/* Sections */}
       <div className="grid grid-cols-1 gap-y-10 lg:grid-cols-[max-content_1fr] lg:items-start lg:gap-x-16 lg:gap-y-16">
+        {/* Hero */}
+        <section className="contents">
+          <div
+            className="w-20 h-20 rounded-full shrink-0 mt-1"
+            style={{ backgroundColor: card.hex_colour_code }}
+          />
+          <h1 className="font-display text-4xl lg:text-5xl leading-tight text-black">
+            {card.title}
+          </h1>
+
+        </section>
+
         {/* Details */}
         <section className="contents">
           <h3 className={LABEL_CLASS}>{DETAIL_SECTION_DETAILS}</h3>
@@ -367,13 +389,13 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
         <h2 className="font-display text-4xl lg:text-5xl text-[#101010] text-center mb-10">
           {RELATED_ACTIONS_HEADING}
         </h2>
-        <div className="relative lg:px-14">
+        <div className="relative">
           <button
             type="button"
             aria-label="Previous"
             disabled={isBeginning}
             onClick={() => swiperInstance?.slidePrev()}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector className="rotate-180" />
           </button>
@@ -389,8 +411,9 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
               slidesPerView={1}
               breakpoints={{
                 768: { slidesPerView: 2, pagination: { enabled: false } },
-                1024: { slidesPerView: 2, pagination: { enabled: false } },
+                1024: { slidesPerView: 3, pagination: { enabled: false } },
                 1280: { slidesPerView: 3, pagination: { enabled: false } },
+                1536: { slidesPerView: 4, pagination: { enabled: false } },
               }}
             >
               {relatedCards.map((item, i) => (
@@ -418,7 +441,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label="Next"
             disabled={isEnd}
             onClick={() => swiperInstance?.slideNext()}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector />
           </button>

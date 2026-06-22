@@ -145,7 +145,7 @@ const ActionListCard = ({
       {/* Header row: avatar + frequency badges */}
       <div className="flex items-center justify-between mb-3">
         <div
-          className="w-15.5 h-15.5 rounded-full overflow-hidden shrink-0"
+          className="w-9 h-9 rounded-full overflow-hidden shrink-0"
           style={{ backgroundColor: avatarSrc ? undefined : avatarColor }}
         >
           {avatarSrc && (
@@ -160,13 +160,13 @@ const ActionListCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010]">
+          <span className="flex items-center gap-1.5 border border-[#DBDBDB] rounded-lg px-2 py-2 font-sans text-[15px] font-medium text-black">
             <TimeIcon className="shrink-0" />
             {frequency}
           </span>
           {(frequencyCount-1 > 0) && <button
             type="button"
-            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
+            className="border border-[#DBDBDB] rounded-lg px-2.5 py-2 font-sans text-[15px] font-medium text-black hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={(e) => { e.stopPropagation(); setCategoriesOpen(false); setFrequencyOpen((v) => !v); }}
           >
             +{frequencyCount - 1}
@@ -175,13 +175,13 @@ const ActionListCard = ({
       </div>
 
       {/* Main content text */}
-      <p className="flex-1 font-display text-xl md:text-2xl lg:text-[28px] leading-snug text-[#101010] mb-4 mt-4">
+      <p className="flex-1 font-display text-xl lg:text-[22px] leading-snug text-black mb-4 mt-4">
         {text}
       </p>
 
       {/* Author chip */}
       {authorName && (
-        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2.5 w-fit mb-1">
+        <div className="flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-2 py-2 w-fit mb-1">
           {authorAvatarSrc ? (
             <Image
               src={authorAvatarSrc}
@@ -191,19 +191,19 @@ const ActionListCard = ({
               className="w-5 h-5 rounded-full object-cover shrink-0"
             />
           ) : (
-            <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
-              <span className="font-sans font-semibold text-white leading-none text-base">
+            <div className="w-6 h-6 rounded-full bg-black shrink-0 flex items-center justify-center">
+              <span className="font-sans font-semibold text-white leading-none text-[15px]">
                 {authorName?.charAt(0).toUpperCase()}
               </span>
             </div>
           )}
-          <span className="font-sans text-base md:text-xl font-medium text-[#101010] whitespace-nowrap">
+          <span className="font-sans text-[15px] font-medium text-black whitespace-nowrap">
             {authorName}
           </span>
-          <span className="font-sans text-base md:text-xl text-[#101010] select-none">
+          <span className="font-sans text-[15px] text-black select-none">
             ·
           </span>
-          <span className="font-sans text-base md:text-xl font-medium text-[#101010]">
+          <span className="font-sans text-[15px] font-medium text-black">
             X
           </span>
         </div>
@@ -214,14 +214,14 @@ const ActionListCard = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
+            className="border border-[#DBDBDB] rounded-lg px-2 py-2 font-sans text-[15px] font-medium text-black hover:bg-gray-50 transition-colors cursor-pointer"
           >
             {category}
           </button>
 
           { (categories.length - 1 > 0) &&<button
             type="button"
-            className="border border-[#DBDBDB] rounded-lg px-4 py-2.5 font-sans text-base md:text-xl font-medium text-[#101010] hover:bg-gray-50 transition-colors cursor-pointer"
+            className="border border-[#DBDBDB] rounded-lg px-2.5 py-2 font-sans text-[15px] font-medium text-black hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={(e) => { e.stopPropagation(); setFrequencyOpen(false); setCategoriesOpen((v) => !v); }}
           >
             +{categories.length - 1}
@@ -231,7 +231,7 @@ const ActionListCard = ({
         {categoriesOpen && (
           <div
             onClick={(e) => e.stopPropagation()}
-            className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
+            className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 px-7.5 py-5 flex flex-wrap gap-2 content-start overflow-y-auto"
             style={{
               boxShadow: "0px 3px 8px 0px #0000003D",
               animation: "slide-up-fade 200ms ease-out",
@@ -240,7 +240,7 @@ const ActionListCard = ({
             {categories.map((cat) => (
               <span
                 key={cat}
-                className="border border-[#DBDBDB] rounded-lg px-3 py-1.5 font-sans text-sm font-semibold text-[#101010] whitespace-nowrap"
+                className="border border-[#DBDBDB] rounded-lg p-2 font-sans text-xs font-semibold text-black whitespace-nowrap"
               >
                 {cat}
               </span>
@@ -251,7 +251,7 @@ const ActionListCard = ({
         {frequencyOpen && (
           <div
             onClick={(e) => e.stopPropagation()}
-            className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 p-4 flex flex-wrap gap-2 content-start overflow-y-auto"
+            className="absolute bottom-0 left-0 right-0 rounded-b-xl bg-white z-10 px-7.5 py-5 flex flex-wrap gap-2 content-start overflow-y-auto"
             style={{
               boxShadow: "0px 3px 8px 0px #0000003D",
               animation: "slide-up-fade 200ms ease-out",
@@ -260,7 +260,7 @@ const ActionListCard = ({
             {frequencies.map((freq) => (
               <span
                 key={freq}
-                className="border border-[#DBDBDB] rounded-lg px-3 py-1.5 font-sans text-sm font-semibold text-[#101010] whitespace-nowrap"
+                className="border border-[#DBDBDB] rounded-lg p-2 font-sans text-xs font-semibold text-black whitespace-nowrap"
               >
                 {freq}
               </span>
