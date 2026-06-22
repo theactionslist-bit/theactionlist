@@ -85,6 +85,7 @@ function HomeContent() {
   const [allCards, setAllCards] = useState<CardRow[]>([]);
   const [isShuffled, setIsShuffled] = useState(false);
   const [loading, setLoading] = useState(true);
+  const prefetchedCardsRef = useRef<CardRow[] | null>(null);
   const [filtersData, setFiltersData] = useState<FiltersData>({
     areas: [],
     authors: [],
@@ -216,6 +217,20 @@ function HomeContent() {
     };
   }, [filters, filtersSettled, currentPage, isShuffled]);
 
+  // Prefetch all cards in the background so Shuffle is instant on first click.
+  useEffect(() => {
+    if (!filtersSettled) return;
+    prefetchedCardsRef.current = null;
+    let ignored = false;
+    const aIds = filters.areas ? [filters.areas] : undefined;
+    const auIds = filters.authors ? [filters.authors] : undefined;
+    const fIds = filters.frequencies ? [filters.frequencies] : undefined;
+    fetchAllCards(aIds, auIds, fIds).then(({ data, error }) => {
+      if (!ignored && !error && data) prefetchedCardsRef.current = data as CardRow[];
+    });
+    return () => { ignored = true; };
+  }, [filters, filtersSettled]);
+
   const displayedCards = isShuffled
     ? allCards.slice((currentPage - 1) * HOME_ITEMS_PER_PAGE, currentPage * HOME_ITEMS_PER_PAGE)
     : allCards;
@@ -225,6 +240,13 @@ function HomeContent() {
       setAllCards(shuffleArray(allCards));
       return;
     }
+    const cached = prefetchedCardsRef.current;
+    if (cached) {
+      setAllCards(shuffleArray(cached));
+      setIsShuffled(true);
+      return;
+    }
+    // Fallback: prefetch not yet complete, fetch now.
     const aIds = filters.areas ? [filters.areas] : undefined;
     const auIds = filters.authors ? [filters.authors] : undefined;
     const fIds = filters.frequencies ? [filters.frequencies] : undefined;
