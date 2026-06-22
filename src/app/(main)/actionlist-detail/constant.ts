@@ -11,6 +11,7 @@ export const DETAIL_SECTION_SOURCES = "Sources:";
 export const DETAIL_SECTION_HELPS = "Can help with:";
 export const DETAIL_SECTION_BEST_TIME = "Best time to try:";
 export const DETAIL_SECTION_SUGGESTED = "Suggested by:";
+export const DETAIL_SECTION_PRODUCTS = "Products:";
 
 export const DETAIL_PARAGRAPHS = [
   "When you talk at roughly 92 beats per minute, you slow the room down just enough for people to keep up without strain. The average conversation sits around 130 BPM—quick enough that ideas start to smear at the edges. Drop to 92 and you create a natural pause between phrases; each point lands, settles, and registers before the next one arrives.",

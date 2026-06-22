@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, createPortal, TOAST_DEFAULT_DURATION, TOAST_CLOSE_ARIA } from "./import";
+import { useState, useEffect, createPortal, TOAST_DEFAULT_DURATION, TOAST_CLOSE_ARIA, ToastrCrossIcon } from "./import";
 
 export interface Toast {
   id: string;
@@ -16,19 +16,17 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
 
   return (
     <div
-      className={`flex items-center gap-3 ${toast.variant === "error" ? "bg-[#EF4444]" : "bg-[#22C55E]"} text-white px-4 py-3 rounded-xl shadow-lg min-w-[280px] max-w-sm w-full`}
+      className={`flex items-center gap-3 ${toast.variant === "error" ? "bg-[#C10803] border-[#C1080312] border-2" : "bg-[#EFF9EE] border-2 border-[#09961E]"} text-white px-4 py-3 rounded-xl shadow-lg min-w-[280px] max-w-sm w-full`}
       style={{ animation: "toast-slide-in 0.25s ease-out" }}
     >
-      <span className="flex-1 font-sans text-base font-medium">{toast.message}</span>
+      <span className="flex-1 font-sans text-base font-medium text-black">{toast.message}</span>
       <button
         type="button"
         aria-label={TOAST_CLOSE_ARIA}
         onClick={() => onRemove(toast.id)}
         className="shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M12 4L4 12M4 4L12 12" stroke="white" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+        <ToastrCrossIcon />
       </button>
     </div>
   );
