@@ -70,6 +70,7 @@ function OTPContent() {
     setResendLoading(true);
     await handleResendSignupOtp(
       email,
+      name,
       () => {
         setOtp(Array(OTP_LENGTH).fill(""));
         inputRefs.current[0]?.focus();

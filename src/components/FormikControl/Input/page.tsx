@@ -66,11 +66,11 @@ export default function Input({ label, type, className, ...props }: InputProps) 
             aria-label={showPassword ? HIDE_PASSWORD_ARIA_LABEL : SHOW_PASSWORD_ARIA_LABEL}
           >
             <Image
-              src={showPassword ? passwordHideEye : passwordEye}
+              src={showPassword ? passwordEye :  passwordHideEye}
               alt={showPassword ? HIDE_PASSWORD_ARIA_LABEL : SHOW_PASSWORD_ARIA_LABEL}
               width={PASSWORD_EYE_SIZE}
               height={PASSWORD_EYE_SIZE}
-              className="pointer-events-none"
+              className="cursor-pointer"
             />
           </button>
         )}

@@ -24,10 +24,11 @@ export async function handleVerifyOtp(
 
 export async function handleResendSignupOtp(
   email: string,
+  name: string,
   onSuccess: () => void,
   setError: (msg: string) => void
 ) {
-  const { error } = await resendSignupOtp(email);
+  const { error } = await resendSignupOtp(email, name);
   if (error) {
     setError(error.message);
     return;

@@ -4,6 +4,7 @@ import {
   useState,
   useRouter,
   useEffect,
+  createClient,
   Link,
   Image,
   HeartIcon,
@@ -34,6 +35,7 @@ import {
   DETAIL_SECTION_HELPS,
   DETAIL_SECTION_BEST_TIME,
   DETAIL_SECTION_SUGGESTED,
+  DETAIL_SECTION_PRODUCTS,
   DETAIL_HEART_ARIA,
   DETAIL_SHARE_ARIA,
   RELATED_ACTIONS_HEADING,
@@ -135,7 +137,7 @@ function VideoEmbed({ url, title }: { url: string; title: string }) {
       ) : (
         <div className="w-full h-full bg-[#1a1a1a]" />
       )}
-      <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors">
+      <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors cursor-pointer">
         <svg
           viewBox="0 0 68 48"
           className="w-16 h-11 drop-shadow-md group-hover:scale-105 transition-transform"
@@ -186,8 +188,22 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
   }
 
   useEffect(() => {
-    if (card) setLiked(card.is_selected);
-  }, [card, setLiked]);
+    async function syncLiked() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase.rpc("get_favorite_actions", {
+        p_page: 1,
+        p_limit: 1000,
+        p_selected_area_ids: null,
+        p_selected_author_ids: null,
+        p_selected_frequency_ids: null,
+      });
+      if (!data) return;
+      setLiked((data as CardRow[]).some((c) => c.id === card.id));
+    }
+    syncLiked();
+  }, [card.id, setLiked]);
 
   const author = card.authors[0];
   const socialLinks = author?.social_links ?? [];
@@ -300,6 +316,34 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
           </section>
         )}
 
+        {/* Products */}
+        {card.products.length > 0 && (
+          <section className="contents">
+            <h3 className={LABEL_CLASS}>{DETAIL_SECTION_PRODUCTS}</h3>
+            <div className="flex flex-wrap gap-4">
+              {card.products.map((product, i) => (
+                <a
+                  key={i}
+                  href={product.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-83.5 border border-[#DBDBDB] rounded-xl overflow-hidden flex flex-col hover:opacity-80 transition-opacity"
+                >
+                  {product.image && (
+                    <div className="relative w-full h-48 shrink-0">
+                      <Image src={product.image} alt={product.title} fill className="object-contain p-4" />
+                    </div>
+                  )}
+                  <div className="p-4 flex flex-col gap-2">
+                    <p className="font-sans font-semibold text-xl text-black">{product.title}</p>
+                    <p className="font-sans text-base text-[#363636] leading-7">{product.description}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Can help with */}
         {card.areas.length > 0 && (
           <section className="contents">
@@ -346,7 +390,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             <div className="flex items-center gap-6 flex-wrap">
               <Link
                 href={`/?author_name=${encodeURIComponent(author.name)}`}
-                className="inline-flex items-center gap-2 bg-[#EFEFEF] rounded-md px-4 py-2 hover:opacity-70 transition-opacity"
+                className="inline-flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2 hover:opacity-70 transition-opacity"
               >
                 <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
                   <span className="font-sans text-xs font-semibold text-white leading-none">
@@ -395,7 +439,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label="Previous"
             disabled={isBeginning}
             onClick={() => swiperInstance?.slidePrev()}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute -left-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector className="rotate-180" />
           </button>
@@ -441,7 +485,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label="Next"
             disabled={isEnd}
             onClick={() => swiperInstance?.slideNext()}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute -right-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector />
           </button>

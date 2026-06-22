@@ -17,7 +17,7 @@ export async function verifySignupOtp(email: string, otp: string) {
   return { data, error };
 }
 
-export async function resendSignupOtp(email: string) {
+export async function resendSignupOtp(email: string, name: string) {
   const supabase = createClient();
-  return supabase.rpc("send_signup_otp", { user_email: email });
+  return supabase.rpc("send_signup_otp", { user_email: email, user_name: name });
 }

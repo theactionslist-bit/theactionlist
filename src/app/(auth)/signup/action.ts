@@ -30,7 +30,7 @@ export async function handleSignupSubmit(
     setSubmitting(false);
     return;
   }
-  const { error: otpError } = await sendSignupOtp(values.email);
+  const { error: otpError } = await sendSignupOtp(values.email, values.name);
   if (otpError) {
     setStatus(otpError.message);
     setSubmitting(false);

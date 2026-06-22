@@ -15,6 +15,10 @@ export function useFavoriteToggle({
   const [modalOpen, setModalOpen] = useState(false);
 
   async function handleHeartClick() {
+    if (!actionId) {
+      setLiked((v) => !v);
+      return;
+    }
     const supabase = createClient();
     const {
       data: { user },
@@ -23,19 +27,14 @@ export function useFavoriteToggle({
       setModalOpen(true);
       return;
     }
-    if (!actionId) {
-      setLiked((v) => !v);
-      return;
-    }
+    const wasLiked = liked;
+    setLiked(!wasLiked);
     setToggling(true);
-    const { error } = await supabase.rpc("toggle_favorite_action", {
+    await supabase.rpc("toggle_favorite_action", {
       p_action_id: actionId,
     });
     setToggling(false);
-    if (!error) {
-      setLiked((v) => !v);
-      if (liked) onUnfavorite?.();
-    }
+    if (wasLiked) onUnfavorite?.();
   }
 
   return { liked, setLiked, toggling, modalOpen, setModalOpen, handleHeartClick };

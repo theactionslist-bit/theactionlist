@@ -47,7 +47,7 @@ export function OnboardingLayout({
   onGoogleSignIn,
 }: OnboardingLayoutProps) {
   return (
-    <div className="flex flex-1 min-h-screen">
+    <div className="flex flex-1 lg:h-full">
       {/* ── Left: cover image ── */}
       <div className="relative hidden lg:block lg:w-1/2">
         <Image
@@ -78,7 +78,7 @@ export function OnboardingLayout({
 
           {/* Logo */}
           <Link href={process.env.NEXT_PUBLIC_BASE_URL || ''}>
-          <div className="mb-10">
+          <div className="mb-19">
             <Image
               src={logo}
               alt={LOGO_ALT}
