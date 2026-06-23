@@ -160,9 +160,14 @@ function VideoEmbed({ url, title }: { url: string; title: string }) {
 }
 
 function getSocialIcon(url: string) {
-  if (url.includes("instagram.com")) return <InstagramIcon />;
-  if (url.includes("twitter.com") || url.includes("x.com")) return <XIcon className="[&_path]:fill-[#10101099]" />;
-  if (url.includes("facebook.com")) return <FacebookIcon />;
+  try {
+    const { hostname } = new URL(url);
+    if (hostname.includes("instagram.com")) return <InstagramIcon />;
+    if (hostname.includes("twitter.com") || hostname === "x.com" || hostname === "www.x.com") return <XIcon className="[&_path]:fill-[#10101099]" />;
+    if (hostname.includes("facebook.com")) return <FacebookIcon />;
+  } catch {
+    // malformed URL — fall through to globe
+  }
   return <IoGlobeOutline size={24} color="#6B6A69" />;
 }
 
@@ -392,7 +397,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                 href={`/?author_name=${encodeURIComponent(author.name)}`}
                 className="inline-flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2 hover:opacity-70 transition-opacity"
               >
-                <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
                   <span className="font-sans text-xs font-semibold text-white leading-none">
                     {author.name.charAt(0).toUpperCase()}
                   </span>
@@ -439,7 +444,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label="Previous"
             disabled={isBeginning}
             onClick={() => swiperInstance?.slidePrev()}
-            className={`absolute -left-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute -left-7.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector className="rotate-180" />
           </button>
@@ -456,7 +461,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
               breakpoints={{
                 768: { slidesPerView: 2, pagination: { enabled: false } },
                 1024: { slidesPerView: 3, pagination: { enabled: false } },
-                1280: { slidesPerView: 3, pagination: { enabled: false } },
+                1280: { slidesPerView: 4, pagination: { enabled: false } },
                 1536: { slidesPerView: 4, pagination: { enabled: false } },
               }}
             >
@@ -485,7 +490,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label="Next"
             disabled={isEnd}
             onClick={() => swiperInstance?.slideNext()}
-            className={`absolute -right-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute -right-7.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector />
           </button>
