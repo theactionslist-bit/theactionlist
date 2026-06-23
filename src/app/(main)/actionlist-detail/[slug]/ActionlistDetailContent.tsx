@@ -160,9 +160,14 @@ function VideoEmbed({ url, title }: { url: string; title: string }) {
 }
 
 function getSocialIcon(url: string) {
-  if (url.includes("instagram.com")) return <InstagramIcon />;
-  if (url.includes("twitter.com") || url.includes("x.com")) return <XIcon className="[&_path]:fill-[#10101099]" />;
-  if (url.includes("facebook.com")) return <FacebookIcon />;
+  try {
+    const { hostname } = new URL(url);
+    if (hostname.includes("instagram.com")) return <InstagramIcon />;
+    if (hostname.includes("twitter.com") || hostname === "x.com" || hostname === "www.x.com") return <XIcon className="[&_path]:fill-[#10101099]" />;
+    if (hostname.includes("facebook.com")) return <FacebookIcon />;
+  } catch {
+    // malformed URL — fall through to globe
+  }
   return <IoGlobeOutline size={24} color="#6B6A69" />;
 }
 
