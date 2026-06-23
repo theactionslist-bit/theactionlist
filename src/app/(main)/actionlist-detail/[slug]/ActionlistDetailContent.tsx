@@ -456,7 +456,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
               breakpoints={{
                 768: { slidesPerView: 2, pagination: { enabled: false } },
                 1024: { slidesPerView: 3, pagination: { enabled: false } },
-                1280: { slidesPerView: 3, pagination: { enabled: false } },
+                1280: { slidesPerView: 4, pagination: { enabled: false } },
                 1536: { slidesPerView: 4, pagination: { enabled: false } },
               }}
             >
