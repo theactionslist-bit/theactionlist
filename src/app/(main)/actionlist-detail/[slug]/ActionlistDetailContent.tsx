@@ -392,7 +392,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                 href={`/?author_name=${encodeURIComponent(author.name)}`}
                 className="inline-flex items-center gap-2 border border-[#DBDBDB] rounded-lg px-4 py-2 hover:opacity-70 transition-opacity"
               >
-                <div className="w-7.5 h-7.5 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-[#101010] shrink-0 flex items-center justify-center">
                   <span className="font-sans text-xs font-semibold text-white leading-none">
                     {author.name.charAt(0).toUpperCase()}
                   </span>
