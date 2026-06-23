@@ -32,6 +32,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${BASE_URL}/my-actions`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/submit-an-action`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
   ];
 
   let dynamicRoutes: MetadataRoute.Sitemap = [];
@@ -42,8 +54,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Fetch all action slugs
     const { data: firstPage, error } = await supabase.rpc("get_cards_data", {
-      page_size: 100,
+      page_size: 12,
       page_number: 1,
+      direction: 'next'
     });
     if (!error && firstPage?.length) {
       const totalCount: number = firstPage[0].total_count;
@@ -54,8 +67,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           ? await Promise.all(
               Array.from({ length: totalPages - 1 }, (_, i) =>
                 supabase.rpc("get_cards_data", {
-                  page_size: 100,
-                  page_number: i + 2,
+                  page_size: 12,
+                  page_number: i + 1,
                 }),
               ),
             )
