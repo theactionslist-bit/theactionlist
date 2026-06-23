@@ -53,33 +53,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = await createClient();
 
     // Fetch all action slugs
-    const { data: firstPage, error } = await supabase.rpc("get_cards_data", {
-      page_size: 12,
-      page_number: 1,
-      direction: 'next'
-    });
-    if (!error && firstPage?.length) {
-      const totalCount: number = firstPage[0].total_count;
-      const totalPages = Math.ceil(totalCount / 100);
-
-      const remaining =
-        totalPages > 1
-          ? await Promise.all(
-              Array.from({ length: totalPages - 1 }, (_, i) =>
-                supabase.rpc("get_cards_data", {
-                  page_size: 12,
-                  page_number: i + 1,
-                }),
-              ),
-            )
-          : [];
-
-      const allCards = [
-        ...firstPage,
-        ...remaining.flatMap((r) => r.data ?? []),
-      ] as { slug: string; created_at: string }[];
-
-      dynamicRoutes = allCards
+    const { data: allCards, error } = await supabase.rpc("get_all_actions");
+    if (!error && allCards?.length) {
+      dynamicRoutes = (allCards as { slug: string; created_at: string }[])
         .filter((c) => c.slug)
         .map((card) => ({
           url: `${BASE_URL}/actionlist-detail/${card.slug}`,
