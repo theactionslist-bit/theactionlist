@@ -439,7 +439,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label="Previous"
             disabled={isBeginning}
             onClick={() => swiperInstance?.slidePrev()}
-            className={`absolute -left-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute -left-7.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isBeginning ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector className="rotate-180" />
           </button>
@@ -485,7 +485,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
             aria-label="Next"
             disabled={isEnd}
             onClick={() => swiperInstance?.slideNext()}
-            className={`absolute -right-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
+            className={`absolute -right-7.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full border-2 border-[#DBDBDB] bg-white transition-colors${isEnd ? " opacity-40 cursor-not-allowed" : " cursor-pointer hover:bg-gray-50"}`}
           >
             <RelationActionVector />
           </button>
