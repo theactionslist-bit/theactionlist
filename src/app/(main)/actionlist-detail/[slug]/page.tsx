@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps) {
   return buildMetadata({
     title: data?.card.title ?? "Action Detail",
     description: ACTIONLIST_DETAIL_SEO_FALLBACK_DESCRIPTION,
-    canonicalUrl: `https://theactionlist.com/actionlist-detail/${slug}`,
+    canonicalUrl: `https://theactionslist.com/actionlist-detail/${slug}`,
     ogType: "article",
   });
 }

@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/login", "/signup", "/otp", "/forgot-password", "/reset-password", "/create-password", "/my-actions", "/my-profile", "/submit-an-action"],
       },
     ],
-    sitemap: "https://theactionlist.com/sitemap.xml",
+    sitemap: "https://theactionslist.com/sitemap.xml",
   };
 }
