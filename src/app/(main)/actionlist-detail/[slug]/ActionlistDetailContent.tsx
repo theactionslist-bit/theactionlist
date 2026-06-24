@@ -256,7 +256,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
         </section>
 
         {/* Details */}
-        <section className="contents">
+        {card.more_info.length > 0 && <section className="contents">
           <h3 className={LABEL_CLASS}>{DETAIL_SECTION_DETAILS}</h3>
           <div className="flex flex-col gap-4">
             {card.more_info.split("\n").map((line, i) =>
@@ -267,7 +267,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
               ) : null
             )}
           </div>
-        </section>
+        </section>}
 
         {/* Sources */}
         {card.sources.length > 0 && (
