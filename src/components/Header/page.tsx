@@ -56,7 +56,7 @@ const HeaderSection = () => {
     >
       <header className="max-w-360 mx-auto py-5 flex items-center px-5 lg:px-8 xl:px-15">
         <Link href="/" className="shrink-0">
-          <Image src={LogoPng} alt={LOGO_ARIA_LABEL} className="h-8 md:h-12 lg:h-15.5 w-auto" />
+          <Image src={LogoPng} alt={LOGO_ARIA_LABEL} className="h-10 md:h-12 lg:h-15.5 w-auto" />
         </Link>
 
         <nav className="hidden lg:flex flex-nowrap flex-1 items-center justify-end">
@@ -114,7 +114,7 @@ const HeaderSection = () => {
         <div className="lg:hidden fixed inset-0 z-50 bg-white flex flex-col px-5 py-5">
           <div className="flex items-center justify-between">
             <Link href="/" onClick={() => setMobileOpen(false)}>
-              <Image src={LogoPng} alt={LOGO_ARIA_LABEL} className="h-8 w-auto" />
+              <Image src={LogoPng} alt={LOGO_ARIA_LABEL} className="h-10 md:h-12 lg:h-15.5 w-auto" />
             </Link>
             <button
               className="p-2 text-[#101010] cursor-pointer"
