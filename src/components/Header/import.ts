@@ -5,7 +5,8 @@ import SuggestActionIcon from "@/assets/Header/SuggestAction.svg";
 
 export { useState, useEffect, useRouter, usePathname, Link } from "@/common/imports";
 export { Button } from "@/common/components";
-export { default as Logo } from "@/assets/Logo.svg";
+export { default as Image } from "next/image";
+export { default as LogoPng } from "@/assets/Logo.png";
 export { RxHamburgerMenu, RxCross2 } from "react-icons/rx";
 export { createClient } from "@/lib/supabase/client";
 export { Modal } from "@/components/Modal/page";
