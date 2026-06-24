@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
 
-const BASE_URL = "https://theactionlist.com";
+const BASE_URL = "https://theactionslist.com";
 
 type ChangeFrequency = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 
