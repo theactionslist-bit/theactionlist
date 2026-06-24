@@ -48,7 +48,7 @@ interface ActionlistDetailContentProps {
 }
 
 const BACK_BUTTON_CLASS =
-  "inline-flex items-center px-4 py-2 border-2 border-[#999999] rounded-full font-sans text-lg font-medium text-[#999999] hover:bg-gray-50 transition-colors";
+  "inline-flex items-center px-4 py-3 border-2 border-[#999999] rounded-full font-sans text-lg line font-medium text-[#999999] hover:bg-gray-50 transition-colors leading-[13px]";
 
 const LABEL_CLASS = "font-display text-[30px] leading-[20px] text-black whitespace-nowrap mt-2";
 
@@ -217,8 +217,8 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
   return (
     <div className="px-4 py-6 md:px-8 lg:px-15">
       {/* Top navigation */}
-      <div className="flex items-center justify-between mb-10">
-        <Link href="/" className={BACK_BUTTON_CLASS} style={{ fontFamily: "var(--font-inter)", fontWeight: 600 }}>
+      <div className="flex items-center justify-between mb-60">
+        <Link href="/" className={BACK_BUTTON_CLASS} style={{ fontFamily: "var(--font-inter)", fontWeight: 500 }}>
           {DETAIL_BACK_BUTTON_TEXT}
         </Link>
         <div className="flex items-center gap-4">
