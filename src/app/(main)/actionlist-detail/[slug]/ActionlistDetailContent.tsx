@@ -382,7 +382,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
                   <div className="w-6 h-6 flex items-center justify-center shrink-0">
                     <TimeIcon />
                   </div>
-                  <span className="font-sans text-xl font-semibold text-black text-[20px] leading-3.5">{freq.name}</span>
+                  <span className="font-sans text-xl font-medium text-black text-[20px] leading-3.5">{freq.name}</span>
                 </Link>
               ))}
             </div>
