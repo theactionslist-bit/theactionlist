@@ -217,7 +217,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
   return (
     <div className="px-4 py-6 md:px-8 lg:px-15">
       {/* Top navigation */}
-      <div className="flex items-center justify-between mb-60">
+      <div className="flex items-center justify-between mb-10 lg:mb-15">
         <Link href="/" className={BACK_BUTTON_CLASS} style={{ fontFamily: "var(--font-inter)", fontWeight: 500 }}>
           {DETAIL_BACK_BUTTON_TEXT}
         </Link>
@@ -243,7 +243,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
       </div>
 
       {/* Sections */}
-      <div className="grid grid-cols-1 gap-y-10 lg:grid-cols-[max-content_1fr] lg:items-start lg:gap-x-16 lg:gap-y-16">
+      <div className="grid grid-cols-1 gap-y-10 lg:grid-cols-[max-content_1fr] lg:items-start lg:gap-x-25 lg:gap-y-16">
         {/* Hero */}
         <section className="contents">
           <div
