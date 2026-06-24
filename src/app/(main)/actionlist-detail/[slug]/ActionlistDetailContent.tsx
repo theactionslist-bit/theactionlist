@@ -168,7 +168,8 @@ function getSocialIcon(url: string) {
   } catch {
     // malformed URL — fall through to globe
   }
-  return <IoGlobeOutline size={24} color="#6B6A69" />;
+  return null;
+  // return <IoGlobeOutline size={24} color="#6B6A69" />;
 }
 
 export default function ActionlistDetailContent({ card: initialCard, relatedCards: initialRelatedCards }: ActionlistDetailContentProps) {
@@ -409,7 +410,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
               {socialLinks.length > 0 && (
                 <div className="flex items-center gap-5">
                   {socialLinks.map((url: string) => (
-                    <a
+                    getSocialIcon(url) && <a
                       key={url}
                       href={url}
                       target="_blank"
