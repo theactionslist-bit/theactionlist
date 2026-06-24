@@ -169,7 +169,7 @@ const ActionListCard = ({
             className="border border-[#DBDBDB] rounded-lg px-2.5 py-2 font-sans text-[15px] font-medium text-black hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={(e) => { e.stopPropagation(); setCategoriesOpen(false); setFrequencyOpen((v) => !v); }}
           >
-            +{frequencyCount - 1}
+            + {frequencyCount - 1}
           </button>}
         </div>
       </div>
@@ -200,12 +200,6 @@ const ActionListCard = ({
           <span className="font-sans text-[15px] font-medium text-black whitespace-nowrap">
             {authorName}
           </span>
-          <span className="font-sans text-[15px] text-black select-none">
-            ·
-          </span>
-          <span className="font-sans text-[15px] font-medium text-black">
-            X
-          </span>
         </div>
       )}
 
@@ -224,7 +218,7 @@ const ActionListCard = ({
             className="border border-[#DBDBDB] rounded-lg px-2.5 py-2 font-sans text-[15px] font-medium text-black hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={(e) => { e.stopPropagation(); setFrequencyOpen(false); setCategoriesOpen((v) => !v); }}
           >
-            +{categories.length - 1}
+            + {categories.length - 1}
           </button>}
         </div>
 
