@@ -3,7 +3,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --header-height: 102px;
+  --header-height: 80px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 88px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-height: 102px;
+  }
 }
 
 @theme inline {
