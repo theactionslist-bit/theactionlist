@@ -262,7 +262,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
           <div className="flex flex-col gap-4">
             {card.more_info.split("\n").map((line, i) =>
               line.trim() ? (
-                <p key={i} className="font-sans text-xl font-medium text-black leading-relaxed">
+                <p key={i} className="font-sans text-lg lg:text-xl font-medium text-black leading-relaxed">
                   {line}
                 </p>
               ) : null
@@ -429,7 +429,7 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
 
       {/* Bottom navigation */}
       <div className="mt-16">
-        <Link href="/" className={BACK_BUTTON_CLASS} style={{ fontFamily: "var(--font-inter)", fontWeight: 600 }}>
+        <Link href="/" className={BACK_BUTTON_CLASS} style={{ fontFamily: "var(--font-inter)", fontWeight: 500 }}>
           {DETAIL_BACK_BUTTON_TEXT}
         </Link>
       </div>
