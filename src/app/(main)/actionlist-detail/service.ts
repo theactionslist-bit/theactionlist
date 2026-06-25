@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import type { CardRow } from "@/app/(main)/service";
 
 export interface AreaRow {
@@ -61,7 +61,7 @@ export async function fetchRelatedCards(
   authorIds: string[],
   excludeId: string,
 ): Promise<CardRow[]> {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data } = await supabase.rpc("get_related_actions", {
     area_ids: areaIds,
     author_ids: authorIds,
@@ -90,7 +90,7 @@ export interface ActionDetailPageData {
 }
 
 export async function fetchCardBySlug(slug: string): Promise<ActionDetail | null> {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data: actionId, error: idError } = await supabase.rpc("get_action_id_from_slug", { p_slug: slug });
   if (idError || !actionId) return null;
@@ -152,3 +152,9 @@ async function fetchPageData(slug: string): Promise<ActionDetailPageData | null>
 }
 
 export const fetchPageDataCached = cache(fetchPageData);
+
+export async function fetchAllSlugs(): Promise<string[]> {
+  const supabase = createClient();
+  const { data } = await supabase.from("actions").select("slug").not("slug", "is", null);
+  return (data ?? []).map((r: any) => r.slug as string).filter(Boolean);
+}

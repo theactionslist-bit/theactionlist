@@ -143,7 +143,12 @@ const MyActions = () => {
                 slug={card.slug}
                 initialLiked={true}
                 onNext={() => router.push(`/actionlist-detail/${card.slug}`)}
-                onUnfavorite={() => { setCurrentPage(1); setRefreshKey((k) => k + 1); }}
+                onUnfavorite={() => {
+  const newTotal = totalItems - 1;
+  const newTotalPages = Math.max(1, Math.ceil(newTotal / MY_ACTIONS_ITEMS_PER_PAGE));
+  setCurrentPage((p) => Math.min(p, newTotalPages));
+  setRefreshKey((k) => k + 1);
+}}
                 text={card.title}
                 avatarColor={card.hex_colour_code}
                 frequency={card.frequencies[0]?.name}

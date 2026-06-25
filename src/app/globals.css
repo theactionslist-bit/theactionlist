@@ -11,8 +11,13 @@
     --header-height: 88px;
   }
 }
-
 @media (min-width: 1024px) {
+  :root {
+    --header-height: 86px;
+  }
+}
+
+@media (min-width: 1280px) {
   :root {
     --header-height: 102px;
   }

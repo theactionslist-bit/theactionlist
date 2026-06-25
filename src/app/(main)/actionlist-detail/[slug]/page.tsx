@@ -4,7 +4,15 @@ import {
   ACTIONLIST_DETAIL_SEO_FALLBACK_DESCRIPTION,
   ActionlistDetailContent,
   fetchPageDataCached,
+  fetchAllSlugs,
 } from "./import";
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const slugs = await fetchAllSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
