@@ -56,7 +56,7 @@ const HeaderSection = () => {
     >
       <header className="max-w-360 mx-auto py-5 flex items-center px-5 lg:px-8 xl:px-15">
         <Link href="/" className="shrink-0">
-          <Image src={LogoPng} alt={LOGO_ARIA_LABEL} className="h-10 md:h-12 lg:h-15.5 w-auto" />
+          <Image src={LogoPng} alt={LOGO_ARIA_LABEL} className="h-10 md:h-12 xl:h-15.5 w-auto" />
         </Link>
 
         <nav className="hidden lg:flex flex-nowrap flex-1 items-center justify-end">
