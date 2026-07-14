@@ -6,7 +6,6 @@ export const ACTIONS_TABLE_ADD_NEW_LABEL = "Add New";
 export const ACTIONS_TABLE_ACTIONS_COLUMN_LABEL = "Actions";
 
 export const ACTIONS_TABLE_COLUMNS = {
-  serialNumber: "#",
   title: "Title",
   moreInfo: "More Info",
   colour: "Colour",
@@ -16,7 +15,6 @@ export const ACTIONS_TABLE_COLUMNS = {
 };
 
 export const ACTIONS_FORM_FIELDS = [
-  { name: "serial_number", label: "Serial Number", control: "input", type: "number" },
   { name: "title", label: "Title", control: "input", type: "text" },
   { name: "more_info", label: "More Info", control: "richtext" },
   { name: "hex_colour_code", label: "Colour (hex)", control: "input", type: "color" },
@@ -24,7 +22,6 @@ export const ACTIONS_FORM_FIELDS = [
 ] as const;
 
 export const ACTIONS_FORM_INITIAL_VALUES = {
-  serial_number: "",
   title: "",
   more_info: "",
   hex_colour_code: "",

@@ -31,7 +31,6 @@ export { createAction, updateAction, deleteAction } from "./mutations";
 export type { AdminActionRow, ActionInput } from "./service";
 
 export const ACTIONS_FORM_VALIDATION_SCHEMA = Yup.object({
-  serial_number: Yup.string().nullable(),
   title: Yup.string().required("Title is required"),
   more_info: Yup.string().nullable(),
   hex_colour_code: Yup.string().nullable(),

@@ -4,7 +4,6 @@ import { ACTIONS_TABLE_ITEMS_PER_PAGE } from "./constant";
 export interface AdminActionRow {
   id: string;
   slug: string;
-  serial_number: number | null;
   title: string;
   more_info: string | null;
   hex_colour_code: string | null;
@@ -15,7 +14,6 @@ export interface AdminActionRow {
 }
 
 export interface ActionInput {
-  serial_number: number | null;
   title: string;
   more_info: string | null;
   hex_colour_code: string | null;
@@ -40,7 +38,7 @@ export async function fetchPaginatedActions(page: number, search: string): Promi
   let query = supabase
     .from("actions")
     .select(
-      "id, serial_number, title, more_info, hex_colour_code, status, products_used, created_at, updated_at",
+      "id, title, more_info, hex_colour_code, status, products_used, created_at, updated_at",
       { count: "exact" },
     );
 

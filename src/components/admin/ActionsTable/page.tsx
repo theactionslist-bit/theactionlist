@@ -42,7 +42,6 @@ function stripHtml(html: string | null): string | null {
 
 function toFormValues(row: AdminActionRow): ActionFormValues {
   return {
-    serial_number: row.serial_number != null ? String(row.serial_number) : "",
     title: row.title,
     more_info: row.more_info ?? "",
     hex_colour_code: row.hex_colour_code ?? "",
@@ -64,15 +63,7 @@ export default function AdminActionsTable() {
   }
 
   async function handleSubmit(values: ActionFormValues): Promise<{ error?: string } | void> {
-    // Formik coerces type="number" inputs to an actual number once filled in,
-    // so serial_number may arrive as "" (empty) or a number, never a string to .trim().
-    const serialNumber =
-      values.serial_number === "" || values.serial_number == null
-        ? null
-        : Number(values.serial_number);
-
     const input: ActionInput = {
-      serial_number: serialNumber,
       title: values.title.trim(),
       more_info: values.more_info.trim() || null,
       hex_colour_code: values.hex_colour_code.trim() || null,
@@ -130,11 +121,6 @@ export default function AdminActionsTable() {
         rowKey={(row) => row.id}
         columns={[
           {
-            key: "serialNumber",
-            label: ACTIONS_TABLE_COLUMNS.serialNumber,
-            render: (row) => row.serial_number ?? "—",
-          },
-          {
             key: "title",
             label: ACTIONS_TABLE_COLUMNS.title,
             render: (row) => row.title,
@@ -142,7 +128,7 @@ export default function AdminActionsTable() {
           {
             key: "moreInfo",
             label: ACTIONS_TABLE_COLUMNS.moreInfo,
-            render: (row) => <TruncatedCell text={stripHtml(row.more_info)} maxWidthClass="max-w-100" />,
+            render: (row) => <TruncatedCell text={stripHtml(row.more_info)} maxWidthClass="max-w-90" />,
           },
           {
             key: "colour",
