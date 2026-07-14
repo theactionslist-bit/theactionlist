@@ -5,8 +5,6 @@ export interface AdminAreaRow {
   id: string;
   name: string;
   attachments: string | null;
-  suggestion_actions: string | null;
-  symmetric_column: string | null;
   created_at: string;
   updated_at: string | null;
 }
@@ -14,8 +12,6 @@ export interface AdminAreaRow {
 export interface AreaInput {
   name: string;
   attachments: string | null;
-  suggestion_actions: string | null;
-  symmetric_column: string | null;
 }
 
 export interface PaginatedAreas {
@@ -30,10 +26,7 @@ export async function fetchPaginatedAreas(page: number, search: string): Promise
 
   let query = supabase
     .from("areas_of_inspiration")
-    .select(
-      "id, name, attachments, suggestion_actions, symmetric_column, created_at, updated_at",
-      { count: "exact" },
-    );
+    .select("id, name, attachments, created_at, updated_at", { count: "exact" });
 
   if (search.trim()) {
     query = query.ilike("name", `%${search.trim()}%`);

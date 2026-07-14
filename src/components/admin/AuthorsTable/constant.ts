@@ -14,18 +14,12 @@ export const AUTHORS_TABLE_COLUMNS = {
 
 export const AUTHORS_FORM_FIELDS = [
   { name: "name", label: "Name", control: "input", type: "text" },
-  {
-    name: "social_links",
-    label: "Social Links",
-    control: "input",
-    type: "text",
-    placeholder: "https://x.com/foo, https://instagram.com/foo",
-  },
+  { name: "social_links", label: "Social Links", control: "linklist" },
 ] as const;
 
 export const AUTHORS_FORM_INITIAL_VALUES = {
   name: "",
-  social_links: "",
+  social_links: [] as string[],
 };
 
 export const AUTHORS_ADD_MODAL_TITLE = "Add Author";

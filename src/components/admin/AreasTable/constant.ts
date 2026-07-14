@@ -8,8 +8,6 @@ export const AREAS_TABLE_ACTIONS_COLUMN_LABEL = "Actions";
 export const AREAS_TABLE_COLUMNS = {
   name: "Name",
   attachments: "Attachments",
-  suggestionActions: "Suggestion Actions",
-  symmetricColumn: "Symmetric Column",
   createdAt: "Created At",
   updatedAt: "Updated At",
 };
@@ -17,15 +15,11 @@ export const AREAS_TABLE_COLUMNS = {
 export const AREAS_FORM_FIELDS = [
   { name: "name", label: "Name", control: "input", type: "text" },
   { name: "attachments", label: "Attachments", control: "textarea", rows: 3 },
-  { name: "suggestion_actions", label: "Suggestion Actions", control: "textarea", rows: 3 },
-  { name: "symmetric_column", label: "Symmetric Column", control: "input", type: "text" },
 ] as const;
 
 export const AREAS_FORM_INITIAL_VALUES = {
   name: "",
   attachments: "",
-  suggestion_actions: "",
-  symmetric_column: "",
 };
 
 export const AREAS_ADD_MODAL_TITLE = "Add Area of Inspiration";

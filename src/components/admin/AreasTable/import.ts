@@ -33,6 +33,4 @@ export type { AdminAreaRow, AreaInput } from "./service";
 export const AREAS_FORM_VALIDATION_SCHEMA = Yup.object({
   name: Yup.string().required("Name is required"),
   attachments: Yup.string().nullable(),
-  suggestion_actions: Yup.string().nullable(),
-  symmetric_column: Yup.string().nullable(),
 });

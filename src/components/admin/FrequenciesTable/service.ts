@@ -4,16 +4,12 @@ import { FREQUENCIES_TABLE_ITEMS_PER_PAGE } from "./constant";
 export interface AdminFrequencyRow {
   id: string;
   name: string;
-  period: string | null;
-  attachments: string | null;
   created_at: string;
   updated_at: string | null;
 }
 
 export interface FrequencyInput {
   name: string;
-  period: string | null;
-  attachments: string | null;
 }
 
 export interface PaginatedFrequencies {
@@ -28,7 +24,7 @@ export async function fetchPaginatedFrequencies(page: number, search: string): P
 
   let query = supabase
     .from("frequencies")
-    .select("id, name, period, attachments, created_at, updated_at", { count: "exact" });
+    .select("id, name, created_at, updated_at", { count: "exact" });
 
   if (search.trim()) {
     query = query.ilike("name", `%${search.trim()}%`);

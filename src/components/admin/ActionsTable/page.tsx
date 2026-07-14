@@ -35,6 +35,11 @@ import type { AdminActionRow, ActionInput } from "./import";
 
 type ActionFormValues = typeof ACTIONS_FORM_INITIAL_VALUES;
 
+function stripHtml(html: string | null): string | null {
+  if (!html) return html;
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
 function toFormValues(row: AdminActionRow): ActionFormValues {
   return {
     serial_number: row.serial_number != null ? String(row.serial_number) : "",
@@ -59,8 +64,15 @@ export default function AdminActionsTable() {
   }
 
   async function handleSubmit(values: ActionFormValues): Promise<{ error?: string } | void> {
+    // Formik coerces type="number" inputs to an actual number once filled in,
+    // so serial_number may arrive as "" (empty) or a number, never a string to .trim().
+    const serialNumber =
+      values.serial_number === "" || values.serial_number == null
+        ? null
+        : Number(values.serial_number);
+
     const input: ActionInput = {
-      serial_number: values.serial_number.trim() ? Number(values.serial_number) : null,
+      serial_number: serialNumber,
       title: values.title.trim(),
       more_info: values.more_info.trim() || null,
       hex_colour_code: values.hex_colour_code.trim() || null,
@@ -128,14 +140,9 @@ export default function AdminActionsTable() {
             render: (row) => row.title,
           },
           {
-            key: "slug",
-            label: ACTIONS_TABLE_COLUMNS.slug,
-            render: (row) => row.slug || "—",
-          },
-          {
             key: "moreInfo",
             label: ACTIONS_TABLE_COLUMNS.moreInfo,
-            render: (row) => <TruncatedCell text={row.more_info} maxWidthClass="max-w-100" />,
+            render: (row) => <TruncatedCell text={stripHtml(row.more_info)} maxWidthClass="max-w-100" />,
           },
           {
             key: "colour",
@@ -154,14 +161,22 @@ export default function AdminActionsTable() {
               ),
           },
           {
-            key: "status",
-            label: ACTIONS_TABLE_COLUMNS.status,
-            render: (row) => row.status ?? "—",
-          },
-          {
             key: "productsUsed",
             label: ACTIONS_TABLE_COLUMNS.productsUsed,
-            render: (row) => <TruncatedCell text={row.products_used} maxWidthClass="max-w-50" />,
+            render: (row) =>
+              row.products_used ? (
+                <a
+                  href={row.products_used}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={row.products_used}
+                  className="block max-w-50 truncate text-[#C27E7A] underline-offset-2 hover:underline"
+                >
+                  {row.products_used}
+                </a>
+              ) : (
+                "—"
+              ),
           },
           {
             key: "createdAt",

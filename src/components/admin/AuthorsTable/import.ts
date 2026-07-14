@@ -5,7 +5,6 @@ export { default as AdminDataTable } from "@/components/admin/DataTable/page";
 export { default as AdminFormModal } from "@/components/admin/FormModal/page";
 export { default as RowActionsMenu } from "@/components/admin/RowActionsMenu/page";
 export { Modal } from "@/common/components";
-export { default as TruncatedCell } from "@/components/admin/TruncatedCell/page";
 export { useToast } from "@/context/ToastContext";
 export {
   AUTHORS_TABLE_ITEMS_PER_PAGE,
@@ -32,5 +31,5 @@ export type { AdminAuthorRow, AuthorInput } from "./service";
 
 export const AUTHORS_FORM_VALIDATION_SCHEMA = Yup.object({
   name: Yup.string().required("Name is required"),
-  social_links: Yup.string().nullable(),
+  social_links: Yup.array().of(Yup.string()).nullable(),
 });

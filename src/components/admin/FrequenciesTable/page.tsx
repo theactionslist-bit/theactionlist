@@ -6,7 +6,6 @@ import {
   AdminFormModal,
   RowActionsMenu,
   Modal,
-  TruncatedCell,
   useToast,
   FREQUENCIES_TABLE_ITEMS_PER_PAGE,
   FREQUENCIES_TABLE_HEADING,
@@ -20,7 +19,6 @@ import {
   FREQUENCIES_FORM_VALIDATION_SCHEMA,
   FREQUENCIES_ADD_MODAL_TITLE,
   FREQUENCIES_EDIT_MODAL_TITLE,
-  FREQUENCIES_VIEW_MODAL_TITLE,
   FREQUENCIES_DELETE_CONFIRM_TITLE,
   FREQUENCIES_DELETE_CONFIRM_DESCRIPTION,
   FREQUENCIES_CREATE_SUCCESS_MESSAGE,
@@ -38,14 +36,12 @@ type FrequencyFormValues = typeof FREQUENCIES_FORM_INITIAL_VALUES;
 function toFormValues(row: AdminFrequencyRow): FrequencyFormValues {
   return {
     name: row.name,
-    period: row.period ?? "",
-    attachments: row.attachments ?? "",
   };
 }
 
 export default function AdminFrequenciesTable() {
   const { addToast } = useToast();
-  const [modalMode, setModalMode] = useState<"add" | "edit" | "view" | null>(null);
+  const [modalMode, setModalMode] = useState<"add" | "edit" | null>(null);
   const [selectedRow, setSelectedRow] = useState<AdminFrequencyRow | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminFrequencyRow | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -58,8 +54,6 @@ export default function AdminFrequenciesTable() {
   async function handleSubmit(values: FrequencyFormValues): Promise<{ error?: string } | void> {
     const input: FrequencyInput = {
       name: values.name.trim(),
-      period: values.period.trim() || null,
-      attachments: values.attachments.trim() || null,
     };
 
     const result =
@@ -91,12 +85,7 @@ export default function AdminFrequenciesTable() {
     setRefreshKey((k) => k + 1);
   }
 
-  const modalTitle =
-    modalMode === "edit"
-      ? FREQUENCIES_EDIT_MODAL_TITLE
-      : modalMode === "view"
-        ? FREQUENCIES_VIEW_MODAL_TITLE
-        : FREQUENCIES_ADD_MODAL_TITLE;
+  const modalTitle = modalMode === "edit" ? FREQUENCIES_EDIT_MODAL_TITLE : FREQUENCIES_ADD_MODAL_TITLE;
 
   return (
     <>
@@ -113,16 +102,6 @@ export default function AdminFrequenciesTable() {
         columns={[
           { key: "name", label: FREQUENCIES_TABLE_COLUMNS.name, render: (row) => row.name },
           {
-            key: "period",
-            label: FREQUENCIES_TABLE_COLUMNS.period,
-            render: (row) => row.period ?? "—",
-          },
-          {
-            key: "attachments",
-            label: FREQUENCIES_TABLE_COLUMNS.attachments,
-            render: (row) => <TruncatedCell text={row.attachments} maxWidthClass="max-w-55" />,
-          },
-          {
             key: "createdAt",
             label: FREQUENCIES_TABLE_COLUMNS.createdAt,
             render: (row) => new Date(row.created_at).toLocaleDateString(),
@@ -138,7 +117,6 @@ export default function AdminFrequenciesTable() {
             render: (row) => (
               <RowActionsMenu
                 actions={[
-                  { label: "View", onClick: () => { setSelectedRow(row); setModalMode("view"); } },
                   { label: "Edit", onClick: () => { setSelectedRow(row); setModalMode("edit"); } },
                   { label: "Delete", onClick: () => setDeleteTarget(row), variant: "danger" },
                 ]}

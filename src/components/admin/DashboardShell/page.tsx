@@ -14,9 +14,9 @@ export default function AdminDashboardShell({ children }: AdminDashboardShellPro
       <AdminHeader
         rightSlot={<AdminSidebarToggleButton onClick={() => setMobileOpen(true)} />}
       />
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-w-0">
         <AdminSidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
-        <main className="flex-1 p-6 lg:p-8">{children}</main>
+        <main className="flex-1 min-w-0 p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

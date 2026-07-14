@@ -6,7 +6,6 @@ import {
   AdminFormModal,
   RowActionsMenu,
   Modal,
-  TruncatedCell,
   useToast,
   AUTHORS_TABLE_ITEMS_PER_PAGE,
   AUTHORS_TABLE_HEADING,
@@ -38,7 +37,7 @@ type AuthorFormValues = typeof AUTHORS_FORM_INITIAL_VALUES;
 function toFormValues(row: AdminAuthorRow): AuthorFormValues {
   return {
     name: row.name,
-    social_links: row.social_links?.length ? row.social_links.join(", ") : "",
+    social_links: row.social_links ?? [],
   };
 }
 
@@ -55,11 +54,11 @@ export default function AdminAuthorsTable() {
   }
 
   async function handleSubmit(values: AuthorFormValues): Promise<{ error?: string } | void> {
+    const cleanedLinks = values.social_links.map((link) => link.trim()).filter(Boolean);
+
     const input: AuthorInput = {
       name: values.name.trim(),
-      social_links: values.social_links.trim()
-        ? values.social_links.split(",").map((s) => s.trim()).filter(Boolean)
-        : null,
+      social_links: cleanedLinks.length ? cleanedLinks : null,
     };
 
     const result =
@@ -115,12 +114,28 @@ export default function AdminAuthorsTable() {
           {
             key: "socialLinks",
             label: AUTHORS_TABLE_COLUMNS.socialLinks,
-            render: (row) => (
-              <TruncatedCell
-                text={row.social_links?.length ? row.social_links.join(", ") : null}
-                maxWidthClass="max-w-55"
-              />
-            ),
+            render: (row) => {
+              const links = row.social_links ?? [];
+              if (links.length === 0) return "—";
+              return (
+                <ol className="flex flex-col gap-0.5">
+                  {links.map((link, i) => (
+                    <li key={i} className="flex gap-1">
+                      <span className="shrink-0 text-[#10101099]">{i + 1}.</span>
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={link}
+                        className="block max-w-40 truncate text-[#C27E7A] underline-offset-2 hover:underline"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              );
+            },
           },
           {
             key: "createdAt",

@@ -1,6 +1,5 @@
 import {
   StatCard,
-  AdminActionsTable,
   IoListOutline,
   IoCompassOutline,
   IoPeopleOutline,
@@ -48,8 +47,6 @@ export default async function AdminDashboardPage() {
           href={DASHBOARD_STAT_HREFS.frequencies}
         />
       </div>
-
-      <AdminActionsTable />
     </div>
   );
 }

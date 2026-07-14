@@ -39,8 +39,6 @@ function toFormValues(row: AdminAreaRow): AreaFormValues {
   return {
     name: row.name,
     attachments: row.attachments ?? "",
-    suggestion_actions: row.suggestion_actions ?? "",
-    symmetric_column: row.symmetric_column ?? "",
   };
 }
 
@@ -60,8 +58,6 @@ export default function AdminAreasTable() {
     const input: AreaInput = {
       name: values.name.trim(),
       attachments: values.attachments.trim() || null,
-      suggestion_actions: values.suggestion_actions.trim() || null,
-      symmetric_column: values.symmetric_column.trim() || null,
     };
 
     const result =
@@ -118,18 +114,6 @@ export default function AdminAreasTable() {
             key: "attachments",
             label: AREAS_TABLE_COLUMNS.attachments,
             render: (row) => <TruncatedCell text={row.attachments} maxWidthClass="max-w-55" />,
-          },
-          {
-            key: "suggestionActions",
-            label: AREAS_TABLE_COLUMNS.suggestionActions,
-            render: (row) => (
-              <TruncatedCell text={row.suggestion_actions} maxWidthClass="max-w-55" />
-            ),
-          },
-          {
-            key: "symmetricColumn",
-            label: AREAS_TABLE_COLUMNS.symmetricColumn,
-            render: (row) => row.symmetric_column ?? "—",
           },
           {
             key: "createdAt",
