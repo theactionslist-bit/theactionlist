@@ -2,6 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdminUser } from "@/lib/admin/auth";
+import { OTHER_SOURCE_TYPE } from "./constant";
 import type { ActionInput } from "./service";
 
 const LINK_PREVIEW_API_URL = "https://api.linkpreview.net/";
@@ -35,23 +36,88 @@ async function fetchLinkPreview(url: string): Promise<LinkPreviewResult | null> 
   }
 }
 
-async function saveActionProduct(
+/**
+ * Syncs a URL-list field against a child table: removes rows for URLs no longer
+ * present, and fetches+inserts a row only for URLs that weren't already there —
+ * unchanged URLs are left untouched so re-saving doesn't re-burn API quota.
+ */
+async function syncUrlEntries(
+  supabase: ReturnType<typeof createAdminClient>,
+  table: string,
+  actionId: string,
+  matchColumn: "url" | "link_url",
+  urls: string[],
+  buildRow: (url: string, preview: LinkPreviewResult) => Record<string, unknown>,
+  scope: Record<string, string> = {},
+): Promise<{ error?: string }> {
+  let existingQuery = supabase.from(table).select(`id, ${matchColumn}`).eq("action_id", actionId);
+  for (const [column, value] of Object.entries(scope)) {
+    existingQuery = existingQuery.eq(column, value);
+  }
+  const { data: existingRows, error: fetchError } = await existingQuery;
+  if (fetchError) return { error: fetchError.message };
+
+  const existing = (existingRows ?? []) as Record<string, string>[];
+  const existingValues = new Set(existing.map((row) => row[matchColumn]));
+  const toRemove = existing.filter((row) => !urls.includes(row[matchColumn]));
+  const toAdd = urls.filter((url) => !existingValues.has(url));
+
+  if (toRemove.length > 0) {
+    const { error } = await supabase
+      .from(table)
+      .delete()
+      .in("id", toRemove.map((row) => row.id));
+    if (error) return { error: error.message };
+  }
+
+  for (const url of toAdd) {
+    const preview = await fetchLinkPreview(url);
+    if (!preview) {
+      return { error: `Could not fetch details for "${url}". Please check it and try again.` };
+    }
+    const { error } = await supabase.from(table).insert(buildRow(url, preview));
+    if (error) return { error: error.message };
+  }
+
+  return {};
+}
+
+function syncActionProducts(
   supabase: ReturnType<typeof createAdminClient>,
   actionId: string,
-  preview: LinkPreviewResult,
+  urls: string[],
 ): Promise<{ error?: string }> {
-  const { error } = await supabase.from("action_products").upsert(
-    {
+  return syncUrlEntries(supabase, "action_products", actionId, "url", urls, (_url, preview) => ({
+    action_id: actionId,
+    url: preview.url,
+    title: preview.title,
+    description: preview.description,
+    image: preview.image,
+  }));
+}
+
+function syncActionSources(
+  supabase: ReturnType<typeof createAdminClient>,
+  actionId: string,
+  urls: string[],
+): Promise<{ error?: string }> {
+  return syncUrlEntries(
+    supabase,
+    "action_sources",
+    actionId,
+    "link_url",
+    urls,
+    (url, preview) => ({
       action_id: actionId,
+      source_type: OTHER_SOURCE_TYPE,
+      link_url: url,
       url: preview.url,
       title: preview.title,
       description: preview.description,
       image: preview.image,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "action_id" },
+    }),
+    { source_type: OTHER_SOURCE_TYPE },
   );
-  return error ? { error: error.message } : {};
 }
 
 async function syncJunctionTable(
@@ -99,29 +165,21 @@ export async function createAction(input: ActionInput): Promise<{ error?: string
   if ("error" in auth) return auth;
 
   const supabase = createAdminClient();
-  const productsUsed = input.products_used?.trim() || null;
-  const { area_ids, author_ids, frequency_ids, ...actionFields } = input;
-
-  let preview: LinkPreviewResult | null = null;
-  if (productsUsed) {
-    preview = await fetchLinkPreview(productsUsed);
-    if (!preview) {
-      return { error: "Could not fetch product details for that URL. Please check it and try again." };
-    }
-  }
+  const { area_ids, author_ids, frequency_ids, products_used, other_urls, ...actionFields } = input;
 
   const { data, error } = await supabase
     .from("actions")
-    .insert({ ...actionFields, products_used: preview?.url ?? productsUsed })
+    .insert(actionFields)
     .select("id")
     .single();
 
   if (error || !data) return { error: error?.message ?? "Failed to create action." };
 
-  if (preview) {
-    const productResult = await saveActionProduct(supabase, data.id, preview);
-    if (productResult.error) return productResult;
-  }
+  const productsResult = await syncActionProducts(supabase, data.id, products_used);
+  if (productsResult.error) return productsResult;
+
+  const sourcesResult = await syncActionSources(supabase, data.id, other_urls);
+  if (sourcesResult.error) return sourcesResult;
 
   const relationsResult = await syncActionRelations(supabase, data.id, input);
   if (relationsResult.error) return relationsResult;
@@ -134,40 +192,19 @@ export async function updateAction(id: string, input: ActionInput): Promise<{ er
   if ("error" in auth) return auth;
 
   const supabase = createAdminClient();
-  const productsUsed = input.products_used?.trim() || null;
-  const { area_ids, author_ids, frequency_ids, ...actionFields } = input;
-
-  const { data: existing } = await supabase
-    .from("actions")
-    .select("products_used")
-    .eq("id", id)
-    .single();
-  const urlChanged = (existing?.products_used ?? null) !== productsUsed;
-
-  let preview: LinkPreviewResult | null = null;
-  if (productsUsed && urlChanged) {
-    preview = await fetchLinkPreview(productsUsed);
-    if (!preview) {
-      return { error: "Could not fetch product details for that URL. Please check it and try again." };
-    }
-  }
+  const { area_ids, author_ids, frequency_ids, products_used, other_urls, ...actionFields } = input;
 
   const { error } = await supabase
     .from("actions")
-    .update({
-      ...actionFields,
-      products_used: preview?.url ?? productsUsed,
-      updated_at: new Date().toISOString(),
-    })
+    .update({ ...actionFields, updated_at: new Date().toISOString() })
     .eq("id", id);
   if (error) return { error: error.message };
 
-  if (!productsUsed) {
-    await supabase.from("action_products").delete().eq("action_id", id);
-  } else if (preview) {
-    const productResult = await saveActionProduct(supabase, id, preview);
-    if (productResult.error) return productResult;
-  }
+  const productsResult = await syncActionProducts(supabase, id, products_used);
+  if (productsResult.error) return productsResult;
+
+  const sourcesResult = await syncActionSources(supabase, id, other_urls);
+  if (sourcesResult.error) return sourcesResult;
 
   const relationsResult = await syncActionRelations(supabase, id, input);
   if (relationsResult.error) return relationsResult;

@@ -120,7 +120,7 @@ export default function AdminDataTable<T>({
                 {columns.map((col) => (
                   <th
                     key={col.key}
-                    className="py-3 pr-4 font-sans text-xs font-semibold uppercase text-[#10101099]"
+                    className="py-3 pr-4 font-sans text-xs font-semibold uppercase text-[#10101099] whitespace-pre-line"
                   >
                     {col.label}
                   </th>

@@ -31,9 +31,30 @@ import {
 } from "./import";
 import type { AdminActionRow, ActionFormValues } from "./import";
 
+const HTML_ENTITY_FALLBACKS: Record<string, string> = {
+  "&nbsp;": " ",
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">",
+  "&quot;": '"',
+  "&#39;": "'",
+};
+
 function stripHtml(html: string | null): string | null {
   if (!html) return html;
-  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const withoutTags = html.replace(/<[^>]*>/g, " ");
+
+  if (typeof document === "undefined") {
+    const decoded = withoutTags.replace(
+      /&nbsp;|&amp;|&lt;|&gt;|&quot;|&#39;/g,
+      (entity) => HTML_ENTITY_FALLBACKS[entity],
+    );
+    return decoded.replace(/\s+/g, " ").trim();
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = withoutTags;
+  return textarea.value.replace(/\s+/g, " ").trim();
 }
 
 export default function AdminActionsTable() {
@@ -98,16 +119,21 @@ export default function AdminActionsTable() {
             key: "productsUsed",
             label: ACTIONS_TABLE_COLUMNS.productsUsed,
             render: (row) =>
-              row.products_used ? (
-                <a
-                  href={row.products_used}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={row.products_used}
-                  className="block max-w-50 truncate text-[#C27E7A] underline-offset-2 hover:underline"
-                >
-                  {row.products_used}
-                </a>
+              row.products_used.length > 0 ? (
+                <div className="flex max-w-50 flex-col gap-1">
+                  {row.products_used.map((url) => (
+                    <a
+                      key={url}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={url}
+                      className="block truncate text-[#C27E7A] underline-offset-2 hover:underline"
+                    >
+                      {url}
+                    </a>
+                  ))}
+                </div>
               ) : (
                 "—"
               ),
