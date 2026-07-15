@@ -18,16 +18,24 @@ export const ACTIONS_FORM_FIELDS = [
   { name: "title", label: "Title", control: "input", type: "text" },
   { name: "more_info", label: "More Info", control: "richtext" },
   { name: "hex_colour_code", label: "Colour (hex)", control: "input", type: "color" },
-  { name: "products_used", label: "Products Used", control: "input", type: "url", placeholder: "https://…" },
+  { name: "products_used", label: "Products Used URL", control: "input", type: "url", placeholder: "https://…" },
+  { name: "area_ids", label: "Areas of Inspiration", control: "multiselect", placeholder: "Select areas of inspiration…" },
+  { name: "author_ids", label: "Authors", control: "multiselect", placeholder: "Select an author…", multiple: false },
+  { name: "frequency_ids", label: "Frequencies", control: "multiselect", placeholder: "Select frequencies…" },
 ] as const;
 
 export const ACTIONS_FORM_INITIAL_VALUES = {
   title: "",
   more_info: "",
   hex_colour_code: "",
-  status: "",
   products_used: "",
+  area_ids: [],
+  author_ids: [],
+  frequency_ids: [],
 };
+
+export const ACTIONS_NEW_HREF = "/admin/actions/new";
+export const actionEditHref = (id: string) => `/admin/actions/${id}/edit`;
 
 export const ACTIONS_ADD_MODAL_TITLE = "Add Action";
 export const ACTIONS_EDIT_MODAL_TITLE = "Edit Action";

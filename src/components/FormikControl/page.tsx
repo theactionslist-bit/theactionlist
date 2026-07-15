@@ -5,9 +5,10 @@ import Selector from "./Selector/page";
 import Textarea from "./Textarea/page";
 import RichText from "./RichText/page";
 import LinkList from "./LinkList/page";
+import MultiSelect from "./MultiSelect/page";
 
 interface FormikControlProps {
-  control: "input" | "select" | "textarea" | "richtext" | "linklist";
+  control: "input" | "select" | "textarea" | "richtext" | "linklist" | "multiselect";
   [key: string]: unknown;
 }
 
@@ -23,6 +24,8 @@ export default function FormikControl({ control, ...rest }: FormikControlProps) 
       return <RichText {...(rest as any)} />;
     case "linklist":
       return <LinkList {...(rest as any)} />;
+    case "multiselect":
+      return <MultiSelect {...(rest as any)} />;
     default:
       return null;
   }

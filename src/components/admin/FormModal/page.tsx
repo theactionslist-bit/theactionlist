@@ -20,7 +20,7 @@ import type { FormikHelpers, ObjectSchema } from "./import";
 export interface AdminFormField {
   name: string;
   label: string;
-  control: "input" | "select" | "textarea" | "richtext" | "linklist";
+  control: "input" | "select" | "textarea" | "richtext" | "linklist" | "multiselect";
   type?: string;
   placeholder?: string;
   options?: { value: string; label: string }[];
@@ -28,6 +28,8 @@ export interface AdminFormField {
   formatViewValue?: (value: unknown) => React.ReactNode;
   /** Shown in the View modal, but excluded from the Add/Edit form. */
   viewOnly?: boolean;
+  /** For control="multiselect": set to false to allow only a single selection. Defaults to true. */
+  multiple?: boolean;
 }
 
 interface AdminFormModalProps<T extends Record<string, unknown>> {
@@ -45,6 +47,30 @@ interface AdminFormModalProps<T extends Record<string, unknown>> {
 function formatValue(value: unknown): string {
   if (value === null || value === undefined || value === "") return FORM_MODAL_EMPTY_VALUE;
   return String(value);
+}
+
+function renderMultiSelect(
+  value: unknown,
+  options: { value: string; label: string }[] = [],
+): React.ReactNode {
+  const ids = Array.isArray(value) ? (value as string[]).filter(Boolean) : [];
+
+  if (ids.length === 0) {
+    return <span className="font-sans text-sm text-[#10101099]">{FORM_MODAL_EMPTY_VALUE}</span>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {ids.map((id) => (
+        <span
+          key={id}
+          className="rounded-full bg-[#F3F1EF] px-3 py-1 font-sans text-xs text-[#101010]"
+        >
+          {options.find((opt) => opt.value === id)?.label ?? id}
+        </span>
+      ))}
+    </div>
+  );
 }
 
 function renderLinkList(value: unknown): React.ReactNode {
@@ -137,6 +163,8 @@ export default function AdminFormModal<T extends Record<string, unknown>>({
                     />
                   ) : field.control === "linklist" ? (
                     renderLinkList(initialValues[field.name])
+                  ) : field.control === "multiselect" ? (
+                    renderMultiSelect(initialValues[field.name], field.options)
                   ) : field.type === "color" ? (
                     <span className="inline-flex items-center gap-2">
                       <span
@@ -184,6 +212,7 @@ export default function AdminFormModal<T extends Record<string, unknown>>({
                       placeholder={field.placeholder}
                       options={field.options}
                       rows={field.rows}
+                      multiple={field.multiple}
                     />
                   ))}
 

@@ -2,12 +2,14 @@
 
 import {
   useState,
+  useRouter,
   AdminDataTable,
   AdminFormModal,
   RowActionsMenu,
   Modal,
   TruncatedCell,
   useToast,
+  useActionFormFields,
   ACTIONS_TABLE_ITEMS_PER_PAGE,
   ACTIONS_TABLE_HEADING,
   ACTIONS_TABLE_EMPTY_TEXT,
@@ -15,79 +17,32 @@ import {
   ACTIONS_TABLE_ADD_NEW_LABEL,
   ACTIONS_TABLE_ACTIONS_COLUMN_LABEL,
   ACTIONS_TABLE_COLUMNS,
-  ACTIONS_FORM_FIELDS,
   ACTIONS_FORM_INITIAL_VALUES,
   ACTIONS_FORM_VALIDATION_SCHEMA,
-  ACTIONS_ADD_MODAL_TITLE,
-  ACTIONS_EDIT_MODAL_TITLE,
   ACTIONS_VIEW_MODAL_TITLE,
   ACTIONS_DELETE_CONFIRM_TITLE,
   ACTIONS_DELETE_CONFIRM_DESCRIPTION,
-  ACTIONS_CREATE_SUCCESS_MESSAGE,
-  ACTIONS_UPDATE_SUCCESS_MESSAGE,
   ACTIONS_DELETE_SUCCESS_MESSAGE,
+  ACTIONS_NEW_HREF,
+  actionEditHref,
   fetchPaginatedActions,
-  createAction,
-  updateAction,
+  toFormValues,
   deleteAction,
 } from "./import";
-import type { AdminActionRow, ActionInput } from "./import";
-
-type ActionFormValues = typeof ACTIONS_FORM_INITIAL_VALUES;
+import type { AdminActionRow, ActionFormValues } from "./import";
 
 function stripHtml(html: string | null): string | null {
   if (!html) return html;
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function toFormValues(row: AdminActionRow): ActionFormValues {
-  return {
-    title: row.title,
-    more_info: row.more_info ?? "",
-    hex_colour_code: row.hex_colour_code ?? "",
-    status: row.status ?? "",
-    products_used: row.products_used ?? "",
-  };
-}
-
 export default function AdminActionsTable() {
+  const router = useRouter();
   const { addToast } = useToast();
-  const [modalMode, setModalMode] = useState<"add" | "edit" | "view" | null>(null);
-  const [selectedRow, setSelectedRow] = useState<AdminActionRow | null>(null);
+  const fields = useActionFormFields();
+  const [viewRow, setViewRow] = useState<AdminActionRow | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminActionRow | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  function closeModal() {
-    setModalMode(null);
-    setSelectedRow(null);
-  }
-
-  async function handleSubmit(values: ActionFormValues): Promise<{ error?: string } | void> {
-    const input: ActionInput = {
-      title: values.title.trim(),
-      more_info: values.more_info.trim() || null,
-      hex_colour_code: values.hex_colour_code.trim() || null,
-      status: values.status.trim() || null,
-      products_used: values.products_used.trim() || null,
-    };
-
-    const result =
-      modalMode === "edit" && selectedRow
-        ? await updateAction(selectedRow.id, input)
-        : await createAction(input);
-
-    if (result.error) {
-      addToast(result.error, "error");
-      return result;
-    }
-
-    addToast(
-      modalMode === "edit" ? ACTIONS_UPDATE_SUCCESS_MESSAGE : ACTIONS_CREATE_SUCCESS_MESSAGE,
-      "success",
-    );
-    setRefreshKey((k) => k + 1);
-    return result;
-  }
 
   async function handleConfirmDelete() {
     if (!deleteTarget) return;
@@ -100,13 +55,6 @@ export default function AdminActionsTable() {
     setRefreshKey((k) => k + 1);
   }
 
-  const modalTitle =
-    modalMode === "edit"
-      ? ACTIONS_EDIT_MODAL_TITLE
-      : modalMode === "view"
-        ? ACTIONS_VIEW_MODAL_TITLE
-        : ACTIONS_ADD_MODAL_TITLE;
-
   return (
     <>
       <AdminDataTable<AdminActionRow>
@@ -115,7 +63,7 @@ export default function AdminActionsTable() {
         itemsPerPage={ACTIONS_TABLE_ITEMS_PER_PAGE}
         searchPlaceholder={ACTIONS_TABLE_SEARCH_PLACEHOLDER}
         addNewLabel={ACTIONS_TABLE_ADD_NEW_LABEL}
-        onAddNew={() => setModalMode("add")}
+        onAddNew={() => router.push(ACTIONS_NEW_HREF)}
         refreshKey={refreshKey}
         fetchPage={fetchPaginatedActions}
         rowKey={(row) => row.id}
@@ -180,8 +128,8 @@ export default function AdminActionsTable() {
             render: (row) => (
               <RowActionsMenu
                 actions={[
-                  { label: "View", onClick: () => { setSelectedRow(row); setModalMode("view"); } },
-                  { label: "Edit", onClick: () => { setSelectedRow(row); setModalMode("edit"); } },
+                  { label: "View", onClick: () => setViewRow(row) },
+                  { label: "Edit", onClick: () => router.push(actionEditHref(row.id)) },
                   { label: "Delete", onClick: () => setDeleteTarget(row), variant: "danger" },
                 ]}
               />
@@ -191,14 +139,14 @@ export default function AdminActionsTable() {
       />
 
       <AdminFormModal<ActionFormValues>
-        isOpen={modalMode !== null}
-        mode={modalMode ?? "add"}
-        title={modalTitle}
-        fields={ACTIONS_FORM_FIELDS}
-        initialValues={selectedRow ? toFormValues(selectedRow) : ACTIONS_FORM_INITIAL_VALUES}
+        isOpen={viewRow !== null}
+        mode="view"
+        title={ACTIONS_VIEW_MODAL_TITLE}
+        fields={fields}
+        initialValues={viewRow ? toFormValues(viewRow) : ACTIONS_FORM_INITIAL_VALUES}
         validationSchema={ACTIONS_FORM_VALIDATION_SCHEMA}
-        onClose={closeModal}
-        onSubmit={handleSubmit}
+        onClose={() => setViewRow(null)}
+        onSubmit={async () => {}}
       />
 
       <Modal
