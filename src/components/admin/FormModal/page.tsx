@@ -156,7 +156,7 @@ export default function AdminFormModal<T extends Record<string, unknown>>({
                   <span className="font-sans text-sm font-semibold text-[#101010]">{field.label}</span>
                   {field.control === "richtext" ? (
                     <div
-                      className="rich-content font-sans text-sm text-[#10101099] wrap-break-word"
+                      className="admin-view-content font-sans text-sm text-[#10101099] whitespace-pre-wrap wrap-break-word"
                       dangerouslySetInnerHTML={{
                         __html: formatValue(initialValues[field.name]),
                       }}
