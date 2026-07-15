@@ -36,6 +36,37 @@ async function fetchLinkPreview(url: string): Promise<LinkPreviewResult | null> 
   }
 }
 
+async function syncActionSlug(
+  supabase: ReturnType<typeof createAdminClient>,
+  actionId: string,
+  slug: string,
+): Promise<{ error?: string }> {
+  if (!slug) return {};
+
+  const { data: current } = await supabase
+    .from("action_slugs")
+    .select("slug")
+    .eq("action_id", actionId)
+    .eq("is_current", true)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (current?.slug === slug) return {};
+
+  const { error: updateError } = await supabase
+    .from("action_slugs")
+    .update({ is_current: false, updated_at: new Date().toISOString() })
+    .eq("action_id", actionId)
+    .eq("is_current", true);
+  if (updateError) return { error: updateError.message };
+
+  const { error: insertError } = await supabase
+    .from("action_slugs")
+    .insert({ action_id: actionId, slug, is_current: true });
+  return insertError ? { error: insertError.message } : {};
+}
+
 /**
  * Syncs a URL-list field against a child table: removes rows for URLs no longer
  * present, and fetches+inserts a row only for URLs that weren't already there —
@@ -165,7 +196,7 @@ export async function createAction(input: ActionInput): Promise<{ error?: string
   if ("error" in auth) return auth;
 
   const supabase = createAdminClient();
-  const { area_ids, author_ids, frequency_ids, products_used, other_urls, ...actionFields } = input;
+  const { area_ids, author_ids, frequency_ids, products_used, other_urls, slug, ...actionFields } = input;
 
   const { data, error } = await supabase
     .from("actions")
@@ -174,6 +205,9 @@ export async function createAction(input: ActionInput): Promise<{ error?: string
     .single();
 
   if (error || !data) return { error: error?.message ?? "Failed to create action." };
+
+  const slugResult = await syncActionSlug(supabase, data.id, slug);
+  if (slugResult.error) return slugResult;
 
   const productsResult = await syncActionProducts(supabase, data.id, products_used);
   if (productsResult.error) return productsResult;
@@ -192,13 +226,16 @@ export async function updateAction(id: string, input: ActionInput): Promise<{ er
   if ("error" in auth) return auth;
 
   const supabase = createAdminClient();
-  const { area_ids, author_ids, frequency_ids, products_used, other_urls, ...actionFields } = input;
+  const { area_ids, author_ids, frequency_ids, products_used, other_urls, slug, ...actionFields } = input;
 
   const { error } = await supabase
     .from("actions")
     .update({ ...actionFields, updated_at: new Date().toISOString() })
     .eq("id", id);
   if (error) return { error: error.message };
+
+  const slugResult = await syncActionSlug(supabase, id, slug);
+  if (slugResult.error) return slugResult;
 
   const productsResult = await syncActionProducts(supabase, id, products_used);
   if (productsResult.error) return productsResult;
@@ -217,6 +254,12 @@ export async function deleteAction(id: string): Promise<{ error?: string }> {
   if ("error" in auth) return auth;
 
   const supabase = createAdminClient();
+
+  // action_slugs has no ON DELETE CASCADE (unlike the other child tables), so it
+  // must be cleared explicitly or the delete below fails with a FK violation.
+  const { error: slugsError } = await supabase.from("action_slugs").delete().eq("action_id", id);
+  if (slugsError) return { error: slugsError.message };
+
   const { error } = await supabase.from("actions").delete().eq("id", id);
   return error ? { error: error.message } : {};
 }

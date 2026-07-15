@@ -25,6 +25,7 @@ export interface ActionInput {
   title: string;
   more_info: string | null;
   hex_colour_code: string | null;
+  slug: string;
   products_used: string[];
   other_urls: string[];
   area_ids: string[];
@@ -48,7 +49,7 @@ export type ActionFormValues = {
   frequency_ids: string[];
 };
 
-function slugify(title: string): string {
+export function slugify(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
@@ -74,6 +75,7 @@ export function toActionInput(values: ActionFormValues): ActionInput {
     title: values.title.trim(),
     more_info: values.more_info.trim() || null,
     hex_colour_code: values.hex_colour_code.trim() || null,
+    slug: slugify(values.title.trim()),
     products_used: cleanUrls(values.products_used),
     other_urls: cleanUrls(values.other_urls),
     area_ids: values.area_ids,
