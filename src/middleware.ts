@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isAdminUser } from "@/lib/admin/isAdminUser";
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -23,19 +24,11 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
-
-  // TEMP: admin gating disabled while building the dashboard UI — re-enable before shipping.
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
   const isProtectedAdminRoute = pathname.startsWith("/admin") && pathname !== "/admin/login";
-  const allowedEmails = (process.env.ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
-  const isAdmin = !!user?.email && allowedEmails.includes(user.email.toLowerCase());
 
-  if (isProtectedAdminRoute && !isAdmin) {
+  if (isProtectedAdminRoute && !(await isAdminUser(user?.id))) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/admin/login";
     const redirectResponse = NextResponse.redirect(loginUrl);
