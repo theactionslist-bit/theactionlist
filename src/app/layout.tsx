@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Goudy_Bookletter_1911, Inter, Quicksand } from "next/font/google";
+import Script from "next/script";
 import { ToastProvider } from "@/context/ToastContext";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 const goudyBookletter = Goudy_Bookletter_1911({
   weight: "400",
@@ -45,6 +48,22 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col max-w-360 mx-auto w-full bg-white" suppressHydrationWarning>
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}');
+              `}
+            </Script>
+          </>
+        )}
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

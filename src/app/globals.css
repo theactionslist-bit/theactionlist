@@ -115,3 +115,84 @@ input:-webkit-autofill:active {
   box-shadow: 0 0 0 9999px #ffffff inset !important;
   -webkit-text-fill-color: inherit !important;
 }
+
+/*
+  Tailwind's Preflight strips default browser styling from h1-h6/blockquote/pre,
+  but Summernote's style-dropdown preview and any saved rich-text HTML rely on
+  those defaults to look distinct. Restore them, scoped to rich-text surfaces
+  only (.rich-content = rendered saved content, .note-editor = the editor itself).
+*/
+/* Saved rich-text HTML often carries its own inline font-family/font-size/width/float
+   (e.g. pasted from Word/Google Docs, which wraps text in narrow floated divs) which
+   would otherwise override the classes set above. */
+.rich-content, .rich-content * {
+  font-family: var(--font-quicksand) !important;
+  font-size: 20px !important;
+  width: 100% !important;
+  float: none !important;
+}
+
+/* Admin "View" modal preview of rich-text fields — force the same small, muted
+   typography as the rest of that modal, overriding any inline font-family/font-size
+   baked into the saved HTML. Deliberately separate from .rich-content above, since
+   that class also carries the public-page-specific width/float overrides we don't
+   want inside a compact modal preview. */
+.admin-view-content, .admin-view-content * {
+  font-family: var(--font-quicksand) !important;
+  font-size: 0.875rem !important;
+  color: #10101099 !important;
+}
+
+/* Default the Summernote editable area to the site's sans font. Scoped to
+   .note-editable (the actual typing surface), not .note-editor as a whole,
+   since the toolbar relies on an icon font that this must not override. */
+.note-editor .note-editable { font-family: var(--font-quicksand) !important; }
+
+.rich-content h1, .note-editor h1 { font-size: 2em !important; font-weight: 700; margin: 0.67em 0; }
+.rich-content h2, .note-editor h2 { font-size: 1.5em !important; font-weight: 700; margin: 0.75em 0; }
+.rich-content h3, .note-editor h3 { font-size: 1.25em !important; font-weight: 700; margin: 0.83em 0; }
+.rich-content h4, .note-editor h4 { font-size: 1em !important; font-weight: 700; margin: 1.12em 0; }
+.rich-content h5, .note-editor h5 { font-size: 0.83em !important; font-weight: 700; margin: 1.5em 0; }
+.rich-content h6, .note-editor h6 { font-size: 0.75em !important; font-weight: 700; margin: 1.67em 0; }
+.rich-content blockquote, .note-editor blockquote {
+  border-left: 4px solid #DBDBDB;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #10101099;
+  font-style: italic;
+}
+.rich-content pre, .note-editor pre,
+.rich-content code, .note-editor code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  background-color: #F3F1EF;
+  border-radius: 0.25rem;
+  padding: 0.125em 0.375em;
+}
+.rich-content ul, .note-editor ul { list-style: disc; padding-left: 1.5em; }
+.rich-content ol, .note-editor ol { list-style: decimal; padding-left: 1.5em; }
+.rich-content p, .note-editor p { margin: 0 0 0.5em 0; }
+
+.note-editor.note-frame, .note-editor.note-airframe{
+  border-radius: .75rem !important;
+}
+.note-popover .popover-content, .note-editor .note-toolbar {
+  border-radius: .75rem .75rem 0 0 !important;
+}
+.note-btn {
+  border-radius: .75rem !important;
+}
+.note-popover .popover-content .note-dropdown-menu, .note-editor .note-toolbar .note-dropdown-menu {
+  border-radius: .75rem !important;
+}
+.note-toolbar {
+    background-color: #fbe8e778 !important; 
+}
+.note-editor.note-frame .note-statusbar {
+    background-color: #fbe8e778 !important;
+    border-bottom-right-radius: .75rem !important;
+    border-bottom-left-radius: .75rem !important;
+}
+.note-popover .popover-content .note-para .note-dropdown-menu, .note-editor .note-toolbar .note-para .note-dropdown-menu {
+    min-width: 240px !important;
+    padding: 5px;
+}

@@ -71,15 +71,6 @@ export function Modal({
         className="relative bg-white w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl rounded-2xl shadow-xl flex flex-col items-center gap-4 sm:gap-5 px-6 pt-8 pb-10 sm:p-10 md:p-12 animate-[modal-scale-in_0.25s_ease-out]"
         onClick={(e) => e.stopPropagation()}
       >
-        {showCloseButton && (
-          <button
-            aria-label={MODAL_CLOSE_ARIA}
-            onClick={onClose}
-            className="absolute top-4 right-4 text-2xl text-[#101010] hover:opacity-60 transition-opacity leading-none"
-          >
-            ×
-          </button>
-        )}
 
         {/* Icon / Image */}
         <div>

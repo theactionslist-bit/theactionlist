@@ -259,15 +259,10 @@ export default function ActionlistDetailContent({ card: initialCard, relatedCard
         {/* Details */}
         {card.more_info.length > 0 && <section className="contents">
           <h3 className={LABEL_CLASS}>{DETAIL_SECTION_DETAILS}</h3>
-          <div className="flex flex-col gap-4">
-            {card.more_info.split("\n").map((line, i) =>
-              line.trim() ? (
-                <p key={i} className="font-sans text-lg lg:text-xl font-medium text-black leading-relaxed">
-                  {line}
-                </p>
-              ) : null
-            )}
-          </div>
+          <div
+            className="rich-content flex w-full flex-col gap-4 font-sans text-lg lg:text-xl font-medium text-black leading-relaxed whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: card.more_info }}
+          />
         </section>}
 
         {/* Sources */}
