@@ -8,6 +8,7 @@ import {
   Button,
   FormikControl,
   AdminHeader,
+  useRef,
   ADMIN_LOGIN_HEADING,
   ADMIN_LOGIN_DESCRIPTION,
   ADMIN_LOGIN_BUTTON_TEXT,
@@ -27,12 +28,19 @@ interface AdminLoginValues {
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const isSubmittingRef = useRef(false);
 
-  function handleSubmit(
+  async function handleSubmit(
     values: AdminLoginValues,
     helpers: FormikHelpers<AdminLoginValues>,
   ) {
-    handleAdminLoginSubmit(values, helpers, router);
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+    try {
+      await handleAdminLoginSubmit(values, helpers, router);
+    } finally {
+      isSubmittingRef.current = false;
+    }
   }
 
   return (
