@@ -26,9 +26,26 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
-  const isProtectedAdminRoute = pathname.startsWith("/admin") && pathname !== "/admin/login";
+  const isAdminLoginRoute = pathname === "/admin/login";
+  const isProtectedAdminRoute = pathname.startsWith("/admin") && !isAdminLoginRoute;
 
-  if (isProtectedAdminRoute && !(await isAdminUser(user?.id))) {
+  if (!isAdminLoginRoute && !isProtectedAdminRoute) {
+    return supabaseResponse;
+  }
+
+  const isAdmin = await isAdminUser(user?.id);
+
+  if (isAdminLoginRoute && isAdmin) {
+    const dashboardUrl = request.nextUrl.clone();
+    dashboardUrl.pathname = "/admin/dashboard";
+    const redirectResponse = NextResponse.redirect(dashboardUrl);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectResponse;
+  }
+
+  if (isProtectedAdminRoute && !isAdmin) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/admin/login";
     const redirectResponse = NextResponse.redirect(loginUrl);
