@@ -20,7 +20,7 @@ async function fetchLinkPreview(url: string): Promise<LinkPreviewResult | null> 
   if (!apiKey) return null;
   try {
     const response = await fetch(
-      `${LINK_PREVIEW_API_URL}?key=${apiKey}=${encodeURIComponent(url)}`,
+      `${LINK_PREVIEW_API_URL}?key=${apiKey}&q=${encodeURIComponent(url)}`,
     );
     const data = await response.json();
     if (!response.ok || !data?.url || !data?.title) return null;
@@ -101,12 +101,17 @@ async function syncUrlEntries(
     if (error) return { error: error.message };
   }
 
-  for (const url of toAdd) {
-    const preview = await fetchLinkPreview(url);
-    if (!preview) {
-      return { error: `Could not fetch details for "${url}". Please check it and try again.` };
+  if (toAdd.length > 0) {
+    const previews = await Promise.all(toAdd.map((url) => fetchLinkPreview(url)));
+    const failedIndex = previews.findIndex((preview) => !preview);
+    if (failedIndex !== -1) {
+      return {
+        error: `Could not fetch details for "${toAdd[failedIndex]}". Please check it and try again.`,
+      };
     }
-    const { error } = await supabase.from(table).insert(buildRow(url, preview));
+
+    const rows = toAdd.map((url, index) => buildRow(url, previews[index] as LinkPreviewResult));
+    const { error } = await supabase.from(table).insert(rows);
     if (error) return { error: error.message };
   }
 
@@ -173,22 +178,13 @@ async function syncActionRelations(
   actionId: string,
   input: ActionInput,
 ): Promise<{ error?: string }> {
-  const areasResult = await syncJunctionTable(supabase, "action_areas", "area_id", actionId, input.area_ids);
-  if (areasResult.error) return areasResult;
+  const results = await Promise.all([
+    syncJunctionTable(supabase, "action_areas", "area_id", actionId, input.area_ids),
+    syncJunctionTable(supabase, "action_authors", "author_id", actionId, input.author_ids),
+    syncJunctionTable(supabase, "action_frequencies", "frequency_id", actionId, input.frequency_ids),
+  ]);
 
-  const authorsResult = await syncJunctionTable(supabase, "action_authors", "author_id", actionId, input.author_ids);
-  if (authorsResult.error) return authorsResult;
-
-  const frequenciesResult = await syncJunctionTable(
-    supabase,
-    "action_frequencies",
-    "frequency_id",
-    actionId,
-    input.frequency_ids,
-  );
-  if (frequenciesResult.error) return frequenciesResult;
-
-  return {};
+  return results.find((result) => result.error) ?? {};
 }
 
 export async function createAction(input: ActionInput): Promise<{ error?: string }> {
@@ -206,17 +202,14 @@ export async function createAction(input: ActionInput): Promise<{ error?: string
 
   if (error || !data) return { error: error?.message ?? "Failed to create action." };
 
-  const slugResult = await syncActionSlug(supabase, data.id, slug);
-  if (slugResult.error) return slugResult;
-
-  const productsResult = await syncActionProducts(supabase, data.id, products_used);
-  if (productsResult.error) return productsResult;
-
-  const sourcesResult = await syncActionSources(supabase, data.id, other_urls);
-  if (sourcesResult.error) return sourcesResult;
-
-  const relationsResult = await syncActionRelations(supabase, data.id, input);
-  if (relationsResult.error) return relationsResult;
+  const results = await Promise.all([
+    syncActionSlug(supabase, data.id, slug),
+    syncActionProducts(supabase, data.id, products_used),
+    syncActionSources(supabase, data.id, other_urls),
+    syncActionRelations(supabase, data.id, input),
+  ]);
+  const failed = results.find((result) => result.error);
+  if (failed) return failed;
 
   revalidatePath(`/actionlist-detail/${slug}`);
 
@@ -236,17 +229,14 @@ export async function updateAction(id: string, input: ActionInput): Promise<{ er
     .eq("id", id);
   if (error) return { error: error.message };
 
-  const slugResult = await syncActionSlug(supabase, id, slug);
-  if (slugResult.error) return slugResult;
-
-  const productsResult = await syncActionProducts(supabase, id, products_used);
-  if (productsResult.error) return productsResult;
-
-  const sourcesResult = await syncActionSources(supabase, id, other_urls);
-  if (sourcesResult.error) return sourcesResult;
-
-  const relationsResult = await syncActionRelations(supabase, id, input);
-  if (relationsResult.error) return relationsResult;
+  const results = await Promise.all([
+    syncActionSlug(supabase, id, slug),
+    syncActionProducts(supabase, id, products_used),
+    syncActionSources(supabase, id, other_urls),
+    syncActionRelations(supabase, id, input),
+  ]);
+  const failed = results.find((result) => result.error);
+  if (failed) return failed;
 
   revalidatePath(`/actionlist-detail/${slug}`);
 
