@@ -6,19 +6,11 @@ export async function isAdminUser(userId: string | undefined | null): Promise<bo
   if (!userId) return false;
 
   const supabase = createAdminClient();
-  const { data: role } = await supabase
-    .from("roles")
-    .select("id")
-    .ilike("name", ADMIN_ROLE_NAME)
-    .maybeSingle();
-  if (!role) return false;
+  const [{ data: role }, { data: userRoles }] = await Promise.all([
+    supabase.from("roles").select("id").ilike("name", ADMIN_ROLE_NAME).maybeSingle(),
+    supabase.from("user_roles").select("role_id").eq("user_id", userId),
+  ]);
 
-  const { data } = await supabase
-    .from("user_roles")
-    .select("id")
-    .eq("user_id", userId)
-    .eq("role_id", role.id)
-    .maybeSingle();
-
-  return !!data;
+  if (!role || !userRoles) return false;
+  return userRoles.some((row) => row.role_id === role.id);
 }
