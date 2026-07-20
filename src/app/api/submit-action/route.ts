@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
 
   if (!response.ok) {
     const text = await response.text();
-    console.error("Google Sheets error:", text);
     return NextResponse.json(
       { error: "Submission failed. Please try again." },
       { status: 500 }

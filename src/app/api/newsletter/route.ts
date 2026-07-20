@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
 
   if (!response.ok) {
     const text = await response.text();
-    console.error("Beehiiv error:", text);
     return NextResponse.json(
       { error: "Subscription failed. Please try again." },
       { status: response.status }
