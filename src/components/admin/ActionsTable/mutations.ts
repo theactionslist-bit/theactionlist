@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdminUser } from "@/lib/admin/auth";
 import { OTHER_SOURCE_TYPE } from "./constant";
@@ -217,6 +218,8 @@ export async function createAction(input: ActionInput): Promise<{ error?: string
   const relationsResult = await syncActionRelations(supabase, data.id, input);
   if (relationsResult.error) return relationsResult;
 
+  revalidatePath(`/actionlist-detail/${slug}`);
+
   return {};
 }
 
@@ -244,6 +247,8 @@ export async function updateAction(id: string, input: ActionInput): Promise<{ er
 
   const relationsResult = await syncActionRelations(supabase, id, input);
   if (relationsResult.error) return relationsResult;
+
+  revalidatePath(`/actionlist-detail/${slug}`);
 
   return {};
 }
