@@ -24,5 +24,4 @@ export async function handleAdminLoginSubmit(
     return;
   }
   router.push(ADMIN_LOGIN_SUCCESS_REDIRECT);
-  router.refresh();
 }
