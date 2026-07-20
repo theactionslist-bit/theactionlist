@@ -28,8 +28,9 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isAdminLoginRoute = pathname === "/admin/login";
   const isProtectedAdminRoute = pathname.startsWith("/admin") && !isAdminLoginRoute;
+  const isServerAction = request.headers.has("next-action");
 
-  if (!isAdminLoginRoute && !isProtectedAdminRoute) {
+  if (isServerAction || (!isAdminLoginRoute && !isProtectedAdminRoute)) {
     return supabaseResponse;
   }
 
