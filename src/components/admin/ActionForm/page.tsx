@@ -97,7 +97,12 @@ export default function ActionForm<T extends Record<string, unknown>>({
             {status && <p className="font-sans text-sm font-medium text-red-600">{status}</p>}
 
             <div className="flex justify-end gap-3">
-              <Button type="button" variant="secondary" onClick={() => router.push(cancelHref)}>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={isSubmitting}
+                onClick={() => router.push(cancelHref)}
+              >
                 {ACTION_FORM_CANCEL_LABEL}
               </Button>
               <Button type="submit" variant="primary" loading={isSubmitting}>

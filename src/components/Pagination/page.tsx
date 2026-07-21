@@ -56,7 +56,7 @@ export default function Pagination({
   return (
     <nav
       aria-label="Pagination"
-      className="flex items-center justify-center gap-2 flex-wrap"
+      className="flex items-center justify-center gap-2 md:flex-wrap"
     >
       <button
         onClick={() => onPageChange(currentPage - 1)}
@@ -81,7 +81,7 @@ export default function Pagination({
             onClick={() => onPageChange(page as number)}
             aria-label={`${PAGINATION_PAGE_ARIA_PREFIX}${page}`}
             aria-current={currentPage === page ? "page" : undefined}
-            className={`w-10.5 h-10.5 flex items-center justify-center rounded-md border font-sans text-base transition-colors cursor-pointer ${
+            className={`w-10 md:w-10.5 h-10 md:h-10.5 flex items-center justify-center rounded-md border font-sans text-base transition-colors cursor-pointer ${
               currentPage === page
                 ? "border-2 border-[#101010] bg-white text-[#101010] font-bold"
                 : "border-2 border-[#DBDBDB]  text-[#101010] hover:bg-white"
