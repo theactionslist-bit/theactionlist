@@ -20,7 +20,7 @@ async function fetchLinkPreview(url: string): Promise<LinkPreviewResult | null> 
   if (!apiKey) return null;
   try {
     const response = await fetch(
-      `${LINK_PREVIEW_API_URL}?key=${apiKey}&q=${encodeURIComponent(url)}`,
+      `${LINK_PREVIEW_API_URL}?key=${apiKey}=${encodeURIComponent(url)}`,
     );
     const data = await response.json();
     if (!response.ok || !data?.url || !data?.title) return null;
