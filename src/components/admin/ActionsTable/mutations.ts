@@ -249,11 +249,24 @@ export async function deleteAction(id: string): Promise<{ error?: string }> {
 
   const supabase = createAdminClient();
 
+  const { data: slugRows } = await supabase
+    .from("action_slugs")
+    .select("slug")
+    .eq("action_id", id)
+    .eq("is_current", true);
+
   // action_slugs has no ON DELETE CASCADE (unlike the other child tables), so it
   // must be cleared explicitly or the delete below fails with a FK violation.
   const { error: slugsError } = await supabase.from("action_slugs").delete().eq("action_id", id);
   if (slugsError) return { error: slugsError.message };
 
   const { error } = await supabase.from("actions").delete().eq("id", id);
-  return error ? { error: error.message } : {};
+  if (error) return { error: error.message };
+
+  for (const row of slugRows ?? []) {
+    revalidatePath(`/actionlist-detail/${row.slug}`);
+  }
+  revalidatePath("/");
+
+  return {};
 }

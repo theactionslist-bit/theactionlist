@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdminUser } from "@/lib/admin/auth";
 import type { FrequencyInput } from "./service";
@@ -10,7 +11,11 @@ export async function createFrequency(input: FrequencyInput): Promise<{ error?: 
 
   const supabase = createAdminClient();
   const { error } = await supabase.from("frequencies").insert(input);
-  return error ? { error: error.message } : {};
+  if (error) return { error: error.message };
+
+  revalidatePath("/actionlist-detail", "layout");
+  revalidatePath("/");
+  return {};
 }
 
 export async function updateFrequency(id: string, input: FrequencyInput): Promise<{ error?: string }> {
@@ -22,7 +27,11 @@ export async function updateFrequency(id: string, input: FrequencyInput): Promis
     .from("frequencies")
     .update({ ...input, updated_at: new Date().toISOString() })
     .eq("id", id);
-  return error ? { error: error.message } : {};
+  if (error) return { error: error.message };
+
+  revalidatePath("/actionlist-detail", "layout");
+  revalidatePath("/");
+  return {};
 }
 
 export async function deleteFrequency(id: string): Promise<{ error?: string }> {
@@ -31,5 +40,9 @@ export async function deleteFrequency(id: string): Promise<{ error?: string }> {
 
   const supabase = createAdminClient();
   const { error } = await supabase.from("frequencies").delete().eq("id", id);
-  return error ? { error: error.message } : {};
+  if (error) return { error: error.message };
+
+  revalidatePath("/actionlist-detail", "layout");
+  revalidatePath("/");
+  return {};
 }
