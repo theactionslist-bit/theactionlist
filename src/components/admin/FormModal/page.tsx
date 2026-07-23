@@ -219,7 +219,7 @@ export default function AdminFormModal<T extends Record<string, unknown>>({
                 {status && <p className="text-sm font-medium text-red-600">{status}</p>}
 
                 <div className="flex gap-3 justify-end">
-                  <Button type="button" variant="secondary" onClick={onClose}>
+                  <Button type="button" variant="secondary" disabled={isSubmitting} onClick={onClose}>
                     {FORM_MODAL_CANCEL_LABEL}
                   </Button>
                   <Button type="submit" variant="primary" loading={isSubmitting}>

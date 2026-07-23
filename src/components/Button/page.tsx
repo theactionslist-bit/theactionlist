@@ -56,8 +56,10 @@ export default function Button({
         !fontSize && "text-base",
         variant === "primary"
           ? "bg-[#D89593] text-white hover:bg-[#C27E7A] border-0"
-          : "bg-transparent text-[#D89593] border-2 border-[#D89593] hover:bg-[#D89593]/10",
-        !isDisabled && "active:scale-[.98]",
+          : isDisabled
+            ? "bg-transparent text-[#10101099] border-2 border-[#DBDBDB]"
+            : "bg-transparent text-[#D89593] border-2 border-[#D89593] hover:bg-[#D89593]/10",
+        !isDisabled && "cursor-pointer active:scale-[.98]",
         isDisabled && "opacity-60 cursor-not-allowed",
         className,
       )}
