@@ -142,7 +142,7 @@ export default function MultiSelect({
               onChange={(e) => setSearch(e.target.value)}
               placeholder={MULTISELECT_SEARCH_PLACEHOLDER}
               autoFocus
-              className="w-full rounded-lg border-2 border-[#DBDBDB] bg-gray-50 px-3 py-2 font-sans text-sm outline-none transition-all focus:border-[#D89593] focus:bg-white"
+              className="w-full rounded-lg border-2 border-[#DBDBDB] bg-gray-50 px-3 py-2 font-sans text-sm text-[#101010] placeholder:text-[#10101099] outline-none transition-all focus:border-[#D89593] focus:bg-white"
             />
           </div>
 
