@@ -15,7 +15,8 @@ interface AdminLoginRouter {
 export async function handleAdminLoginSubmit(
   values: AdminLoginValues,
   { setSubmitting, setStatus }: Pick<FormikHelpers<AdminLoginValues>, "setSubmitting" | "setStatus">,
-  router: AdminLoginRouter
+  router: AdminLoginRouter,
+  onBeforeRedirect?: () => void
 ) {
   const { error } = await signInAsAdmin(values.email, values.password);
   if (error) {
@@ -23,5 +24,6 @@ export async function handleAdminLoginSubmit(
     setSubmitting(false);
     return;
   }
+  onBeforeRedirect?.();
   router.push(ADMIN_LOGIN_SUCCESS_REDIRECT);
 }

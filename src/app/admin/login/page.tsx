@@ -9,6 +9,7 @@ import {
   FormikControl,
   AdminHeader,
   useRef,
+  useState,
   ADMIN_LOGIN_HEADING,
   ADMIN_LOGIN_DESCRIPTION,
   ADMIN_LOGIN_BUTTON_TEXT,
@@ -29,6 +30,7 @@ interface AdminLoginValues {
 export default function AdminLoginPage() {
   const router = useRouter();
   const isSubmittingRef = useRef(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   async function handleSubmit(
     values: AdminLoginValues,
@@ -37,7 +39,7 @@ export default function AdminLoginPage() {
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
     try {
-      await handleAdminLoginSubmit(values, helpers, router);
+      await handleAdminLoginSubmit(values, helpers, router, () => setIsRedirecting(true));
     } finally {
       isSubmittingRef.current = false;
     }
@@ -81,10 +83,10 @@ export default function AdminLoginPage() {
                 <Button
                   type="submit"
                   variant="primary"
-                  loading={isSubmitting}
+                  loading={isSubmitting || isRedirecting}
                   className="w-full mt-2"
                 >
-                  {isSubmitting
+                  {isSubmitting || isRedirecting
                     ? ADMIN_LOGIN_SUBMITTING_TEXT
                     : ADMIN_LOGIN_BUTTON_TEXT}
                 </Button>
