@@ -8,9 +8,10 @@ type RichTextProps = {
   label?: string;
   name: string;
   placeholder?: string;
+  required?: boolean;
 };
 
-export default function RichText({ label, name, placeholder }: RichTextProps) {
+export default function RichText({ label, name, placeholder, required }: RichTextProps) {
   const [field, meta, helpers] = useField(name);
   const editorRef = useRef<HTMLDivElement>(null);
   const hasError = meta.touched && meta.error;
@@ -69,7 +70,10 @@ export default function RichText({ label, name, placeholder }: RichTextProps) {
   return (
     <div className="flex flex-col gap-2.5">
       {label && (
-        <label className="font-sans text-[16px] font-semibold text-[#101010]">{label}</label>
+        <label className="font-sans text-[16px] font-semibold text-[#101010]">
+          {label}
+          {required && <span className="text-red-500"> *</span>}
+        </label>
       )}
 
       <div className={`rounded-xl ${hasError ? "[&_.note-editor]:border-red-400" : ""}`}>

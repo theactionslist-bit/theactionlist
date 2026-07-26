@@ -15,14 +15,14 @@ export const ACTIONS_TABLE_COLUMNS = {
 };
 
 export const ACTIONS_FORM_FIELDS = [
-  { name: "title", label: "Title", control: "input", type: "text" },
-  { name: "more_info", label: "More Info", control: "richtext" },
+  { name: "title", label: "Title", control: "input", type: "text", required: true },
+  { name: "more_info", label: "More Info", control: "richtext", required: true },
   { name: "hex_colour_code", label: "Colour (hex)", control: "input", type: "color" },
   { name: "products_used", label: "Products Used URLs", control: "linklist", placeholder: "https://…" },
   { name: "other_urls", label: "Other URLs", control: "linklist", placeholder: "https://…" },
-  { name: "area_ids", label: "Areas of Inspiration", control: "multiselect", placeholder: "Select areas of inspiration…" },
-  { name: "author_ids", label: "Authors", control: "multiselect", placeholder: "Select an author…", multiple: false },
-  { name: "frequency_ids", label: "Frequencies", control: "multiselect", placeholder: "Select frequencies…" },
+  { name: "area_ids", label: "Areas of Inspiration", control: "multiselect", placeholder: "Select areas of inspiration…", required: true },
+  { name: "author_ids", label: "Authors", control: "multiselect", placeholder: "Select an author…", multiple: false, required: true },
+  { name: "frequency_ids", label: "Frequencies", control: "multiselect", placeholder: "Select frequencies…", required: true },
 ] as const;
 
 export const ACTIONS_FORM_INITIAL_VALUES = {

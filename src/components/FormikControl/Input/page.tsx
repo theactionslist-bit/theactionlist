@@ -14,9 +14,10 @@ import {
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   name: string;
+  required?: boolean;
 };
 
-export default function Input({ label, type, className, ...props }: InputProps) {
+export default function Input({ label, type, className, required, ...props }: InputProps) {
   const [field, meta] = useField(props.name);
   const [showPassword, setShowPassword] = useState(false);
   const hasError = meta.touched && meta.error;
@@ -32,11 +33,15 @@ export default function Input({ label, type, className, ...props }: InputProps) 
           className="font-sans text-[16px] font-semibold text-[#101010]"
         >
           {label}
+          {required && <span className="text-red-500"> *</span>}
         </label>
       )}
 
       {isColorField ? (
-        <div className="inline-flex items-center gap-3">
+        <label
+          htmlFor={props.id || props.name}
+          className="inline-flex w-fit cursor-pointer items-center gap-3"
+        >
           <span
             className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-[#DBDBDB]"
             style={{ backgroundColor: (field.value as string) || "#FFFFFF" }}
@@ -52,7 +57,7 @@ export default function Input({ label, type, className, ...props }: InputProps) 
           <span className="font-sans text-base text-gray-900">
             {(field.value as string) || "No colour set"}
           </span>
-        </div>
+        </label>
       ) : (
         <div className="relative">
           <input
