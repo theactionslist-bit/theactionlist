@@ -123,9 +123,9 @@ function syncActionProducts(
   actionId: string,
   urls: string[],
 ): Promise<{ error?: string }> {
-  return syncUrlEntries(supabase, "action_products", actionId, "url", urls, (_url, preview) => ({
+  return syncUrlEntries(supabase, "action_products", actionId, "url", urls, (url, preview) => ({
     action_id: actionId,
-    url: preview.url,
+    url,
     title: preview.title,
     description: preview.description,
     image: preview.image,
@@ -147,7 +147,7 @@ function syncActionSources(
       action_id: actionId,
       source_type: OTHER_SOURCE_TYPE,
       link_url: url,
-      url: preview.url,
+      url,
       title: preview.title,
       description: preview.description,
       image: preview.image,
