@@ -31,5 +31,7 @@ export type { AdminAuthorRow, AuthorInput } from "./service";
 
 export const AUTHORS_FORM_VALIDATION_SCHEMA = Yup.object({
   name: Yup.string().required("Name is required"),
-  social_links: Yup.array().of(Yup.string()).nullable(),
+  social_links: Yup.array()
+    .of(Yup.string().url("Enter a valid social link URL").required("Social link cannot be blank"))
+    .default([]),
 });
