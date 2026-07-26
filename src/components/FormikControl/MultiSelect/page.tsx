@@ -24,6 +24,7 @@ type MultiSelectProps = {
   placeholder?: string;
   /** Set to false to allow only a single selection. Defaults to true. */
   multiple?: boolean;
+  required?: boolean;
 };
 
 export default function MultiSelect({
@@ -32,6 +33,7 @@ export default function MultiSelect({
   options = [],
   placeholder = MULTISELECT_DEFAULT_PLACEHOLDER,
   multiple = true,
+  required,
 }: MultiSelectProps) {
   const [field, meta, helpers] = useField<string[]>(name);
   const [open, setOpen] = useState(false);
@@ -82,7 +84,10 @@ export default function MultiSelect({
   return (
     <div ref={containerRef} className="relative flex flex-col gap-2.5">
       {label && (
-        <label className="font-sans text-[16px] font-semibold text-[#101010]">{label}</label>
+        <label className="font-sans text-[16px] font-semibold text-[#101010]">
+          {label}
+          {required && <span className="text-red-500"> *</span>}
+        </label>
       )}
 
       <div className="relative">

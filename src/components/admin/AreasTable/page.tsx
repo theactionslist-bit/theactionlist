@@ -6,7 +6,6 @@ import {
   AdminFormModal,
   RowActionsMenu,
   Modal,
-  TruncatedCell,
   useToast,
   AREAS_TABLE_ITEMS_PER_PAGE,
   AREAS_TABLE_HEADING,
@@ -38,7 +37,6 @@ type AreaFormValues = typeof AREAS_FORM_INITIAL_VALUES;
 function toFormValues(row: AdminAreaRow): AreaFormValues {
   return {
     name: row.name,
-    attachments: row.attachments ?? "",
   };
 }
 
@@ -57,7 +55,7 @@ export default function AdminAreasTable() {
   async function handleSubmit(values: AreaFormValues): Promise<{ error?: string } | void> {
     const input: AreaInput = {
       name: values.name.trim(),
-      attachments: values.attachments.trim() || null,
+      attachments: modalMode === "edit" ? (selectedRow?.attachments ?? null) : null,
     };
 
     const result =
@@ -110,11 +108,6 @@ export default function AdminAreasTable() {
         rowKey={(row) => row.id}
         columns={[
           { key: "name", label: AREAS_TABLE_COLUMNS.name, render: (row) => row.name },
-          {
-            key: "attachments",
-            label: AREAS_TABLE_COLUMNS.attachments,
-            render: (row) => <TruncatedCell text={row.attachments} maxWidthClass="max-w-55" />,
-          },
           {
             key: "createdAt",
             label: AREAS_TABLE_COLUMNS.createdAt,

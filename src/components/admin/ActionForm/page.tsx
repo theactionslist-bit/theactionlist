@@ -22,6 +22,7 @@ export interface ActionFormField {
   options?: { value: string; label: string }[];
   rows?: number;
   multiple?: boolean;
+  required?: boolean;
 }
 
 interface ActionFormProps<T extends Record<string, unknown>> {
@@ -91,6 +92,7 @@ export default function ActionForm<T extends Record<string, unknown>>({
                 options={field.options}
                 rows={field.rows}
                 multiple={field.multiple}
+                required={field.required}
               />
             ))}
 
