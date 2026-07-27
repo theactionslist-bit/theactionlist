@@ -44,7 +44,12 @@ export type { AdminActionRow, ActionInput, LookupOption, ActionFormValues } from
 export const ACTIONS_FORM_VALIDATION_SCHEMA = Yup.object({
   title: Yup.string().required("Title is required"),
   more_info: Yup.string().required("More info is required"),
-  hex_colour_code: Yup.string().nullable(),
+  hex_colour_code: Yup.string()
+    .nullable()
+    .matches(/^#[0-9A-Fa-f]{6}$/, {
+      message: "Enter a valid hex colour, e.g. #D89593",
+      excludeEmptyString: true,
+    }),
   products_used: Yup.array().of(Yup.string().url("Enter a valid product URL").required("Product URL cannot be blank")).default([]),
   other_urls: Yup.array().of(Yup.string().url("Enter a valid URL").required("URL cannot be blank")).default([]),
   area_ids: Yup.array().of(Yup.string().required()).min(1, "Select at least one area of inspiration").required(),

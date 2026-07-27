@@ -17,13 +17,22 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   required?: boolean;
 };
 
+const HEX_COLOUR_PATTERN = /^#[0-9A-Fa-f]{6}$/;
+
 export default function Input({ label, type, className, required, ...props }: InputProps) {
-  const [field, meta] = useField(props.name);
+  const [field, meta, helpers] = useField(props.name);
   const [showPassword, setShowPassword] = useState(false);
   const hasError = meta.touched && meta.error;
   const isPasswordField = type === "password";
   const isColorField = type === "color";
   const inputType = isPasswordField && showPassword ? "text" : type;
+  const hexValue = (field.value as string) || "";
+  const isValidHex = HEX_COLOUR_PATTERN.test(hexValue);
+
+  function handleHexTextChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value.trim();
+    helpers.setValue(raw && !raw.startsWith("#") ? `#${raw}` : raw);
+  }
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -38,13 +47,11 @@ export default function Input({ label, type, className, required, ...props }: In
       )}
 
       {isColorField ? (
-        <label
-          htmlFor={props.id || props.name}
-          className="inline-flex w-fit cursor-pointer items-center gap-3"
-        >
-          <span
-            className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-[#DBDBDB]"
-            style={{ backgroundColor: (field.value as string) || "#FFFFFF" }}
+        <div className="inline-flex items-center gap-3">
+          <label
+            htmlFor={props.id || props.name}
+            className="relative h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-full border-2 border-[#DBDBDB]"
+            style={{ backgroundColor: isValidHex ? hexValue : "#FFFFFF" }}
           >
             <input
               id={props.id || props.name}
@@ -53,11 +60,28 @@ export default function Input({ label, type, className, required, ...props }: In
               type="color"
               className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             />
-          </span>
-          <span className="font-sans text-base text-gray-900">
-            {(field.value as string) || "No colour set"}
-          </span>
-        </label>
+          </label>
+          <input
+            type="text"
+            value={hexValue}
+            onChange={handleHexTextChange}
+            onBlur={() => helpers.setTouched(true)}
+            placeholder="#RRGGBB"
+            className={`
+              font-sans text-base w-32
+              rounded-xl border-2
+              px-4 py-2.5 text-gray-900 placeholder:text-[#10101099]
+              outline-none transition-all
+              hover:bg-white
+              focus:bg-white
+              ${
+                hasError
+                  ? "border-red-400 focus:border-red-500"
+                  : "border-[#DBDBDB] focus:border-[#D89593]"
+              }
+            `}
+          />
+        </div>
       ) : (
         <div className="relative">
           <input
